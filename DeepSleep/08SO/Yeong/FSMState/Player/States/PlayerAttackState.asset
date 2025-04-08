@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823324fb80bc165499dd88d3cba74995, type: 3}
+  m_Name: PlayerAttackState
+  m_EditorClassIdentifier: 
+  stateName: 2
+  className: YH.Players.PlayerAttackState
+  animParam: {fileID: 11400000, guid: 593eee604cc632448ab07fd852530dfa, type: 2}

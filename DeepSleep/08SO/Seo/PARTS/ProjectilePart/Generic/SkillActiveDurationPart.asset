@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2224b5163afa17342aab93d3d5645c54, type: 3}
+  m_Name: SkillActiveDurationPart
+  m_EditorClassIdentifier: 
+  inventoryType: 2
+  icon: {fileID: 21300000, guid: 54da8620af14f3d4d9791b85dbbc6da9, type: 3}
+  itemName: "\uC9C0\uC18D\uC2DC\uAC04 \uC99D\uAC00"
+  itemDescription: "\uC9C0\uC18D\uC2DC\uAC04\uC774 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  price: 10
+  maxStack: 999
+  type: 0
+  reflectionName: SkillActiveDurationNode
+  visual: {fileID: 919132149155446097, guid: 3826878b3731a3047b2e84eb01c9be71, type: 3}

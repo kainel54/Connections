@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce2bab98f1fba14c9d33f8681edc247, type: 3}
+  m_Name: PoisonData
+  m_EditorClassIdentifier: 
+  status: 3
+  icon: {fileID: 21300000, guid: 177fbe3e2e17e4d4da6d3ba6eb0445bd, type: 3}
+  frame: {fileID: 21300000, guid: 6403afd719acd2b4dbb0dfae7add33cb, type: 3}
+  statusName: "\uB3C5"
+  description: "\uC9C0\uC18D\uC801\uC73C\uB85C \uD53C\uD574\uB97C \uC785\uB294\uB2E4."
