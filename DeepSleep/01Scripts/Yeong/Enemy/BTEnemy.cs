@@ -47,42 +47,7 @@ public class BTEnemy : Entity, IPoolable
         player = _playerManagerSO.PlayerTrm;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            GetCompo<HealthCompo>().Die();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            var evt = StatusEvents.AddStatusEvent;
-            evt.entity = this;
-            evt.status = StatusEnum.SpeedDownDebuff;
-
-            _statusEventChannel.RaiseEvent(evt);
-        }
-            
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            var evt = StatusEvents.AddTimeStatusEvent;
-            evt.entity = this;
-            evt.time = 4f;
-            evt.status = StatusEnum.SpeedDownDebuff;
-
-            _statusEventChannel.RaiseEvent(evt);
-        }
-            
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            var evt = StatusEvents.RemoveStatusEvent;
-            evt.entity = this;
-            evt.status = StatusEnum.SpeedDownDebuff;
-
-            _statusEventChannel.RaiseEvent(evt);
-        }
-    }
-
+    
     public BlackboardVariable<T> GetVariable<T>(string variableName)
     {
         if(_btAgent.GetVariable(variableName, out BlackboardVariable<T> variable))
