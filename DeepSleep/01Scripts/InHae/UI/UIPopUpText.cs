@@ -1,5 +1,6 @@
 using DG.Tweening;
 using ObjectPooling;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -8,7 +9,10 @@ public class UIPopUpText : MonoBehaviour, IPoolable
     private TextMeshProUGUI _text;
     
     private RectTransform _rectTransform => transform as RectTransform;
+    public GameObject GameObject { get => gameObject; set { } }
 
+    [SerializeField] private UIPoolingType _type;
+    public Enum PoolEnum { get => _type; set { } }
     private void Awake()
     {
         _text = GetComponent<TextMeshProUGUI>();
@@ -26,16 +30,23 @@ public class UIPopUpText : MonoBehaviour, IPoolable
 
     public void UpAndFadeText(float yDelta = 2f, float duration = 0.5f)
     {
-        Sequence seq = DOTween.Sequence();
+        Sequence seq = DOTween.Sequence().SetUpdate(true);
         seq.Join(_text.DOFade(0, duration));
         seq.Join(_rectTransform.DOAnchorPosY( _rectTransform.position.y + yDelta, duration));
         seq.OnComplete(() => PoolManager.Instance.Push(this, true));
     }
     
-    public GameObject GameObject { get => gameObject; set { } }
-    [field:SerializeField] public PoolingType PoolType { get; set; }
-    
     public void Init()
     {
+    }
+
+    public void OnPop()
+    {
+
+    }
+
+    public void OnPush()
+    {
+
     }
 }

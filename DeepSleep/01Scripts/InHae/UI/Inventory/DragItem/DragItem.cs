@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public enum DragItemType
 {
-    SkillAndPart,
+    InventorySlotItem,
     NodeInPart,
 }
 

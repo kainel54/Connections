@@ -56,11 +56,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _BlinkValue: 0
+    - _OutlineThickness: 0.1
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _Alpha: {r: 1, g: 1, b: 1, a: 1}
-    - _BlinkColor: {r: 8, g: 8, b: 8, a: 1}
+    - _AlphaColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BlinkColor: {r: 7.8593287, g: 7.8593287, b: 7.8593287, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

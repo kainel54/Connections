@@ -10,7 +10,7 @@ namespace YH.StatSystem
         Percnet
     }
 
-    //StatElementSO¸¦ °¡Á®¿Í¼­ ÇØ´ç ½ºÅÈÀÇ [º¯È­]¸¦ Ç¥ÇöÇØÁÜ
+    //StatElementSOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½È­]ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [Serializable]
     public class StatElement : ISerializationCallbackReceiver
     {
@@ -38,7 +38,7 @@ namespace YH.StatSystem
 
         public void OnBeforeSerialize() { }
 
-        //Serialize°ªÀÌ º¯°æµÈ ÀÌÈÄ È£Ãâ
+        //Serializeï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
         public void OnAfterDeserialize()
         {
             SetDictionary();
@@ -65,33 +65,38 @@ namespace YH.StatSystem
 
         private void SetValue()
         {
-            //µ¡¼À º¯°æ»çÇ× Àû¿ë
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             float totalAddModifier = 0;
             foreach (float addModifier in _addModifiers.Values)
             {
                 totalAddModifier += addModifier;
             }
 
-            //ÆÛ¼¾Æ® º¯°æ»çÇ× Àû¿ë
+            //ï¿½Û¼ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             float totalPercentModifier = 0;
             foreach (float percentModifier in _percentModifiers.Values)
             {
                 totalPercentModifier += percentModifier;
             }
 
-            //µµÇÕ °ª °è»ê
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
             float value = (_baseValue + totalAddModifier) * (1 + totalPercentModifier / 100);
-            ////ÃÖ´ë, ÃÖ¼Ò Àû¿ë
+            ////ï¿½Ö´ï¿½, ï¿½Ö¼ï¿½ ï¿½ï¿½ï¿½ï¿½
             //if (elementSO != null)
             //    value = Mathf.Clamp(value, elementSO.minMaxValue.x, elementSO.minMaxValue.y);
-
-
+            
             int intValue = Mathf.CeilToInt(value);
-
-            if (Value != value) OnValueChanged?.Invoke(Value, value);
-            if (IntValue != intValue) OnIntValueChanged?.Invoke(IntValue, intValue);
+            
+            float previewValue = Value;
+            int previewIntValue = IntValue;
+            
             Value = value;
             IntValue = intValue;
+            
+            if (previewValue != Value)
+                OnValueChanged?.Invoke(previewValue, Value);
+            if (previewIntValue != IntValue) 
+                OnIntValueChanged?.Invoke(previewIntValue, IntValue);
         }
 
         public void AddModify(string key, float modify, EModifyMode eModifyMode)
@@ -118,9 +123,7 @@ namespace YH.StatSystem
             if (_modifiers[eModifyMode].ContainsKey(key))
             {
                 if (_modifierOverlaps[eModifyMode][key] == 0)
-                {
                     _modifiers[eModifyMode].Remove(key);
-                }
             }
             else
                 Debug.LogWarning($"[{key}]Key not found for statModifier");

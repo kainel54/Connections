@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2224b5163afa17342aab93d3d5645c54, type: 3}
+  m_Name: ProjectileReflectionPart
+  m_EditorClassIdentifier: 
+  inventoryType: 2
+  icon: {fileID: 21300000, guid: cd6dc974935477d4c9e02fb66be7f093, type: 3}
+  itemName: "\uD22C\uC0AC\uCCB4 \uBC18\uC0AC \uD30C\uCE20"
+  itemDescription: "\uD22C\uC0AC\uCCB4\uAC00 \uBCBD\uC5D0 \uB2FF\uC73C\uBA74 \uBC18\uC0AC\uB41C\uB2E4.
+    \uC7A5\uCC29\uD55C \uD30C\uCE20 \uAC1C\uC218\uB9CC\uD07C \uBCBD\uC5D0 \uD295\uAE38
+    \uC218 \uC788\uB2E4."
+  price: 100
+  maxStack: 999
+  type: 0
+  nodeScriptName: ReflectionPartNode
+  visual: {fileID: 4448123184397291684, guid: d18be603c12f9784d8fe93db62320530, type: 3}

@@ -132,13 +132,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d06525a454a522449bf28a41ccb0f825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _soundEventChannelSO: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
+  _soundSo: {fileID: 11400000, guid: dcfa9078350f096449a809336ddbe6c1, type: 2}
   itemData: {fileID: 0}
   _whatIsGround:
     serializedVersion: 2
     m_Bits: 64
   _rotateSpeed: 100
   _playerManagerSO: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
-  <PoolType>k__BackingField: 6
+  _type: 0
 --- !u!135 &9121873808259575909
 SphereCollider:
   m_ObjectHideFlags: 0

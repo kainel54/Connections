@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 479008baac47e51459f3152c0bcad57d, type: 3}
+  m_Name: AttackDamageSkillStat
+  m_EditorClassIdentifier: 
+  fieldType: 2
+  title: "\uACF5\uACA9\uB825"
+  description: "\uC2A4\uD0AC\uC744 \uB9DE\uB294 \uC801\uC774 \uBC1B\uB294 \uB370\uBBF8\uC9C0\uC785\uB2C8\uB2E4."
+  icon: {fileID: 21300000, guid: c587c7f09ef5f644bb1a664546be9f10, type: 3}
+  minMaxValue: {x: 1, y: 10000}

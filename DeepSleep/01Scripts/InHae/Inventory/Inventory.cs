@@ -6,6 +6,7 @@ public enum InventoryType
     None,
     Skill,
     Part,
+    NodeAbility,
 }
 
 public abstract class Inventory : MonoBehaviour

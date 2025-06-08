@@ -13,12 +13,12 @@ public class EntityStatus : MonoBehaviour, IEntityComponent
     {
         _entity = entity;
         
-        _entity.GetCompo<HealthCompo>().OnDieEvent.AddListener(AllRemoveStatus);
+        _entity.GetCompo<EntityHealth>().OnDieEvent.AddListener(AllRemoveStatus);
     }
 
     private void OnDestroy()
     {
-        _entity.GetCompo<HealthCompo>().OnDieEvent.RemoveListener(AllRemoveStatus);
+        _entity.GetCompo<EntityHealth>().OnDieEvent.RemoveListener(AllRemoveStatus);
     }
 
     public void StatusDictionaryInit(Dictionary<StatusEnum, StatusStat> dictionary)

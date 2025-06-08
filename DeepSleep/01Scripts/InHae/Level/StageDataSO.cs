@@ -17,8 +17,9 @@ namespace IH.Level
         public SoundSO DefaultSoundSo;
         
         public int roomCount;
+        public int minDeadEndRoom;
         public int specialRoomCount;
-        public int rewardRoomCount;
         public List<RoomPair> roomPairs;
+        public List<LevelTypeEnum> deadEndOrder;
     }
 }

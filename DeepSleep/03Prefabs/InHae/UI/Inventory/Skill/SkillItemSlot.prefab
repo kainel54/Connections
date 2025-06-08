@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 6, y: 6, z: 6, w: 6}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -404,6 +404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d359356bd3ea2e84ebe0f07a0f58a01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uiEventChannel: {fileID: 11400000, guid: f134ea3e70a47714099e843f3a932a07, type: 2}
+  _soundChannelSo: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
+  _clickSound: {fileID: 11400000, guid: 303509b71b2fefe4cb7e911b009474f6, type: 2}
   _itemImage: {fileID: 1309049801760451618}
   _amountText: {fileID: 1000070302052860619}
   slotIndex: 0
@@ -411,7 +414,8 @@ MonoBehaviour:
     data: {fileID: 0}
     stackSize: 0
     slotIndex: 0
-  _yOffset: 150
+  _skillNodeEventChannelSo: {fileID: 11400000, guid: 041174eda0f894141a38a9314e337994, type: 2}
+  _yOffset: 300
   _skillImageObj: {fileID: 6420933682541777201}
   _canvas: {fileID: 0}
 --- !u!114 &-928530659660533657

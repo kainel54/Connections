@@ -6,10 +6,10 @@ public class ProtectNexusMission : SpecialLevelMission
     {
         base.Init();
 
-        _specialLevelRoom.clearAction += HandleClearCheck;
-        _specialLevelRoom.player.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleTimeOutCheck);
+        _specialLevelRoom.missionClearCheckAction += HandleClearCheck;
+        _specialLevelRoom.player.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleTimeOutCheck);
 
-        // ³Ø¼­½º ½ºÆù
+        // ï¿½Ø¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         _specialLevelRoom.StartSpawn();
     }
@@ -20,8 +20,8 @@ public class ProtectNexusMission : SpecialLevelMission
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(true);
-        _specialLevelRoom.clearAction -= HandleClearCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(true);
+        _specialLevelRoom.missionClearCheckAction -= HandleClearCheck;
     }
 
     private void HandleTimeOutCheck()
@@ -30,7 +30,7 @@ public class ProtectNexusMission : SpecialLevelMission
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(false);
-        _specialLevelRoom.player.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleTimeOutCheck);
+        _specialLevelRoom.missionActiveAction.Invoke(false);
+        _specialLevelRoom.player.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleTimeOutCheck);
     }
 }

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fe54ecc49148a498c70ff5453f6de3, type: 3}
+  m_Name: ArrowSkillSO
+  m_EditorClassIdentifier: 
+  inventoryType: 1
+  itemTier: 0
+  icon: {fileID: 21300000, guid: 385d1712aacb42746a85727d68a38736, type: 3}
+  itemName: "\uC2E0\uC18D\uC758 \uD654\uC0B4"
+  itemDescription: "\uB9C8\uB825 \uD654\uC0B4\uC744 \uBC1C\uC0AC\uD574 [\uADA4\uC801]
+    \uADA4\uC801\uC73C\uB85C \uB0A0\uC544\uAC00\uBA70 [N]\uC758 \uD53C\uD574\uB97C
+    \uC785\uD78C\uB2E4."
+  price: 40
+  maxStack: 999
+  skillStats:
+  - {fileID: 11400000, guid: 1c5571e65c6c8a24b8107e38f3b6409e, type: 2}
+  - {fileID: 11400000, guid: c3875983c4f4b524f8548a76d529a5b9, type: 2}
+  reflectionName: ArrowSkill
+  visual: {fileID: 8488841992452324529, guid: 86286171d3b9fa049bb78e11a78f8e9d, type: 3}

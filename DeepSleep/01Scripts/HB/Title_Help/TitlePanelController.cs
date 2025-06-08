@@ -1,7 +1,8 @@
 using DG.Tweening;
-using IH.EventSystem;
+using IH.EventSystem.SystemEvent;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using YH.EventSystem;
@@ -13,39 +14,38 @@ public class TitlePanelController : MonoBehaviour
     [SerializeField] private RectTransform _helpPanel;
     [SerializeField] private Image _background;
 
-    [SerializeField] private Button _gameStartButton;
-    [SerializeField] private Button _helpButton;
-    [SerializeField] private Button _closeButton;
-    [SerializeField] private Button _quitButton;
-
     [SerializeField] private Vector2 sizeDelta;
+    private bool _isHelpPanelOpened = false;
 
     [SerializeField] private GameEventChannelSO _systemChannel;
-    
+
     public UnityEvent closeEvent;
 
     private void Start()
     {
-        _helpCanvasGroup = transform.GetComponent<CanvasGroup>();
-
-        _gameStartButton.onClick.AddListener(GameStartHandler);
-        _helpButton.onClick.AddListener(OpenHelpPanelHandler);
-        _closeButton.onClick.AddListener(CloseHelpPanelHandler);
-        _quitButton.onClick.AddListener(QuitGameHandler);
+        _helpCanvasGroup = GetComponent<CanvasGroup>();
 
         sizeDelta = _helpPanel.sizeDelta;
-
+        
         _helpCanvasGroup.interactable = false;
         _helpCanvasGroup.blocksRaycasts = false;
         _helpPanel.DOSizeDelta(new Vector2(0, sizeDelta.y), 0);
         _background.DOFade(0, 0);
     }
 
-    private void GameStartHandler()
+    private void Update()
     {
-        // 게임 시작
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (_isHelpPanelOpened)
+                CloseHelpPanelHandler();
+        }
+    }
+
+    public void GameStartHandler()
+    {
         _systemChannel.AddListener<FadeComplete>(HandleSceneMove);
-        
+
         var fadeOutEvent = SystemEvents.FadeScreenEvent;
         fadeOutEvent.isFadeIn = false;
         fadeOutEvent.isCircle = true;
@@ -60,27 +60,30 @@ public class TitlePanelController : MonoBehaviour
         SceneManager.LoadScene("MergeScene");
     }
 
-    private void OpenHelpPanelHandler()
+    public void OpenHelpPanelHandler()
     {
         _helpPanel.DOSizeDelta(sizeDelta, 0.3f);
-        _background.DOFade(1, 0.3f)
+        _background.DOFade(0.8f, 0.3f)
             .OnComplete(() =>
             {
                 _helpCanvasGroup.interactable = true;
                 _helpCanvasGroup.blocksRaycasts = true;
+                _isHelpPanelOpened = true;
             });
     }
 
-    private void CloseHelpPanelHandler()
+    public void CloseHelpPanelHandler()
     {
         closeEvent?.Invoke();
         _helpCanvasGroup.interactable = false;
         _helpCanvasGroup.blocksRaycasts = false;
+        
+        _isHelpPanelOpened = false;
         _helpPanel.DOSizeDelta(new Vector2(0, sizeDelta.y), 0.3f);
         _background.DOFade(0, 0.3f);
     }
 
-    private void QuitGameHandler()
+    public void QuitGameHandler()
     {
         Application.Quit();
     }

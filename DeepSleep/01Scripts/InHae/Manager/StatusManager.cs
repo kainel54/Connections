@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IH.EventSystem.StatusEvent;
 using UnityEngine;
 using YH.Entities;
 using YH.EventSystem;
@@ -58,6 +59,9 @@ public class StatusManager : MonoBehaviour
     
     private void HandleAddStatusEvent(AddStatusEvent evt)
     {
+        if(evt.entity.IsDead)
+            return;
+        
         if (!_cashingStatus.ContainsKey(evt.entity))
         {
             EntityStatus entityStatus = evt.entity.GetCompo<EntityStatus>(true);
@@ -70,6 +74,9 @@ public class StatusManager : MonoBehaviour
     
     private void HandleAddTimeStatusEvent(AddTimeStatusEvent evt)
     {
+        if(evt.entity.IsDead)
+            return;
+        
         if (!_cashingStatus.ContainsKey(evt.entity))
         {
             EntityStatus entityStatus = evt.entity.GetCompo<EntityStatus>(true);

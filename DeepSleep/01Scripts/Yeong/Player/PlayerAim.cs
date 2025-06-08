@@ -13,6 +13,8 @@ public class PlayerAim : MonoBehaviour,IEntityComponent
     [SerializeField] private float _playerHeight = 0.7f;
     [SerializeField] private Vector3 _aimOffset;
     public Transform AimingTarget { get; private set; }
+    private Transform _previousTarget; // �߰�
+    private Outline _currentOutline;   // ���� Ÿ���� Outline ĳ�̿�
 
     public event Action<Quaternion> OnLookDirectionEvent;
 
@@ -36,20 +38,29 @@ public class PlayerAim : MonoBehaviour,IEntityComponent
         UpdateLookDirection();
         _rigAimTrm.position = _aimTrm.position;
     }
+    
 
     private void UpdateAimPosition()
     {
         _mousePos = _player.PlayerInput.GetWorldMousePosition();
         _mousePos += _aimOffset;
+
         if (IsAutoLock)
         {
-            AimingTarget = GetTarget();
+            Transform newTarget = GetTarget();
+            if (newTarget != AimingTarget)
+            {
+                SetTargetOutline(AimingTarget, false); // ���� Ÿ���� Outline ���
+                SetTargetOutline(newTarget, true);     // ���ο� Ÿ���� Outline �ѱ�
+                AimingTarget = newTarget;
+            }
+
             if (AimingTarget != null)
             {
                 if (AimingTarget.TryGetComponent(out Renderer renderer))
                     _aimTrm.position = renderer.bounds.center;
                 else
-                    _aimTrm.position = AimingTarget.position + new Vector3(0,1,0);
+                    _aimTrm.position = AimingTarget.position + new Vector3(0, 1, 0);
                 return;
             }
         }
@@ -62,6 +73,14 @@ public class PlayerAim : MonoBehaviour,IEntityComponent
         {
             _aimTrm.position = new Vector3(
                 _mousePos.x, transform.position.y + _playerHeight, _mousePos.z);
+        }
+    }
+
+    private void SetTargetOutline(Transform target, bool enabled)
+    {
+        if (target != null && target.TryGetComponent(out Outline outline))
+        {
+            outline.enabled = enabled;
         }
     }
 
@@ -94,7 +113,6 @@ public class PlayerAim : MonoBehaviour,IEntityComponent
     public Vector3 GetBulletDirection(Transform gunPointTrm)
     {
         Vector3 direction = (_aimTrm.position - gunPointTrm.position).normalized;
-        Debug.Log(direction);
         //if (!IsAimPrecisely && AimingTarget == null)
         //{
         //    direction.y = 0;

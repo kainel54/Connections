@@ -4,7 +4,7 @@ public class BlacksmithLevelRoom : LevelRoom
 {
     private void Start()
     {
-        isClear = true;
+        LevelClear();
         ConnectDoorDisable();
     }
 }

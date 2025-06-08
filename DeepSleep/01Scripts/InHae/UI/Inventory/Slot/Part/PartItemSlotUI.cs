@@ -1,26 +1,35 @@
-using IH.EventSystem;
+using IH.EventSystem.NodeEvent.NodeChainEvent;
+using IH.EventSystem.NodeEvent.PartNodeEvents;
+using IH.EventSystem.UIEvent;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using YH.EventSystem;
 
-public class PartItemSlotUI : ItemSlotUI, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class PartItemSlotUI : ItemSlotUI, IPointerClickHandler
 {
-    [SerializeField] private GameEventChannelSO _nodeEventChannel;
+    [SerializeField] private GameEventChannelSO _nodeChainEventChannel;
+    [SerializeField] private GameEventChannelSO _partNodeEventChannel;
     
-    [SerializeField] private Canvas _canvas;
     [SerializeField] private GameObject _skillImageObj;
-    [SerializeField] private float _yOffset;
+    [SerializeField] private float _xOffset;
 
     private bool _isChainMode;
+    
+    private ItemPopUpPanel _partPopUpPanel;
 
     private void Awake()
     {
-        _nodeEventChannel.AddListener<ChainModeChangeEvent>(HandleChainModeChangeEvent);
+        _nodeChainEventChannel.AddListener<ChainModeChangeEvent>(HandleChainModeChangeEvent);
+    }
+
+    private void Start()
+    {
+        _partPopUpPanel = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Part);
     }
 
     private void OnDestroy()
     {
-        _nodeEventChannel.RemoveListener<ChainModeChangeEvent>(HandleChainModeChangeEvent);
+        _nodeChainEventChannel.RemoveListener<ChainModeChangeEvent>(HandleChainModeChangeEvent);
     }
 
     private void HandleChainModeChangeEvent(ChainModeChangeEvent evt)
@@ -63,9 +72,8 @@ public class PartItemSlotUI : ItemSlotUI, IPointerEnterHandler, IPointerExitHand
         if(eventData.button != PointerEventData.InputButton.Left)
             return;
         
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Part);
-        popUp.SetFix(false);
-        popUp.EndPopUp();
+        _partPopUpPanel.SetFix(false);
+        _partPopUpPanel.EndPopUp();
         _skillImageObj.SetActive(false);
 
         ChainAbleEvent();
@@ -76,65 +84,64 @@ public class PartItemSlotUI : ItemSlotUI, IPointerEnterHandler, IPointerExitHand
         if(!_isChainMode)
             return;
 
-        var evt = NodeEvents.ChainPartSelectEvent;
+        var evt = NodeChainEvents.ChainPartSelectEvent;
         evt.partItemSO = item.data as PartItemSO;
-        _nodeEventChannel.RaiseEvent(evt);
+        _nodeChainEventChannel.RaiseEvent(evt);
     }
     
-    public void OnPointerEnter(PointerEventData eventData)
+    public override void OnPointerEnter(PointerEventData eventData)
     {
+        base.OnPointerEnter(eventData);
+        
         if(isEmpty)
             return;
         
-        var drag = UIHelper.Instance.GetDragItem(DragItemType.SkillAndPart);
+        var drag = UIHelper.Instance.GetDragItem(DragItemType.InventorySlotItem);
         if(drag.isDragging)
             return;
-  
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Part);
-        Vector3 pos = eventData.position;
-        pos.y += _yOffset;
-
-        RectTransform popUpRect = popUp.transform as RectTransform;
-        RectTransform canvasRect = _canvas.transform as RectTransform;
-
+        
+        RectTransform popUpRect = _partPopUpPanel.transform as RectTransform;
         Vector2 popUpSize = popUpRect.sizeDelta;
-        Vector2 screenSize = canvasRect.sizeDelta;
-
-        Vector2 anchoredPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, 
-            pos, _canvas.worldCamera, out anchoredPos);
-
-        float halfWidth = popUpSize.x * 0.5f;
-
-        if (anchoredPos.x + halfWidth > screenSize.x * 0.5f)
-            anchoredPos.x = screenSize.x * 0.5f - halfWidth;
-        else if (anchoredPos.x - halfWidth < -screenSize.x * 0.5f)
-            anchoredPos.x = -screenSize.x * 0.5f + halfWidth;
-
-        popUpRect.anchoredPosition = anchoredPos;
-        popUp.OnPopUp(item);
+        
+        Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
+        pos.x -= popUpSize.x * 0.5f + _xOffset;
+        popUpRect.position = pos;
+        
+        _partPopUpPanel.OnPopUp(item);
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public override void OnPointerExit(PointerEventData eventData)
     {
+        base.OnPointerExit(eventData);
         if(isEmpty)
             return;
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Part);
-        popUp.EndPopUp();
+        
+        _partPopUpPanel.EndPopUp();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if(isEmpty)
             return;
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Part);
-        popUp.SetFix(true);
+
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            var partAutoEquipEvt = PartNodeEvent.AutoEquipPartEvent;
+            partAutoEquipEvt.part = item as PartInventoryItem;
+            _partNodeEventChannel.RaiseEvent(partAutoEquipEvt);
+            
+            var slotSelectActiveEvt = UIEvents.ItemSlotSelectActiveEvent;
+            slotSelectActiveEvt.isActive = false;
+            _uiEventChannel.RaiseEvent(slotSelectActiveEvt);
+            
+            _partPopUpPanel.EndPopUp();
+        }
     }
 
     public override void OnEndDrag(PointerEventData eventData)
     {
         base.OnEndDrag(eventData);
-        var evt = NodeEvents.ChainPartSelectCompleteEvent;
-        _nodeEventChannel.RaiseEvent(evt);
+        var evt = NodeChainEvents.ChainPartSelectCompleteEvent;
+        _nodeChainEventChannel.RaiseEvent(evt);
     }
 }

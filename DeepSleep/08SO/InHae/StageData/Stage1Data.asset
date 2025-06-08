@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultSoundSo: {fileID: 11400000, guid: f64f1414b550c3445bccdf2c87a308b2, type: 2}
   roomCount: 20
+  minDeadEndRoom: 4
   specialRoomCount: 3
-  rewardRoomCount: 2
   roomPairs:
   - levelTypeEnum: 0
     levelRooms:
@@ -35,9 +35,5 @@ MonoBehaviour:
     - {fileID: 7845730609514538924, guid: 3b7877ce178394f4595e201fdabc0da9, type: 3}
   - levelTypeEnum: 5
     levelRooms:
-    - {fileID: 2887537251288781565, guid: c3cbb37e7dff36149aece3a0986c5f3f, type: 3}
-    - {fileID: -309350538999586702, guid: c3c5d8a7fa06a4b4a9ef922d973ac2d9, type: 3}
-    - {fileID: 5207740867073777189, guid: 28ce0c7953c83344ea9b19f1523d7780, type: 3}
-  - levelTypeEnum: 6
-    levelRooms:
     - {fileID: -2763175637815817693, guid: 000b38f80d3d9a04d95af49bb2fd8310, type: 3}
+  deadEndOrder: 040000000300000005000000

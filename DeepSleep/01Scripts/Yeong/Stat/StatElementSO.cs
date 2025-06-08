@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace YH.StatSystem
 {
-    //StatÀÇ º¯ÇÏÁö ¾Ê´Â °ªÀ» °¡Áö°íÀÖÀ½
+    //Statï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [CreateAssetMenu(fileName = "StatElement", menuName = "SO/Stat/StatElement")]
     public class StatElementSO : ScriptableObject
     {

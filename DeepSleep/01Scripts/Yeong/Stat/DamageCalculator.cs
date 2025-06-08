@@ -4,7 +4,7 @@ namespace YH.StatSystem
 {
     public static class DamageCalculator
     {
-        public static int DamageCalculate(float damageCoefficient, StatCompo dealer, StatCompo target, string mainStatName, out bool isCritical)
+        public static int DamageCalculate(float damageCoefficient, EntityStat dealer, EntityStat target, string mainStatName, out bool isCritical)
         {
             float damage = 0;
             damage.AddStatCalculate(dealer, mainStatName);
@@ -18,9 +18,9 @@ namespace YH.StatSystem
             return Mathf.CeilToInt(damage);
         }
 
-        private static bool IsCritical(StatCompo dealer)
+        private static bool IsCritical(EntityStat dealer)
         {
-            //Å©¸®Æ¼ÄÃÀÎÁö È®ÀÎ
+            //Å©ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             bool isCritical = false;
             if (dealer.TryGetElement("Critical", out StatElement critical))
             {
@@ -29,37 +29,37 @@ namespace YH.StatSystem
             }
             return isCritical;
         }
-        private static void AddStatCalculate(this ref float amount, StatCompo statCompo, string statName)
+        private static void AddStatCalculate(this ref float amount, EntityStat statCompo, string statName)
         {
-            //¼ø¼öÁõ°¡
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (statCompo.TryGetElement(statName, out StatElement stat))
             {
                 amount += stat.Value;
             }
         }
-        private static void SubtractStatCalculate(this ref float amount, StatCompo statCompo, string statName)
+        private static void SubtractStatCalculate(this ref float amount, EntityStat statCompo, string statName)
         {
-            //¼ø¼öÁõ°¡
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (statCompo.TryGetElement(statName, out StatElement stat))
             {
                 amount -= stat.Value;
             }
         }
-        private static void PercentStatCalculate(this ref float amount, StatCompo statCompo, string statName)
+        private static void PercentStatCalculate(this ref float amount, EntityStat statCompo, string statName)
         {
-            //n% Áõ°¡ ¹¹ ÀÌ·±°Å
+            //n% ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½
             if (statCompo.TryGetElement(statName, out StatElement stat))
             {
                 amount *= stat.Value / 100;
             }
         }
-        private static void ProportionCalculate(this ref float amount, StatCompo numeratorStatCompo, string numerator,
-            StatCompo denominatorStatCompo, string denominator, float logAmount = 10)
+        private static void ProportionCalculate(this ref float amount, EntityStat numeratorStatCompo, string numerator,
+            EntityStat denominatorStatCompo, string denominator, float logAmount = 10)
         {
-            //numerator¿Í denominatorÀÇ Â÷ÀÌ°¡ logAmount¹è°¡ ³¯¶§ 2¹èÂ÷ÀÌ
-            //ex) numerator: 1000, denominator: 100, logAmount: 10ÀÏ¶§ 2¹è°¡
-            //ex) numerator: 100, denominator: 10000, logAmount: 10ÀÏ¶§ 1/4¹è
-            //¹æ¾î·ÂÀ¸·Î ÀÎÇÑ ¹Î°¨ÇÑ ÀÎÇÃ·¹ÀÌ¼ÇÀ» ¹æÁö
+            //numeratorï¿½ï¿½ denominatorï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ logAmountï¿½è°¡ ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            //ex) numerator: 1000, denominator: 100, logAmount: 10ï¿½Ï¶ï¿½ 2ï¿½è°¡
+            //ex) numerator: 100, denominator: 10000, logAmount: 10ï¿½Ï¶ï¿½ 1/4ï¿½ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã·ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (numeratorStatCompo.TryGetElement(numerator, out StatElement numeratorStat) &&
                 denominatorStatCompo.TryGetElement(denominator, out StatElement denominatorStat) &&
                 denominatorStat.Value != 0)

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 823324fb80bc165499dd88d3cba74995, type: 3}
+  m_Script: {fileID: 11500000, guid: aafd2552f1bead54981965373cdef02b, type: 3}
   m_Name: PlayerMoveState
   m_EditorClassIdentifier: 
   stateName: 1
   className: YH.Players.PlayerMoveState
-  animParam: {fileID: 11400000, guid: 5a39adfd21818a1478e2b247903f2d51, type: 2}
+  animParam: {fileID: 11400000, guid: bc0b06d0bbd60e2408b1720f58ed3fcb, type: 2}

@@ -10,7 +10,7 @@ public class PartInventoryItem : InventoryItem
     
     public PartNode partNode;
 
-    public void NodeInit(Type type)
+    public void PartNodeInit(Type type)
     {
         if(partNode != null)
             return;

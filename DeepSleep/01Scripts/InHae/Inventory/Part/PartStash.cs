@@ -5,7 +5,7 @@ using UnityEngine;
 public class PartStash : Stash
 {
     // 계속 리플렉션 안하려고 캐싱용 딕셔너리
-    private Dictionary<string, Type> _nodeTypes = new Dictionary<string, Type>();
+    private Dictionary<string, Type> _partNodeTypes = new Dictionary<string, Type>();
     public PartStash(Transform parent) : base(parent)
     {
         
@@ -31,10 +31,10 @@ public class PartStash : Stash
             PartInventoryItem newItem = new PartInventoryItem(itemData, idx);
             PartItemSO partItem = itemData as PartItemSO;
             
-            if (!_nodeTypes.ContainsKey(partItem.nodeScriptName))
-                _nodeTypes.Add(partItem.nodeScriptName, Type.GetType(partItem.nodeScriptName));
+            if (!_partNodeTypes.ContainsKey(partItem.nodeScriptName))
+                _partNodeTypes.Add(partItem.nodeScriptName, Type.GetType(partItem.nodeScriptName));
 
-            newItem.NodeInit(_nodeTypes[partItem.nodeScriptName]);
+            newItem.PartNodeInit(_partNodeTypes[partItem.nodeScriptName]);
             newItem.stackSize = count;
             
             stash.Add(newItem);

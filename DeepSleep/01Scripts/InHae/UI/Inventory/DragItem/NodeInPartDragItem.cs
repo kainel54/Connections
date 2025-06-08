@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace InHae.UI
+namespace IH.UI
 {
     public class NodeInPartDragItem : DragItem
     {

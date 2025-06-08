@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f8d62c17624ed478956946d0d2dedb, type: 3}
   m_Name: SelfBombEnemy
   m_EditorClassIdentifier: 
-  poolCount: 10
+  poolCount: 30
   prefab: {fileID: 2155728317071926057, guid: ac52732b64b0a754aaca1d2ea3b1767e, type: 3}
-  poolingType: 15

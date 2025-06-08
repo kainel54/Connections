@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using YH.Combat;
 using YH.Entities;
@@ -10,7 +11,7 @@ public class EnemyDamageCaster : MonoBehaviour, IEntityComponent, IAfterInitable
     private BTEnemy _btEnemy;
     [SerializeField] private DamageCaster[] _casters;
     private bool _isActive;
-    private StatCompo _statCompo;
+    private EntityStat _statCompo;
     [SerializeField] private StatElementSO _attackPowerSO;
     private StatElement _attackPower;
     public bool IsSuccess { get; private set; }
@@ -23,7 +24,7 @@ public class EnemyDamageCaster : MonoBehaviour, IEntityComponent, IAfterInitable
         {
             caster.InitCaster(_btEnemy);
         }
-        _statCompo = _btEnemy.GetCompo<StatCompo>();
+        _statCompo = _btEnemy.GetCompo<EntityStat>();
     }
 
     public void AfterInit()
@@ -86,5 +87,13 @@ public class EnemyDamageCaster : MonoBehaviour, IEntityComponent, IAfterInitable
         }
     }
 
-    
+    public void SetCast(DamageCaster caster,int idx)
+    {
+        _casters[idx] = caster;
+    }
+
+    public void Dispose()
+    {
+
+    }
 }

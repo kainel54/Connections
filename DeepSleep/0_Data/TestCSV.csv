@@ -1,0 +1,11 @@
+Key,Script,Name,Type,#Desc,Desc,Tier,Damage,Cooldown,AttackType,Target,Shape,Distance,#Reference
+고유 ID,스크립트 이름,이름,스킬 형식,개발용 설명,인게임 설명,등급,피해량,재사용 대기시간,공격 방식,타겟 방식,공격 범위,사거리,참고 자료
+Int,String,String,Enum,,String,Enum,Unsigned Int,Float,Enum,Enum,Enum or Any,Float,문자
+겹칠 수 없음 2000부터 시작,간결한 스킬명,실제 표시되는 이름,Normal / Position / Combo / Chain / Charge / Hold,그냥 뭐 표시될거보다 덜 정제된 설명,이해하기 쉽게 표시될 설명,Normal / Rare / Epic / Legendary,음수 불가능,음수 불가능,Melee / Range,Single / Multi,Circle / Rectangle / Sector,음수 불가능,"Animation Name / Reference Video, etc"
+1000,JudgementSlash,심판의 가르기,Normal,마우스 방향을 원형으로 벤다.,"주위를 베어 [N]의 피해를 입히고, 적중한 대상을 날려버린다.",Rare,30,7,Melee,Multi,Circle,2,Sword And Shield Slash https://discord.com/channels/1316692799956975626/1359806668556341278/1377461967391817778 짧은 모션 출발
+1001,MagicSphere,마력 구체,Normal,마우스 방향으로 마력 구체를 발사한다.,"마력 구체를 발사해 [N]의 피해를 입히고 폭발한다, 폭발에 피격된 대상의 이동속도를 2초간 40% 감소시킨다.",Rare,60,10,Range,Multi,Circle,"10, 1.5",MAGIC 치면 관련 애니메이션이 100개가 나옴 근데 내부를 볼 수가 없음 https://youtu.be/SEMDIuW6iKU?t=35
+1002,SpinningSlash,회전 베기,Normal,회전하며 돌진해 주위에 칼날을 흩뿌린다.,전방으로 5m 돌진하며 회전해 칼날을 던져 [N]의 피해를 입히고. 적중한 대상에게 출혈 디버프를 부여한다.,Epic,45,8,Melee,Muti,Circle,3,Corkscrew evade https://youtu.be/qEFT27d0IuA?t=154
+1003,GroundSlash,대지 가르기,Normal,검이 마우스 방향을 찍음,"거대한 검을 내리쳐 [N]의 피해를 입히고, 적중한 대상을 넘어트린다.",Rare,50,7.5,Melee,Multi,Rectangle,7.5,얘도 Magic 쳐서 손드는거 베이스로 잡으면 될듯 https://youtu.be/cbqvaAz7U7A?t=214
+1004,FlameZone,화염 지대,Position,마우스 위치에 화염 지대를 생성함,마우스 위치에 화염을 6초간 일으킨다. 매 초 [N/6]의 피해를 준다,Rare,70,10,Range,Multi,Circle,7.5,위에 매직류 쓰세요
+1005,NeedleShot,바늘 찌르기,Normal,바늘같은거로적 찌름,전방을 가볍게 찔러 [N]의 피해를 입힌다.,Normal,40,5,Melee,Single,Rectangle,2,Mixamo Stabbing 인데 좀 조잡함. 약간 찌르는 느낌으로다가 모션 크지않고 그냥 Idle -> 찌르기까지 거으 ㅣ뭐 0.3초 걸리는 평타급 모션을 가진 https://youtu.be/qEFT27d0IuA?t=1
+1006,MagicArrow,마력 화살,Normal ,화살 발사,마력 화살을 발사해 [N]의 피해를 입힌다.,Normal,60,6,Range,Single,Circle,10,나중에 찾을게요

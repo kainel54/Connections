@@ -14,7 +14,7 @@ namespace YH.FSM
         {
             _states = new Dictionary<FSMState, EntityState>();
 
-            foreach (StateSO state in fsmStates.states)
+            foreach (EntityStateSO state in fsmStates.states)
             {
                 try
                 {
@@ -28,7 +28,7 @@ namespace YH.FSM
                 }
             }
         }
-        
+
         public void Initialize(FSMState startState)
         {
             currentState = GetState(startState);
@@ -48,7 +48,7 @@ namespace YH.FSM
         {
             currentState.Update();
         }
-        
+
         public EntityState GetState(FSMState state) => _states.GetValueOrDefault(state);
     }
 }

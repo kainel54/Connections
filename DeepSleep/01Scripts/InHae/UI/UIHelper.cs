@@ -5,6 +5,7 @@ using UnityEngine;
 public class UIHelper : MonoSingleton<UIHelper>
 {
     [SerializeField] private PlayerStatusPopUpUI _playerStatusPopUpUI;
+    [SerializeField] private SkillStatPopUpUI _skillStatPopUpUI;
     
     [SerializeField] private Transform _dragItemParent;
     private Dictionary<DragItemType, DragItem> _dragItems = new Dictionary<DragItemType, DragItem>();
@@ -23,6 +24,7 @@ public class UIHelper : MonoSingleton<UIHelper>
 
     public DragItem GetDragItem(DragItemType type) => _dragItems[type];
     public ItemPopUpPanel GetPopUpPanel(ItemPopUpItemType type) => _popUpPanels[type];
-
+    
     public PlayerStatusPopUpUI GetPlayerStatusTooltip() => _playerStatusPopUpUI;
+    public SkillStatPopUpUI GetSkillStatPopUpUI() => _skillStatPopUpUI;
 }

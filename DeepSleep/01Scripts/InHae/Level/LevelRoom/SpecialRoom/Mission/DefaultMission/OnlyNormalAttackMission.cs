@@ -1,11 +1,18 @@
+using IH.EventSystem.MissionEvent;
+
 public class OnlyNormalAttackMission : SpecialLevelMission
 {
     public override void Init()
     {
         base.Init();
+        
+        _missionEventChannel.AddListener<OnlyNormalAttackMissionFailCheckEvent>(HandleFailCheck);
 
-        _specialLevelRoom.clearAction += HandleClearCheck;
-        _specialLevelRoom.player.PlayerInput.UseSkillEvent += HandleUseSkillCheck;
+        var onlyNormalAttackMissionCheckEvt = MissionEvents.OnlyNormalAttackMissionStartEvent;
+        onlyNormalAttackMissionCheckEvt.isStart = true;
+        _missionEventChannel.RaiseEvent(onlyNormalAttackMissionCheckEvt);
+
+        _specialLevelRoom.missionClearCheckAction += HandleClearCheck;
         _specialLevelRoom.StartSpawn();
     }
 
@@ -14,18 +21,28 @@ public class OnlyNormalAttackMission : SpecialLevelMission
         if (_missionEnd)
             return;
 
-        _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(true);
-        _specialLevelRoom.clearAction -= HandleClearCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(true);
+        _specialLevelRoom.missionClearCheckAction -= HandleClearCheck;
+        EndProcess();
     }
-
-    private void HandleUseSkillCheck()
+    
+    private void HandleFailCheck(OnlyNormalAttackMissionFailCheckEvent evt)
     {
         if (_missionEnd)
             return;
 
+        _specialLevelRoom.missionActiveAction.Invoke(false);
+        EndProcess();
+    }
+
+    private void EndProcess()
+    {
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(false);
-        _specialLevelRoom.player.PlayerInput.UseSkillEvent -= HandleUseSkillCheck;
+
+        var onlyNormalAttackMissionCheckEvt = MissionEvents.OnlyNormalAttackMissionStartEvent;
+        onlyNormalAttackMissionCheckEvt.isStart = false;
+        _missionEventChannel.RaiseEvent(onlyNormalAttackMissionCheckEvt);
+        
+        _missionEventChannel.RemoveListener<OnlyNormalAttackMissionFailCheckEvent>(HandleFailCheck);
     }
 }

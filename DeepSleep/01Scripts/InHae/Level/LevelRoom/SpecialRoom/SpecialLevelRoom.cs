@@ -2,45 +2,48 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using IH.EventSystem.LevelEvent;
+using IH.EventSystem.MissionEvent;
 using UnityEngine;
-using UnityEngine.Serialization;
 using YH.EventSystem;
 using YH.Players;
 using Random = UnityEngine.Random;
 
 public class SpecialLevelRoom : LevelRoom
 {
-    [SerializeField] private PlayerManagerSO _playerManagerSo;
+    [SerializeField] private GameEventChannelSO _levelEventChannel;
     [SerializeField] private GameEventChannelSO _missionEventChannel;
+    
+    [SerializeField] private Transform _missionParent;
+    [SerializeField] private PlayerManagerSO _playerManagerSo;
     
     [SerializeField] private DefaultRoomChest _chest;
 
     [HideInInspector] public Player player;
 
-    public Action<bool> missionCheckAction;
-    public Action clearAction;
+    public Action<bool> missionActiveAction;
+    public Action missionClearCheckAction;
     private bool _missionClear = true;
 
     private List<SpecialLevelMission> _missions = new List<SpecialLevelMission>();
     private SpecialLevelMission _selectMission;
+    
     private Spawner _spawner;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
+        _spawner = GetComponent<Spawner>();
+        
         _playerManagerSo.SetUpPlayerEvent += HandleSettingPlayer;
 
-        _missions = GetComponentsInChildren<SpecialLevelMission>().ToList();
-        missionCheckAction += HandleMissionCheck;
-        _spawner = GetComponent<Spawner>();
-        _spawner.levelClearEvent += HandleLevelClearEvent;
+        _missions = _missionParent.GetComponentsInChildren<SpecialLevelMission>().ToList();
+        missionActiveAction += HandleMissionCheck;
     }
-
-    
 
     private void OnDestroy()
     {
         _playerManagerSo.SetUpPlayerEvent -= HandleSettingPlayer;
-        _spawner.levelClearEvent -= HandleLevelClearEvent;
     }
 
     private void HandleSettingPlayer()
@@ -61,6 +64,10 @@ public class SpecialLevelRoom : LevelRoom
     {
         if(isClear)
             return;
+        
+        var inCombatEvt = LevelEvents.InCombatCheckEvent;
+        inCombatEvt.isCombat = true;
+        _levelEventChannel.RaiseEvent(inCombatEvt);
 
         _selectMission = _missions[Random.Range(0, _missions.Count)];
         _selectMission.SetRoom(this);
@@ -69,25 +76,30 @@ public class SpecialLevelRoom : LevelRoom
 
     public void StartSpawn()
     {
+        _spawner.SetWave();
+        StartCoroutine(SpawnDelay(1));
+    }
+
+    private IEnumerator SpawnDelay(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
         _spawner.Spawn();
     }
 
-    private void HandleLevelClearEvent()
-    {
-        if (isClear)
-            return;
-        LevelClear();
-    }
     public override void LevelClear()
     {
+        if (isClear) 
+            return;
         base.LevelClear();
+        
+        var inCombatEvt = LevelEvents.InCombatCheckEvent;
+        inCombatEvt.isCombat = false;
+        _levelEventChannel.RaiseEvent(inCombatEvt);
 
         if (_missionClear)
         {
-            clearAction?.Invoke();
+            missionClearCheckAction?.Invoke();
             _chest.Open();
         }
     }
-
-    
 }

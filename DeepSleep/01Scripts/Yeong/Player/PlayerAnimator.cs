@@ -1,29 +1,36 @@
 using DG.Tweening;
+using ObjectPooling;
 using System;
-using System.Collections.Generic;
+using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 using YH.Animators;
 using YH.Entities;
+using YH.EventSystem;
 using YH.Players;
 
-public class PlayerAnimator : MonoBehaviour, IEntityComponent
+public class PlayerAnimator : MonoBehaviour, IEntityComponent, IAfterInitable
 {
 
     [SerializeField]
-    private AnimParamSO _xVelocityParam, _zVelocityParam, _dashParam, _fireParam, _reloadParam, _reloadSpeedParam,_deathParam;
+    private AnimParamSO _xVelocityParam, _zVelocityParam, _fireParam, _deathParam,_speedParam;
 
     private Animator _animator;
     private Player _player;
     private PlayerMovement _playerMovement;
     private PlayerAttackCompo _playerAttack;
+    private SkinnedMeshRenderer _meshRender;
 
-    public event Action<bool> ReloadAnimationStatusChange;
     public event Action OnDieEvent;
 
     private float _lastAttackTime;
     private bool _isAttackMode;
+    private readonly int _blinkShaderParam = Shader.PropertyToID("_BlinkValue");
+    private readonly int _blinkColorShaderParam = Shader.PropertyToID("_BlinkColor");
 
+    [SerializeField] private GameEventChannelSO _spawnEvent;
+    [SerializeField] private PoolingItemSO _effectItem;
+    [SerializeField] private Color _dashEndColor;
     public void Initialize(Entity entity)
     {
         _animator = GetComponent<Animator>();
@@ -34,7 +41,9 @@ public class PlayerAnimator : MonoBehaviour, IEntityComponent
         _playerMovement.OnDashEvent += HandleDashEvent;
         _playerAttack = _player.GetCompo<PlayerAttackCompo>();
         _playerAttack.FireEvent += HandleFireEvent;
-        _playerAttack.ReloadEvent += HandleReloadStart;
+    }
+    public void AfterInit()
+    {
     }
 
     public void SwitchAnimationLayer(int layerIndex)
@@ -45,14 +54,29 @@ public class PlayerAnimator : MonoBehaviour, IEntityComponent
             _animator.SetLayerWeight(i, weight);
         }
     }
-    private void HandleDashEvent()
+    private void HandleDashEvent(bool IsDash)
     {
-        if(_playerMovement.CanDash)
-            _animator.SetTrigger(_dashParam.hashValue);
+        if (IsDash)
+        {
+            gameObject.SetActive(false);
+            var evt = SpawnEvents.EffectSpawn;
+            evt.position = _player.transform.position;
+            evt.rotation = _player.transform.rotation;
+            evt.scale = _player.transform.localScale;
+            evt.effectItem = _effectItem;
+            _spawnEvent.RaiseEvent(evt);
+            _playerMovement.Dash();
+        }
+        else
+        {
+            _meshRender.material.SetFloat(_blinkShaderParam, 1);
+            gameObject.SetActive(true);
+            _meshRender.material.DOFloat(0, _blinkShaderParam, 0.5f);
+        }
     }
 
-  
-    private void HandleFireEvent(int a,int b)
+
+    private void HandleFireEvent()
     {
         _animator.SetTrigger(_fireParam.hashValue);
     }
@@ -65,20 +89,18 @@ public class PlayerAnimator : MonoBehaviour, IEntityComponent
         float dampTime = 0.1f;
         _animator.SetFloat(_xVelocityParam.hashValue, x, dampTime, Time.fixedDeltaTime);
         _animator.SetFloat(_zVelocityParam.hashValue, z, dampTime, Time.fixedDeltaTime);
-    }
 
-    private void ReloadAnimationEnd()
-    {
-        ReloadAnimationStatusChange?.Invoke(false);
+        float animationSpeed;
+        if (x > 0.7f||z>0.7f)
+        {
+            animationSpeed = 1.5f;
+        }
+        else
+        {
+            animationSpeed = 1f;
+        }
+        _animator.SetFloat(_speedParam.hashValue, animationSpeed);
     }
-
-    private void HandleReloadStart(float reloadSpeed)
-    {
-        ReloadAnimationStatusChange?.Invoke(true);
-        _animator.SetFloat(_reloadSpeedParam.hashValue, reloadSpeed);
-        _animator.SetTrigger(_reloadParam.hashValue);
-    }
-
 
     public void SetDie()
     {
@@ -87,12 +109,13 @@ public class PlayerAnimator : MonoBehaviour, IEntityComponent
 
     public void DeathEvent()
     {
-        OnDieEvent?.Invoke();
+        OnDieEvent?.Invoke(); 
     }
 
-    public void DashEvent()
+    public void Dispose()
     {
-        _playerMovement.Dash();
+        _playerMovement.OnMovementEvent -= HandleMovementEvent;
+        _playerMovement.OnDashEvent -= HandleDashEvent;
+        _playerAttack.FireEvent -= HandleFireEvent;
     }
-
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8738597237880592289}
   - component: {fileID: 5617804393604832596}
   - component: {fileID: 3436008214149744931}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: DamageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -81,7 +81,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 24
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5617804393604832596
 MonoBehaviour:
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce056d880e4f84543880fbb8d5d7a6a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PoolType>k__BackingField: 5
+  _type: 1
   _text: {fileID: 3436008214149744931}
 --- !u!114 &3436008214149744931
 MonoBehaviour:

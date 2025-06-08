@@ -6,7 +6,7 @@ namespace YH.FSM
     public abstract class EntityState
     {
         protected Entity _entity;
-        
+
         protected AnimParamSO _animParam;
         protected bool _isTriggerCall;
 

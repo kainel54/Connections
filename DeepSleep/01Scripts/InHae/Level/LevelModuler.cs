@@ -35,7 +35,7 @@ public static class LevelModuler
         return gridPos;
     }
 
-    public static Dictionary<Vector2Int, int> Bfs(Dictionary<Vector2Int, LevelRoom> levelGridDictionary)
+    public static Dictionary<Vector2Int, int> BFS(Dictionary<Vector2Int, LevelRoom> levelGridDictionary)
     {
         Dictionary<Vector2Int, int> distanceDictionary = new Dictionary<Vector2Int, int> { { Vector2Int.zero, 0 } };
         

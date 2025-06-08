@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 475d5bdf0173470284d1958220f2313d, type: 3}
+  m_Name: TestStage1Data
+  m_EditorClassIdentifier: 
+  DefaultSoundSo: {fileID: 11400000, guid: f64f1414b550c3445bccdf2c87a308b2, type: 2}
+  roomCount: 12
+  minDeadEndRoom: 4
+  specialRoomCount: 1
+  roomPairs:
+  - levelTypeEnum: 0
+    levelRooms:
+    - {fileID: 1759132999406597851, guid: fc48303dd097fc648b9cc6dba62e222f, type: 3}
+  - levelTypeEnum: 1
+    levelRooms:
+    - {fileID: 4207929539010554482, guid: 7530dd846e64c744e8cebc6a88a65571, type: 3}
+  - levelTypeEnum: 2
+    levelRooms:
+    - {fileID: 1205029692662938002, guid: a30632fb9cb905b48867987297cb4c64, type: 3}
+  - levelTypeEnum: 3
+    levelRooms:
+    - {fileID: 105965217896151278, guid: aac9c31b9a65a5c438af54a3ef8595d4, type: 3}
+  - levelTypeEnum: 4
+    levelRooms:
+    - {fileID: 1031731308432136382, guid: 662e95ebcb0161d418c006f7e7d17c9c, type: 3}
+  - levelTypeEnum: 5
+    levelRooms:
+    - {fileID: 4470463946676764309, guid: a1c70c5e17f726c46990ded668b2ba89, type: 3}
+  deadEndOrder: 040000000300000005000000

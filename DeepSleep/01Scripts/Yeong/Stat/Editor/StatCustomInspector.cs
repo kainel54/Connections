@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace YH.StatSystem
 {
-    [CustomEditor(typeof(StatCompo))]
+    [CustomEditor(typeof(EntityStat))]
     public class StatCustomInspector : Editor
     {
         private SerializedProperty statProp;

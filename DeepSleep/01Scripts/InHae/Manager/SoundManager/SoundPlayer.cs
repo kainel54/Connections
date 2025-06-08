@@ -10,8 +10,11 @@ using Random = UnityEngine.Random;
 public class SoundPlayer : MonoBehaviour, IPoolable
 {
     public GameObject GameObject { get => gameObject; set { } }
-    [field:SerializeField]public PoolingType PoolType { get; set; }
-    
+
+    public Enum PoolEnum { get => _type; set { } }
+
+    [SerializeField] private ObjectType _type;
+
     public void Init()
     {
         _audioSource.volume = 1f;
@@ -77,5 +80,15 @@ public class SoundPlayer : MonoBehaviour, IPoolable
         {
             gameObject.SetActive(false);
         }
+    }
+
+    public void OnPop()
+    {
+
+    }
+
+    public void OnPush()
+    {
+
     }
 }

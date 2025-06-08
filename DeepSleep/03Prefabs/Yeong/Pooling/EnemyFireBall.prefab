@@ -9831,7 +9831,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -14664,7 +14664,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 0
@@ -24523,7 +24523,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 0
@@ -34260,7 +34260,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -39066,8 +39066,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnChannel: {fileID: 11400000, guid: 57b218c641cb90c44a0ce9f3758937e1, type: 2}
-  _impactItem: {fileID: 11400000, guid: 5fb8bce416bb24741a9467f5435ed561, type: 2}
-  <PoolType>k__BackingField: 18
+  _impactItem: {fileID: 11400000, guid: 8ac60374ac593544195671a043657467, type: 2}
+  _type: 3
 --- !u!54 &-7889252340104611679
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -39108,7 +39108,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 321
+    m_Bits: 266561
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0

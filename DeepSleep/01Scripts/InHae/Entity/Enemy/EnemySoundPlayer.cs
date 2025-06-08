@@ -1,4 +1,4 @@
-using System;
+using IH.EventSystem.SoundEvent;
 using UnityEngine;
 using YH.Entities;
 using YH.EventSystem;
@@ -23,14 +23,14 @@ public class EnemySoundPlayer : MonoBehaviour, IEntityComponent
 
     private void Awake()
     {
-        _enemy.GetCompo<HealthCompo>().OnHealthChangedEvent.AddListener(HandleHitSound);
-        _enemy.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleDeadSound);
+        _enemy.GetCompo<EntityHealth>().OnHitEvent.AddListener(HandleHitSound);
+        _enemy.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleDeadSound);
     }
 
     private void OnDestroy()
     {
-        _enemy.GetCompo<HealthCompo>().OnHealthChangedEvent.RemoveListener(HandleHitSound);
-        _enemy.GetCompo<HealthCompo>().OnDieEvent.RemoveListener(HandleDeadSound);
+        _enemy.GetCompo<EntityHealth>().OnHitEvent.RemoveListener(HandleHitSound);
+        _enemy.GetCompo<EntityHealth>().OnDieEvent.RemoveListener(HandleDeadSound);
     }
     
     private void Update()
@@ -50,7 +50,7 @@ public class EnemySoundPlayer : MonoBehaviour, IEntityComponent
         _soundChannel.RaiseEvent(evt); 
     }
     
-    private void HandleHitSound(float arg0, float arg1, bool arg2)
+    private void HandleHitSound()
     {
         if(_currentHitDelay > 0)
             return;

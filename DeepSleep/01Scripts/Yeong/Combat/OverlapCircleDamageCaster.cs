@@ -33,9 +33,14 @@ namespace YH.Combat
                 if (_hitResults[i].TryGetComponent(out IDamageable damageable))
                 {
                     CameraManager.Instance.ShakeCamera(4, 4, 0.15f);
-                    damageable.ApplyDamage(_owner.GetCompo<StatCompo>(), (int)damage);
+                    
+                    
+                    EntityStat statCompo = _owner.GetCompo<EntityStat>();
+                    HitData hitData = new HitData(_owner, damage, 
+                        statCompo.GetElement("Critical").Value, 
+                        statCompo.GetElement("CriticalDamage").Value);
+                    damageable.ApplyDamage(hitData);
                 }
-                
                 //todo 나중에 넉백도 적용
             }
 

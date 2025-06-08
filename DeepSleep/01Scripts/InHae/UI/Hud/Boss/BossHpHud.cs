@@ -1,4 +1,5 @@
 using DG.Tweening;
+using IH.EventSystem.LevelEvent;
 using UnityEngine;
 using UnityEngine.UI;
 using YH.EventSystem;
@@ -24,8 +25,8 @@ public class BossHpHud : MonoBehaviour
         if (_boss == null)
             return;
         
-        _boss.GetCompo<HealthCompo>().OnHealthChangedEvent.RemoveListener(HandleHealthChanged);
-        _boss.GetCompo<HealthCompo>().OnDieEvent.RemoveListener(HandleBossDieEvent);
+        _boss.GetCompo<EntityHealth>().OnHealthChangedEvent.RemoveListener(HandleHealthChanged);
+        _boss.GetCompo<EntityHealth>().OnDieEvent.RemoveListener(HandleBossDieEvent);
     }
     
     private void HandleBossHpBar(BossLevelEvent evt)
@@ -33,10 +34,10 @@ public class BossHpHud : MonoBehaviour
         gameObject.SetActive(true);
         
         _boss = evt.boss;
-        _maxHealth = _boss.GetCompo<HealthCompo>().MaxHealth;
+        _maxHealth = _boss.GetCompo<EntityHealth>().MaxHealth;
         
-        _boss.GetCompo<HealthCompo>().OnHealthChangedEvent.AddListener(HandleHealthChanged);
-        _boss.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleBossDieEvent);
+        _boss.GetCompo<EntityHealth>().OnHealthChangedEvent.AddListener(HandleHealthChanged);
+        _boss.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleBossDieEvent);
     }
 
     private void HandleBossDieEvent()

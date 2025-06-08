@@ -4,8 +4,8 @@ public class OnlySkillMission : SpecialLevelMission
     {
         base.Init();
 
-        _specialLevelRoom.clearAction += HandleClearCheck;
-        _specialLevelRoom.player.PlayerInput.FireEvent += HandleUseSkillCheck;
+        _specialLevelRoom.missionClearCheckAction += HandleClearCheck;
+        _specialLevelRoom.player.PlayerInput.AttackEvent += HandleUseSkillCheck;
         _specialLevelRoom.StartSpawn();
     }
 
@@ -15,8 +15,8 @@ public class OnlySkillMission : SpecialLevelMission
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(true);
-        _specialLevelRoom.clearAction -= HandleClearCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(true);
+        _specialLevelRoom.missionClearCheckAction -= HandleClearCheck;
     }
 
     private void HandleUseSkillCheck(bool arg0)
@@ -25,7 +25,7 @@ public class OnlySkillMission : SpecialLevelMission
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(false);
-        _specialLevelRoom.player.PlayerInput.FireEvent -= HandleUseSkillCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(false);
+        _specialLevelRoom.player.PlayerInput.AttackEvent -= HandleUseSkillCheck;
     }
 }

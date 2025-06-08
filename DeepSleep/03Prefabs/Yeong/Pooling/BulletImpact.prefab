@@ -49,7 +49,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -4902,8 +4902,7 @@ GameObject:
   - component: {fileID: 2276238547963542151}
   - component: {fileID: 8374638439625079870}
   - component: {fileID: 7856485290340623962}
-  - component: {fileID: 3519270413431857443}
-  - component: {fileID: 148762847601810257}
+  - component: {fileID: 6589814794100429244}
   m_Layer: 0
   m_Name: BulletImpact
   m_TagString: Untagged
@@ -4946,7 +4945,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -9797,7 +9796,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &3519270413431857443
+--- !u!114 &6589814794100429244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9806,32 +9805,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6472475244010740823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5b51446a2da85440818d72939ec2d58, type: 3}
+  m_Script: {fileID: 11500000, guid: c245523795914413b02ce5e4d85a45db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PoolType>k__BackingField: 3
---- !u!95 &148762847601810257
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6472475244010740823}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 8e2e7013eb723f64ea388565245d3f0d, type: 3}
-  m_Controller: {fileID: 9100000, guid: 44c43c2dca162704e8e7749e3b2604f3, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  _effectPoolingType: 1
 --- !u!1 &6830945886194364386
 GameObject:
   m_ObjectHideFlags: 0
@@ -9881,7 +9858,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -14781,7 +14758,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -19672,7 +19649,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1

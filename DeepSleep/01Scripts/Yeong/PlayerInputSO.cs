@@ -1,19 +1,32 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace YH.Players
 {
-    [CreateAssetMenu(fileName = "PlayerInputSO", menuName = "SO/PlayerInputSO")]
-    public class PlayerInputSO : ScriptableObject, Controls.IPlayerActions
+    public enum ControlType
     {
+        WASD,
+        PointNClick
+    }
+
+
+
+    [CreateAssetMenu(fileName = "PlayerInputSO", menuName = "SO/PlayerInputSO")]
+    public class PlayerInputSO : ScriptableObject, Controls.IWASDActions, Controls.IPointNClickActions
+    {
+        public event Action MoveEvent;
         public event Action DashEvent;
-        public event Action<bool> FireEvent;
-        public event Action QSkillEvent;
-        public event Action ESkillEvent;
-        public event Action ShiftSkillEvent;
-        public event Action FSkillEvent;
-        public event Action UseSkillEvent;
+        public event Action<bool> AttackEvent;
+        public event Action StopEvent;
+        public Action InteractEvent;
+
+        public List<Action> SkillActions = new List<Action>(4)
+        {
+            null, null, null, null
+        };
+        
         public event Action ReloadEvent;
 
         public Vector2 Movement { get; private set; }
@@ -21,6 +34,7 @@ namespace YH.Players
 
         [SerializeField] private LayerMask _whatIsEnemy;
         [SerializeField] private LayerMask _whatIsGround;
+        [SerializeField] private ControlType _controlType;
 
         private Controls _controls;
         public Controls Controls => _controls;
@@ -30,7 +44,11 @@ namespace YH.Players
         public void ClearSubscription()
         {
             DashEvent = null;
-            FireEvent = null;
+            AttackEvent = null;
+            MoveEvent = null;
+            InteractEvent = null;
+            for(byte i = 0; i < SkillActions.Count; i++)
+                SkillActions[i] = null;
         }
 
         private void OnEnable()
@@ -38,14 +56,34 @@ namespace YH.Players
             if (_controls == null)
             {
                 _controls = new Controls();
-                _controls.Player.SetCallbacks(this);
+
+                switch (_controlType)
+                {
+                    case ControlType.WASD:
+                        _controls.WASD.SetCallbacks(this);
+                        break;
+                    case ControlType.PointNClick:
+                        _controls.PointNClick.SetCallbacks(this);
+                        break;
+                }
             }
-            _controls.Player.Enable();
+
+            GetActionMap()?.Enable();
         }
 
         private void OnDisable()
         {
-            _controls.Player.Disable();
+            GetActionMap()?.Disable();
+        }
+
+        public InputActionMap GetActionMap()
+        {
+            return _controlType switch
+            {
+                ControlType.WASD => _controls.WASD,
+                ControlType.PointNClick => _controls.PointNClick,
+                _ => null
+            };
         }
 
 
@@ -56,26 +94,10 @@ namespace YH.Players
         }
 
 
-        public void OnMousePos(InputAction.CallbackContext context)
-        {
-            MousePosition = context.ReadValue<Vector2>();
-        }
-
         public void OnMove(InputAction.CallbackContext context)
         {
+            MoveEvent?.Invoke();
             Movement = context.ReadValue<Vector2>();
-        }
-
-        public void OnFire(InputAction.CallbackContext context)
-        {
-            // UI 클릭했을 때 발사 안되게 일단 처리 근데 마음에 안들어서 나중에 바꿀 계획
-            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-                return;
-
-            if (context.performed)
-                FireEvent?.Invoke(true);
-            else if (context.canceled)
-                FireEvent?.Invoke(false);
         }
         public Vector3 GetWorldMousePosition()
         {
@@ -92,7 +114,7 @@ namespace YH.Players
 
         public RaycastHit GetMouseHitInfo()
         {
-            float radius = 1.5f;
+            float radius = 0.5f;
             Ray ray = Camera.main.ScreenPointToRay(MousePosition);
 
             if (Physics.SphereCast(ray, radius, out RaycastHit hitInfo, Mathf.Infinity, _whatIsEnemy))
@@ -102,41 +124,57 @@ namespace YH.Players
             return default;
         }
 
-        public void OnQSkill(InputAction.CallbackContext context)
+        public void OnInteract(InputAction.CallbackContext context)
         {
             if (context.performed)
-                QSkillEvent?.Invoke();
+                InteractEvent?.Invoke();
         }
 
-        public void OnESkill(InputAction.CallbackContext context)
+        public void OnAttack(InputAction.CallbackContext context)
         {
+            // UI 클릭했을 때 발사 안되게 일단 처리 근데 마음에 안들어서 나중에 바꿀 계획
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                return;
+
             if (context.performed)
-                ESkillEvent?.Invoke();
+                AttackEvent?.Invoke(true);
+            else if (context.canceled)
+                AttackEvent?.Invoke(false);
         }
 
-        public void OnFSkill(InputAction.CallbackContext context)
+        public void OnSkill1(InputAction.CallbackContext context)
         {
             if (context.performed)
-                FSkillEvent?.Invoke();
-        }
-        public void OnShiftSkill(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                ShiftSkillEvent?.Invoke();
+                SkillActions[0]?.Invoke();
         }
 
-        public void OnUseSkill(InputAction.CallbackContext context)
+        public void OnSkill2(InputAction.CallbackContext context)
         {
             if (context.performed)
-                UseSkillEvent?.Invoke();
+                SkillActions[1]?.Invoke();
         }
 
-       
-
-        public void OnReload(InputAction.CallbackContext context)
+        public void OnSkill3(InputAction.CallbackContext context)
         {
             if (context.performed)
-                ReloadEvent?.Invoke();
+                SkillActions[2]?.Invoke();
+        }
+
+        public void OnSkill4(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                SkillActions[3]?.Invoke();
+        }
+
+        public void OnMousePosition(InputAction.CallbackContext context)
+        {
+            MousePosition = context.ReadValue<Vector2>();
+        }
+
+        public void OnStop(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                StopEvent?.Invoke();
         }
     }
 }

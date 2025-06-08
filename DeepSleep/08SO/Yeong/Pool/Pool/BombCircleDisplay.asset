@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f8d62c17624ed478956946d0d2dedb, type: 3}
   m_Name: BombCircleDisplay
   m_EditorClassIdentifier: 
-  poolCount: 10
+  poolCount: 32
   prefab: {fileID: 142482119557435265, guid: e5193dc2c564e284da711c3d14b99d09, type: 3}
-  poolingType: 4

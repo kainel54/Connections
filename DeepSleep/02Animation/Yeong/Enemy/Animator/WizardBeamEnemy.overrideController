@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WizardBeamEnemy
+  m_Controller: {fileID: 9100000, guid: b998ea3f3f5501644a5ddffe6520eaab, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: c92013d871619104ba16d1b0ca679c0d, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: c92013d871619104ba16d1b0ca679c0d, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: e5653598a2ad07d4ba704619fec7a08e, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: e5653598a2ad07d4ba704619fec7a08e, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: b539c79c55819f247af287ce6c022598, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: b539c79c55819f247af287ce6c022598, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 119a76cd43bdf6e4eaece9f8d24edd20, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: cfd81383b26e3964ebfb16195c5c27af, type: 2}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 48ca899fea90a4547ba992a613981d3c, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 48ca899fea90a4547ba992a613981d3c, type: 3}

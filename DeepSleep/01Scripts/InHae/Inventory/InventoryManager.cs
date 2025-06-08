@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using YH.EventSystem;
 
 namespace IH.Manager
 {
@@ -18,17 +15,22 @@ namespace IH.Manager
         public void AddInventoryItemWithSo(ItemDataSO itemData) => 
             _inventoryDictionary[itemData.inventoryType].AddItemWithSo(itemData);
         
-        public void AddInventoryItem(InventoryType type, InventoryItem item) => _inventoryDictionary[type].AddItem(item);
+        public void AddInventoryItem(InventoryType type, InventoryItem item) => 
+            _inventoryDictionary[type].AddItem(item);
 
         public void RemoveInventoryItemWithSo(ItemDataSO itemData) => 
             _inventoryDictionary[itemData.inventoryType].RemoveItemWithSo(itemData);
         
-        public void RemoveInventoryItem(InventoryType type, InventoryItem item) => _inventoryDictionary[type].RemoveItem(item);
+        public void RemoveInventoryItem(InventoryType type, InventoryItem item) => 
+            _inventoryDictionary[type].RemoveItem(item);
         
-        public bool CanAddItem(ItemDataSO itemData) => _inventoryDictionary[itemData.inventoryType].CanAddItem(itemData);
+        public bool CanAddItem(ItemDataSO itemData) => 
+            _inventoryDictionary[itemData.inventoryType].CanAddItem(itemData);
         
-        public Inventory GetInventory(InventoryType type) => _inventoryDictionary[type];
+        public Inventory GetInventory(InventoryType type) => 
+            _inventoryDictionary[type];
         
-        public void SetStash(InventoryType type, Stash stash) => _inventoryDictionary[type].SetStash(stash);
+        public void SetStash(InventoryType type, Stash stash) => 
+            _inventoryDictionary[type].SetStash(stash);
     }
 }

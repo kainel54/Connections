@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7245f2eed910f2488ffb7462d76da16, type: 3}
+  m_Name: StartItemListSO
+  m_EditorClassIdentifier: 
+  skillItems:
+  - {fileID: 11400000, guid: 9b9ad5253bc17eb43afbae51cf93264c, type: 2}
+  - {fileID: 11400000, guid: e39a8f38c2d18384da576db1d9bda5d3, type: 2}
+  - {fileID: 11400000, guid: fc73bea2183294444a022f1f8baabcb0, type: 2}
+  - {fileID: 11400000, guid: 238d80231e68cc248b439f6dfc4a40a3, type: 2}
+  - {fileID: 11400000, guid: af4f031a28b490a489c59667c01f8979, type: 2}
+  - {fileID: 11400000, guid: e4e4873f5a3a6b74c81b268a0fcd66be, type: 2}

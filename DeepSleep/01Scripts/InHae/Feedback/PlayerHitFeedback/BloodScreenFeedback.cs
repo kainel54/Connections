@@ -1,4 +1,5 @@
 using DG.Tweening;
+using IH.EventSystem.VolumeEvent;
 using UnityEngine;
 using YH.EventSystem;
 using YH.Feedbacks;
@@ -6,7 +7,6 @@ using YH.Feedbacks;
 public class BloodScreenFeedback : Feedback
 {
     [SerializeField] private GameEventChannelSO _volumeEventChannel;
-    
     
     [SerializeField] private float _duration;
     [SerializeField] private float _intensity;

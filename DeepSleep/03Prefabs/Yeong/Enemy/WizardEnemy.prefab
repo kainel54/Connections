@@ -388,7 +388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7755187522096575620}
-  - component: {fileID: 3634908280664431547}
+  - component: {fileID: 843584420620789603}
   - component: {fileID: 578006168376067996}
   - component: {fileID: 326834324175391231}
   - component: {fileID: 3723350385700075580}
@@ -396,9 +396,10 @@ GameObject:
   - component: {fileID: 6956143358513093938}
   - component: {fileID: 879387987525069788}
   - component: {fileID: 104018515579348312}
+  - component: {fileID: 5892569841439379646}
   m_Layer: 8
   m_Name: WizardEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -421,7 +422,7 @@ Transform:
   - {fileID: 2805556996464091145}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3634908280664431547
+--- !u!114 &843584420620789603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -430,10 +431,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808412613800772109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9044ed5c6d6c1574397265478ab3d507, type: 3}
+  m_Script: {fileID: 11500000, guid: 76e05dacfdd528c4687f909cde2344e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _statusEventChannel: {fileID: 11400000, guid: 6668f721007b1ea458c7a39ac8c0e22d, type: 2}
+  _enemyPoolingType: 5
   player: {fileID: 0}
   _playerManagerSO: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
   turnSpeed: 10
@@ -442,11 +444,14 @@ MonoBehaviour:
     m_Bits: 128
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 33280
+    m_Bits: 8393216
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  <PoolType>k__BackingField: 19
+  _dodgeCoolTime: 2
+  _dodgeEffect: {fileID: 11400000, guid: cfe3a98e60ffdee4da536316d27280bb, type: 2}
+  _spawnChannel: {fileID: 11400000, guid: 57b218c641cb90c44a0ce9f3758937e1, type: 2}
+  _dodgeSound: {fileID: 11400000, guid: 66f1215ef450f6d47bb58d983630f0f4, type: 2}
 --- !u!114 &578006168376067996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,7 +519,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.1
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -586,10 +591,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnHitEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnDieEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3634908280664431547}
+      - m_Target: {fileID: 843584420620789603}
         m_TargetAssemblyTypeName: BTEnemy, Assembly-CSharp
         m_MethodName: SetDead
         m_Mode: 1
@@ -646,6 +654,24 @@ MonoBehaviour:
   _bulletSpeed: 10
   _shootingRange: 15
   _impactForce: 0
+--- !u!114 &5892569841439379646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808412613800772109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1962819323107104376
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,7 +718,7 @@ Animator:
   m_GameObject: {fileID: 1962819323107104376}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
-  m_Controller: {fileID: 9100000, guid: 8dcfa684fe9a68f4693d808e7ca50e6d, type: 2}
+  m_Controller: {fileID: 22100000, guid: 2ab5b5d41ccdf72488882920f9d79dd1, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -730,6 +756,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackSpeedSO: {fileID: 11400000, guid: 2a83a0f5cff0da3419f957b110758ecf, type: 2}
   _attackSpeedParam: {fileID: 11400000, guid: cc81eed6749483d4585e2f57bf90d4d0, type: 2}
+  _effectItem: {fileID: 11400000, guid: cfe3a98e60ffdee4da536316d27280bb, type: 2}
+  _spawnEvent: {fileID: 11400000, guid: 57b218c641cb90c44a0ce9f3758937e1, type: 2}
 --- !u!1 &2025946198287749140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,7 +1643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _overrideStatElements: []
-  _baseStat: {fileID: 11400000, guid: e0815f5dba0d5f94c98d0ea3fd55e68a, type: 2}
+  _baseStat: {fileID: 11400000, guid: 9009d2614b6eeec4fb283a706daeb5de, type: 2}
 --- !u!1 &7243727513452492962
 GameObject:
   m_ObjectHideFlags: 0

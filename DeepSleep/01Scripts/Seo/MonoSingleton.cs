@@ -15,7 +15,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
             }
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<T>();
+                _instance = GameObject.FindAnyObjectByType<T>();
                 if (_instance == null)
                 {
                     Debug.Assert(_instance != null, $"{typeof(T).Name} singletone is not exist");

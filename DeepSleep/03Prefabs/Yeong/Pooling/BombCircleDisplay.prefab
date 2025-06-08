@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fill: {fileID: 4213199125162392324}
-  <PoolType>k__BackingField: 4
+  _poolType: 0
 --- !u!1 &9035729261682463709
 GameObject:
   m_ObjectHideFlags: 0

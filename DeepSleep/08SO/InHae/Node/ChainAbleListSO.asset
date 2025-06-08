@@ -16,4 +16,4 @@ MonoBehaviour:
   - parts:
     - {fileID: 11400000, guid: 3b77c3760f0df0540aaf37957ce8662e, type: 2}
     - {fileID: 11400000, guid: 5f5b2bbbf3eb1d7469b6e962b0ec988a, type: 2}
-    nodeReflectionName: CircleZigzagTrajectoryNode
+    nodeReflectionName: CircleZigzagTrajectoryPartNode

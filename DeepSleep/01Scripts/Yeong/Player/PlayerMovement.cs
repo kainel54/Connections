@@ -1,5 +1,7 @@
 using DG.Tweening;
 using System;
+using System.Collections;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,37 +14,42 @@ public class PlayerMovement : MonoBehaviour, IEntityComponent, IAfterInitable
     [SerializeField] private float _gravity = -9.8f, _rotationSpeed;
     [SerializeField] private StatElementSO _speedSO;
     [SerializeField] private LayerMask _whatIsWall;
+    [SerializeField] private AnimationCurve _dashSpeedCurve;
     public CharacterController CharacterControllerCompo { get; private set; }
     public bool IsGround => CharacterControllerCompo.isGrounded;
     public bool IsDash => _isDash;
     public bool CanDash { get; private set; } 
 
     public event Action<Vector3> OnMovementEvent;
-    public event Action OnDashEvent;
+    public event Action<bool> OnDashEvent;
     public event Action<float, float> DashCoolEvent;
 
     private Player _player;
     private Vector3 _movement;
-    
+    public Vector3 Movement => _movement;
+
     private float _verticalVelocity;
     private bool _isDash;
     private Quaternion _targetRotation;
     
     private StatElement _speedStat;
-    private StatCompo _statCompo;
+    private EntityStat _statCompo;
+    private PlayerAim _aimCompo;
     
     private float _currentDashCool = 0f;
     private float _dashCoolTime = 2f;
     private Collider _collider;
+    private Vector3 _dashDestination;
     public bool CanManualMove { get; set; } = true;
-    private readonly float _dashDistance = 5f, _dashTime = 0.5f;
+    private readonly float _dashTime = 0.2f;
 
     public void Initialize(Entity player)
     {
         _player = player as Player;
         CharacterControllerCompo = _player.GetComponent<CharacterController>();
-        _player.GetCompo<PlayerAim>().OnLookDirectionEvent += HandleLookDirectionEvent;
-        _statCompo = _player.GetCompo<StatCompo>();
+        _aimCompo = _player.GetCompo<PlayerAim>();
+        _aimCompo.OnLookDirectionEvent += HandleLookDirectionEvent;
+        _statCompo = _player.GetCompo<EntityStat>();
         _player.PlayerInput.DashEvent += HandleDashEvent;
         _collider = _player.GetComponent<Collider>();
     }
@@ -53,12 +60,13 @@ public class PlayerMovement : MonoBehaviour, IEntityComponent, IAfterInitable
             return;
         if (_player.PlayerInput.Movement.magnitude < 0.1f)
             return;
-        OnDashEvent?.Invoke();
+        OnDashEvent?.Invoke(true);
     }
 
     public void Dash()
     {
         StopImmediately();
+        _player.GetCompo<EntityHealth>().SetInvincible(true);
         _currentDashCool = _dashCoolTime;
         CanManualMove = false;
         _isDash = true;
@@ -66,31 +74,37 @@ public class PlayerMovement : MonoBehaviour, IEntityComponent, IAfterInitable
 
         Vector3 rollingDirection = GetRollingDirection();
         _player.transform.rotation = Quaternion.LookRotation(rollingDirection);
-        Vector3 destination = _player.transform.position + rollingDirection * (_dashDistance - 0.5f);
-        float distance = _dashDistance;
-        float dashTime = _dashTime;
+        _dashDestination = rollingDirection;
 
-
-        if (CheckColliderInFront(rollingDirection, ref distance))
-        {
-            destination = _player.transform.position + _player.transform.forward.normalized * (distance - 0.5f);
-            dashTime = distance * _dashTime / _dashDistance;
-            CharacterControllerCompo.enabled = false;
-        }
-        _player.transform.DOMove(destination, _dashTime).SetEase(Ease.OutQuad).OnComplete(EndDash);
+        DOVirtual.DelayedCall(_dashTime, EndDash);
     }
 
     private void EndDash()
     {
+        OnDashEvent?.Invoke(false);
+        StartCoroutine(InvicibleDelay());
         CharacterControllerCompo.enabled = true;
         CanManualMove = true;
         _isDash = false;
     }
 
+    private IEnumerator InvicibleDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        _player.GetCompo<EntityHealth>().SetInvincible(false);
+    }
+
     private Vector3 GetRollingDirection()
     {
         Vector3 direction = Vector3.zero;
-        direction = new Vector3(_player.transform.forward.x, 0, _player.transform.forward.z);
+        Vector3 moveInput = _player.PlayerInput.Movement;
+        if (_player.PlayerInput.Movement.magnitude < 0.1f)
+        {
+            moveInput = _player.transform.forward.normalized;
+            moveInput = new Vector2(moveInput.x, moveInput.z);
+        }
+
+        direction = Quaternion.Euler(0, -45f, 0) * new Vector3(moveInput.x, 0, moveInput.y);
         _targetRotation = Quaternion.LookRotation(direction);
         return direction;
     }
@@ -127,6 +141,13 @@ public class PlayerMovement : MonoBehaviour, IEntityComponent, IAfterInitable
         ApplyGravity();
         ApplyRotation();
         Move();
+        DashMove();
+    }
+
+    private void DashMove()
+    {
+        if(_isDash)
+            CharacterControllerCompo.Move(_dashDestination*Time.fixedDeltaTime* (_dashSpeedCurve.Evaluate(_dashTime)*30));
     }
 
     private void CalculateMovement()
@@ -154,7 +175,7 @@ public class PlayerMovement : MonoBehaviour, IEntityComponent, IAfterInitable
 
     private void ApplyRotation()
     {
-        _player.transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.fixedDeltaTime * _rotationSpeed);
+        _player.transform.rotation =  _targetRotation;
     }
 
     private void Move()
@@ -180,5 +201,12 @@ public class PlayerMovement : MonoBehaviour, IEntityComponent, IAfterInitable
         if (hit)
             distance = hitInfo.distance;
         return hit;
+    }
+
+    public void Dispose()
+    {
+        _player.GetCompo<PlayerAim>().OnLookDirectionEvent -= HandleLookDirectionEvent;
+        _player.PlayerInput.DashEvent -= HandleDashEvent;
+
     }
 }

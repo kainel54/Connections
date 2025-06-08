@@ -1,6 +1,6 @@
 using YH.EventSystem;
 
-namespace IH.EventSystem
+namespace IH.EventSystem.SystemEvent
 {
     public static class SystemEvents
     {

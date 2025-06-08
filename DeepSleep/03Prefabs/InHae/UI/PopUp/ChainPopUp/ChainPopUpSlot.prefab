@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afd974e8714e2ed4fbc190ee2ac609cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uiEventChannel: {fileID: 11400000, guid: f134ea3e70a47714099e843f3a932a07, type: 2}
   _itemImage: {fileID: 2713853308758537438}
   _amountText: {fileID: 2721411325632410732}
   slotIndex: 0

@@ -15,7 +15,6 @@ public class BurnDebuff : BuffAndDebuffStat
         mono = entity as MonoBehaviour;
 
         _buffTime = true;
-        mono.StartCoroutine("BurnCoroutine");
     }
 
     private IEnumerator BurnCoroutine()
@@ -23,7 +22,6 @@ public class BurnDebuff : BuffAndDebuffStat
         while (_buffTime)
         {
             _statCompo.GetElement("Health").AddModify("BurnDebuff", -1, EModifyMode.Add);
-            Debug.Log("burn debuff");
             yield return new WaitForSeconds(_delay);
         }
     }

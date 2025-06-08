@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShootingSfx
   m_EditorClassIdentifier: 
   audioType: 0
-  clip: {fileID: 8300000, guid: 9ce8c1b6a639b914187e020b8dcf2726, type: 3}
+  clip: {fileID: 8300000, guid: 51f4b13898c49e64bbeeb597c4d5c5fd, type: 3}
   isLoop: 0
   isRandomizePitch: 1
   is3DSound: 0

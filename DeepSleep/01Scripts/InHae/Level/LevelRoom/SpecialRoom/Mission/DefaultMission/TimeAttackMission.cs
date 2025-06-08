@@ -1,21 +1,24 @@
 using System;
 using System.Collections;
+using IH.EventSystem.MissionEvent;
 using UnityEngine;
 
 public class TimeAttackMission : SpecialLevelMission
 {
     private event Action OnClearEvent;
     [SerializeField] private float duration;
+    
+    private Coroutine _coroutine;
 
     public override void Init()
     {
         base.Init();
 
-        _specialLevelRoom.clearAction += HandleClearCheck;
-        _specialLevelRoom.player.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleTimeOutCheck);
+        _specialLevelRoom.missionClearCheckAction += HandleClearCheck;
+        _specialLevelRoom.player.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleTimeOutCheck);
         OnClearEvent += HandleTimeOutCheck;
 
-        StartCoroutine(Timer(duration));
+        _coroutine = StartCoroutine(Timer(duration));
 
         _specialLevelRoom.StartSpawn();
     }
@@ -24,10 +27,16 @@ public class TimeAttackMission : SpecialLevelMission
     {
         if (_missionEnd)
             return;
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+        
+        var timerTextEvent = MissionEvents.MissionEtcTextEvent;
+        timerTextEvent.isActive = false;
+        _missionEventChannel.RaiseEvent(timerTextEvent);
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(true);
-        _specialLevelRoom.clearAction -= HandleClearCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(true);
+        _specialLevelRoom.missionClearCheckAction -= HandleClearCheck;
     }
 
     private void HandleTimeOutCheck()
@@ -36,8 +45,16 @@ public class TimeAttackMission : SpecialLevelMission
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(false);
-        _specialLevelRoom.player.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleTimeOutCheck);
+        _specialLevelRoom.missionActiveAction.Invoke(false);
+        _specialLevelRoom.player.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleTimeOutCheck);
+        
+        var timerTextEvent = MissionEvents.MissionEtcTextEvent;
+        timerTextEvent.isActive = false;
+        _missionEventChannel.RaiseEvent(timerTextEvent);
+        
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+        
         OnClearEvent -= HandleTimeOutCheck;
     }
 
@@ -45,12 +62,21 @@ public class TimeAttackMission : SpecialLevelMission
     {
         float timer = duration;
 
-        while(duration > 0)
+        var timerTextEvent = MissionEvents.MissionEtcTextEvent;
+        timerTextEvent.isActive = true;
+
+        while(timer > 0)
         {
             timer -= Time.deltaTime;
+            timerTextEvent.text = $"남은 시간: {timer:0}초";
+            timerTextEvent.color = timer <= 10 ? Color.red : Color.white;
+            _missionEventChannel.RaiseEvent(timerTextEvent);
+            
             yield return null;
         }
 
+        timerTextEvent.isActive = false;
+        _missionEventChannel.RaiseEvent(timerTextEvent);
         OnClearEvent?.Invoke();
     }
 }

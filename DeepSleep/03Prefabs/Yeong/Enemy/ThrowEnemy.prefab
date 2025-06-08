@@ -237,7 +237,7 @@ Animator:
   m_GameObject: {fileID: 1150687700329545749}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
-  m_Controller: {fileID: 9100000, guid: 44c43c2dca162704e8e7749e3b2604f3, type: 2}
+  m_Controller: {fileID: 22100000, guid: 3366e29b52554f042b20b288597951b3, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1066,7 +1066,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8450028360675851254}
-  - component: {fileID: 689639100340280264}
+  - component: {fileID: 7384253805534445644}
   - component: {fileID: 3711470766620505169}
   - component: {fileID: 3457857667048659448}
   - component: {fileID: 8475831932098104613}
@@ -1075,6 +1075,7 @@ GameObject:
   - component: {fileID: 2367965038674598062}
   - component: {fileID: 2138722877586480311}
   - component: {fileID: -4862371051022507675}
+  - component: {fileID: -3158699756727293186}
   m_Layer: 8
   m_Name: ThrowEnemy
   m_TagString: Enemy
@@ -1100,7 +1101,7 @@ Transform:
   - {fileID: 239058687203841903}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &689639100340280264
+--- !u!114 &7384253805534445644
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1109,10 +1110,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4755180648745780483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9044ed5c6d6c1574397265478ab3d507, type: 3}
+  m_Script: {fileID: 11500000, guid: 4332647b6b3c584478ce488053caeb99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _statusEventChannel: {fileID: 11400000, guid: 6668f721007b1ea458c7a39ac8c0e22d, type: 2}
+  _enemyPoolingType: 7
   player: {fileID: 0}
   _playerManagerSO: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
   turnSpeed: 10
@@ -1121,11 +1123,12 @@ MonoBehaviour:
     m_Bits: 128
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 33280
+    m_Bits: 8393216
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  <PoolType>k__BackingField: 14
+  isElemental: 0
+  isDivision: 0
 --- !u!114 &3711470766620505169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1202,7 +1205,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.1
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1274,10 +1277,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnHitEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnDieEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 689639100340280264}
+      - m_Target: {fileID: 7384253805534445644}
         m_TargetAssemblyTypeName: BTEnemy, Assembly-CSharp
         m_MethodName: SetDead
         m_Mode: 1
@@ -1343,6 +1349,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6dfd3129b507da45aede6511b92ce4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-3158699756727293186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755180648745780483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &4822996182373177345
 GameObject:
   m_ObjectHideFlags: 0

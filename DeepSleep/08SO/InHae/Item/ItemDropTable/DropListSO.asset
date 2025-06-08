@@ -15,6 +15,7 @@ MonoBehaviour:
   itemList:
   - {fileID: -5894262411893674944, guid: b85e801d70bd47c4d9074b5ae912b4cc, type: 3}
   - {fileID: 4656073962792066495, guid: 913261affcc0b8746b39c25861a657a1, type: 3}
+  - {fileID: 2118705047241047425, guid: 01620b3090e914345b5dbf074a0490b3, type: 3}
   skillSoList:
   - {fileID: 11400000, guid: e39a8f38c2d18384da576db1d9bda5d3, type: 2}
   - {fileID: 11400000, guid: 9b9ad5253bc17eb43afbae51cf93264c, type: 2}
@@ -40,3 +41,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 52ba9a971e4d7cb4cbac493dd8eb32a6, type: 2}
   - {fileID: 11400000, guid: be749df46753f0743bee55f362a0f54e, type: 2}
   - {fileID: 11400000, guid: b6cfdf64d5412454187b5615295b2614, type: 2}
+  - {fileID: 11400000, guid: c1565f4fc83f8044ea9cf2a7df49c6aa, type: 2}
+  NodeAbilityItemSoList:
+  - {fileID: 11400000, guid: 145eeb43c551c6a448cfc7590f1324cd, type: 2}
+  - {fileID: 11400000, guid: 7bb242211845ea2409d43d25ca37d24e, type: 2}
+  - {fileID: 11400000, guid: 3b1b0829c66a4874fbdfa030535d06bd, type: 2}
+  - {fileID: 11400000, guid: 3294aeb3069b9b94fad53caf6750ec6a, type: 2}

@@ -4975,7 +4975,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -9859,7 +9859,7 @@ GameObject:
   - component: {fileID: 2640102716483089718}
   - component: {fileID: 8580413176338225127}
   - component: {fileID: 6706867869993112315}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FireCircleMagic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15179,7 +15179,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1

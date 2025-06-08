@@ -1,9 +1,10 @@
+using IH.EventSystem.MissionEvent;
 using UnityEngine;
 using YH.EventSystem;
 
 public abstract class SpecialLevelMission : MonoBehaviour
 {
-    [SerializeField] private GameEventChannelSO _missionEventChannel;
+    [SerializeField] protected GameEventChannelSO _missionEventChannel;
     [SerializeField] private string _description;
     
     protected SpecialLevelRoom _specialLevelRoom;

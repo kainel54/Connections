@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f8d62c17624ed478956946d0d2dedb, type: 3}
   m_Name: WizardEnemy
   m_EditorClassIdentifier: 
-  poolCount: 10
-  prefab: {fileID: 3634908280664431547, guid: 716bac2cf86888d439f5a91dc4eb572f, type: 3}
-  poolingType: 19
+  poolCount: 30
+  prefab: {fileID: 843584420620789603, guid: 716bac2cf86888d439f5a91dc4eb572f, type: 3}

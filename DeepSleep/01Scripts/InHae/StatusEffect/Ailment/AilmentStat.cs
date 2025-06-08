@@ -5,12 +5,12 @@ using YH.StatSystem;
 
 public class AilmentStat : StatusStat, ILifeTimeStatus
 {
-    protected StatCompo _statCompo;
+    protected EntityStat _statCompo;
 
     public override void StatusInit(Entity entity)
     {
         base.StatusInit(entity);
-        _statCompo = entity.GetCompo<StatCompo>();
+        _statCompo = entity.GetCompo<EntityStat>();
     }
 
     public void SetLifeTime(float lifetime)

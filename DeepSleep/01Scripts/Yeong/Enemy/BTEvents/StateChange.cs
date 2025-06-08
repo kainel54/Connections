@@ -33,7 +33,6 @@ public partial class StateChange : EventChannelBase
             if (var0 != null)
             {
                 var0.Value = state;
-                Debug.Log(var0.Value);
             }
 
             callback();

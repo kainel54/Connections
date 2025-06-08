@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: SwordDownTargetingData
   m_EditorClassIdentifier: 
   fieldType: 3
-  canUseSkillRange: 0
-  skillObjCreateCount: 0
+  canUseSkillRangeStat:
+    statInfo: {fileID: 11400000, guid: ba4fb3a67ac7a09488ddd39d8f10f819, type: 2}
+    _defaultValue: 0
+    currentValue: 0

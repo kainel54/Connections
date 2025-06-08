@@ -14,11 +14,11 @@ public partial class AttackDamageCastAction : Action
 
     protected override Status OnStart()
     {
-        if(Active.Value)
+        if (Active.Value)
             Animator.Value.SetDamageCasterEvent += HandleDamageCasterEvent;
         else
             Animator.Value.SetDamageCasterEvent -= HandleDamageCasterEvent;
-        
+
         return Status.Success;
     }
 

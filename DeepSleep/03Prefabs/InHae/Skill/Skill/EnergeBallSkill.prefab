@@ -52,8 +52,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a00da79b99215974c86b4babb551b2ca, type: 2}
   - {fileID: 11400000, guid: a42c3d35b1b2d684b8cfd79919540d37, type: 2}
   - {fileID: 11400000, guid: 3a8603f6a12717649bcad5de8cdc825e, type: 2}
+  - {fileID: 11400000, guid: 143728e0ec6fe6249a2ba012908cc7d3, type: 2}
   player: {fileID: 0}
-  isFire: 1
+  shootCount: 0
+  firedCount: 0
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 0

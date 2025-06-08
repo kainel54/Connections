@@ -19,6 +19,7 @@ public partial class GetVariableAction : Action
         enemy.SetVariable("Renderer", enemy.GetCompo<EnemyAnimator>());
         enemy.SetVariable("AnimTrigger", enemy.GetCompo<EntityAnimationTrigger>());
         enemy.SetVariable("DamageCaster", enemy.GetCompo<EnemyDamageCaster>());
+        enemy.SetVariable("Target", enemy.player);
         
         return Status.Running;
     }

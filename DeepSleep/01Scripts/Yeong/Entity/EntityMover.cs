@@ -26,7 +26,7 @@ namespace YH.Entities
         private CharacterController _characterCompo;
         private Entity _entity;
         private EntityRenderer _renderer;
-        private StatCompo _statCompo;
+        private EntityStat _statCompo;
         private StatElement _speedStat;
         public Quaternion targetRotation { get; set; }
 
@@ -39,7 +39,7 @@ namespace YH.Entities
             //_rbCompo = entity.GetComponent<Rigidbody>();
             _renderer = entity.GetCompo<EntityRenderer>();
             //_collider = entity.GetComponent<Collider>();
-            _statCompo = entity.GetCompo<StatCompo>();
+            _statCompo = entity.GetCompo<EntityStat>();
         }
 
         public void AfterInit()
@@ -84,7 +84,6 @@ namespace YH.Entities
         {
             if (!CanManualMove) return;
             _velocity = movement * 10 * Time.fixedDeltaTime;
-            Debug.Log(_speedStat.Value);
             if (_velocity.sqrMagnitude > 0 && isRotation)
             {
                 targetRotation = Quaternion.LookRotation(_velocity);
@@ -106,6 +105,11 @@ namespace YH.Entities
 
             //Player player = _agent as Player;
             //player.StateMachine.ChangeState(PlayerStateEnum.Hurt);
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

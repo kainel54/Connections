@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,19 +13,29 @@ public class HelpPanel : MonoBehaviour
 
     private int i = 0;
     private float target;
+    private int _maxPage;
     [SerializeField] private float duration = 0.3f;
-    [SerializeField] private int _maxPage;
+
+    [SerializeField] private List<Image> _quickButtonList;
+    [SerializeField] private Transform _quickButtonParent;
 
     private void Start()
     {
         target = _panelParent.sizeDelta.x;
         _maxPage = _panelParent.childCount - 1;
 
+        _quickButtonList = new List<Image>();
+        foreach (Image children in _quickButtonParent.GetComponentsInChildren<Image>())
+        {
+            _quickButtonList.Add(children);
+            children.color = Color.gray;
+        }
+
         _nextButton.onClick.AddListener(NextPageHandler);
         _prevButton.onClick.AddListener(PrevPageHandler);
     }
 
-    public void NextPageHandler()
+    private void NextPageHandler()
     {
         if (_isTweening || i >= _maxPage) return;
 
@@ -44,7 +55,14 @@ public class HelpPanel : MonoBehaviour
     {
         _isTweening = true;
         i = page;
-        _panelParent.GetComponent<RectTransform>().DOAnchorPosX(target * -page, duration)
+
+        foreach(var currentButton in _quickButtonList)
+        {
+            currentButton.color = Color.gray;
+        }
+        _quickButtonList[i].color = Color.white;
+
+        _panelParent.GetComponent<RectTransform>().DOAnchorPosX(target * -page, duration).SetUpdate(true)
             .OnComplete(() => _isTweening = false);
     }
 }

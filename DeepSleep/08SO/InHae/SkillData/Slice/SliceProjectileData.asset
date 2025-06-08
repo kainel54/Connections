@@ -13,8 +13,24 @@ MonoBehaviour:
   m_Name: SliceProjectileData
   m_EditorClassIdentifier: 
   fieldType: 1
-  skillObjCreateCount: 0
-  projMoveSpeed: 5
-  skillObjCreateDelay: 0
-  ispenetration: 0
-  currentTrajectoryList: 
+  projectileCountStat:
+    statInfo: {fileID: 11400000, guid: 3bd05c259900b6947ab20b00ccf70259, type: 2}
+    _defaultValue: 0
+    currentValue: 0
+  projectileMoveSpeedStat:
+    statInfo: {fileID: 11400000, guid: d499249a3045dbf47912e4fd19dfcc2b, type: 2}
+    _defaultValue: 0
+    currentValue: 0
+  projectilePenetrationCountStat:
+    statInfo: {fileID: 11400000, guid: c1d01f85bd98b004bbc88ff13a56b302, type: 2}
+    _defaultValue: 0
+    currentValue: 0
+  projectileReflectionCountStat:
+    statInfo: {fileID: 11400000, guid: 94d3c09295e6b214dae0369b0a269eee, type: 2}
+    _defaultValue: 0
+    currentValue: 0
+  projectileTrajectoryStat:
+    statInfo: {fileID: 11400000, guid: 1c5571e65c6c8a24b8107e38f3b6409e, type: 2}
+    _defaultTrajectory: 
+    currentTrajectory: 
+  canBeHit: 0

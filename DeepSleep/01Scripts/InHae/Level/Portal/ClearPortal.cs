@@ -1,5 +1,5 @@
 using DG.Tweening;
-using IH.EventSystem;
+using IH.EventSystem.SystemEvent;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YH.EventSystem;

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2093108104741840081}
   - component: {fileID: -4894296972679654168}
   - component: {fileID: 3166876714268806459}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 4224
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -125,7 +125,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnChannel: {fileID: 11400000, guid: 57b218c641cb90c44a0ce9f3758937e1, type: 2}
   _impactItem: {fileID: 11400000, guid: cfe3a98e60ffdee4da536316d27280bb, type: 2}
-  <PoolType>k__BackingField: 0
+  _type: 0
+  _impactSound: {fileID: 11400000, guid: 730a6b44f1a5afa4b87435b3b9185df3, type: 2}
 --- !u!54 &-4894296972679654168
 Rigidbody:
   m_ObjectHideFlags: 0

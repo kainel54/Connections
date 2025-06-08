@@ -4,6 +4,7 @@ using YH.Entities;
 using YH.StatSystem;
 using ObjectPooling;
 using YH.EventSystem;
+using System;
 
 namespace YH.Projectile
 {
@@ -18,8 +19,10 @@ namespace YH.Projectile
         [SerializeField] private GameEventChannelSO _spawnChannel;
         [SerializeField] private PoolingItemSO _impactItem;
 
-        [field: SerializeField] public PoolingType PoolType { get; set; }
         public GameObject GameObject { get => gameObject; set { } }
+
+        public Enum PoolEnum { get => _type; set { } }
+        [SerializeField] private ProjectileType _type;
         protected Entity _owner;
 
         protected virtual void Awake()
@@ -45,7 +48,7 @@ namespace YH.Projectile
             PoolManager.Instance.Push(this);
         }
 
-        private void ApplyKnockBackToTarget(Collision other)
+        protected void ApplyKnockBackToTarget(Collision other)
         {
             if (other.gameObject.TryGetComponent(out IKnockBackable knockbackable))
             {
@@ -55,12 +58,29 @@ namespace YH.Projectile
             }
         }
 
-        private void ApplyDamageToTarget(Collision other)
+        protected void ApplyDamageToTarget(Collision other)
         {
+            if (_owner is BTEnemy && other.gameObject.layer == LayerMask.NameToLayer("Tower")) return;
+
             if (other.gameObject.TryGetComponent(out IDamageable damageable))
             {
-                StatCompo statCompo = _owner.GetCompo<StatCompo>();
-                damageable.ApplyDamage(statCompo, _damage);
+                EntityStat statCompo = _owner.GetCompo<EntityStat>();
+                HitData hitData = new HitData(_owner, _damage,
+                    statCompo.GetElement("Critical").Value,
+                    statCompo.GetElement("CriticalDamage").Value);
+
+                damageable.ApplyDamage(hitData, true, true, 1);
+            }
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Shield"))
+            {
+                Debug.Log("Shield Hit");
+                EntityStat statCompo = _owner.GetCompo<EntityStat>();
+                HitData hitData = new HitData(_owner, _damage,
+                    statCompo.GetElement("Critical").Value,
+                    statCompo.GetElement("CriticalDamage").Value);
+
+                other.transform.GetComponent<Shield>().ApplyDamage(hitData);
             }
         }
 
@@ -73,6 +93,7 @@ namespace YH.Projectile
                 evt.effectItem = _impactItem;
                 evt.position = contact.point;
                 evt.rotation = Quaternion.LookRotation(contact.normal);
+                evt.scale = new Vector3(0.2f, 0.2f, 0.2f);
                 _spawnChannel.RaiseEvent(evt);
             }
         }
@@ -90,6 +111,16 @@ namespace YH.Projectile
 
         public virtual void Init()
         {
+        }
+
+        public void OnPop()
+        {
+            Init();
+        }
+
+        public void OnPush()
+        {
+
         }
     }
 

@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f8d62c17624ed478956946d0d2dedb, type: 3}
   m_Name: ShamanEnemy
   m_EditorClassIdentifier: 
-  poolCount: 10
+  poolCount: 30
   prefab: {fileID: 2243823062255383096, guid: 50aaed6151fa32240843f7fcba038315, type: 3}
-  poolingType: 20

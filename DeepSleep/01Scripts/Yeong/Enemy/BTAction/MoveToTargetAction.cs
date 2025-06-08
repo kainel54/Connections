@@ -27,7 +27,7 @@ public partial class MoveToTargetAction : Action
 
     protected override Status OnUpdate()
     {
-        if(Target.Value == null)
+        if (Target.Value == null)
             return Status.Failure;
 
         Entity.Value.FaceToTarget(Mover.Value.GetNextPathPoint());
@@ -36,7 +36,11 @@ public partial class MoveToTargetAction : Action
             Mover.Value.SetDestination(Target.Value.position);
             _lastChaseTime = Time.time;
         }
-        
+
+        if (Vector3.Distance(Target.Value.transform.position, Mover.Value.transform.position) < stopOffset)
+            return Status.Success;
+
+
         return Status.Running;
     }
 }

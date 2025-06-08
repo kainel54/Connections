@@ -1,6 +1,5 @@
 using DG.Tweening;
-using System;
-using IH.EventSystem;
+using IH.EventSystem.SystemEvent;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YH.EventSystem;
@@ -32,14 +31,15 @@ public class GameOverUI : MonoBehaviour
     private void HandlePlayerSetUp()
     {
         _player = _playerManagerSO.Player;
-        _player.GetCompo<PlayerAnimator>().OnDieEvent += HandleDeadEvent;
+        //_player.GetCompo<PlayerAnimator>().OnDieEvent += HandleDeadEvent;
     }
 
     private void HandleDeadEvent()
     {
         _uiInputReader.Controls.UI.Disable();
-        _player.PlayerInput.Controls.Player.Disable();
-        
+        _player.PlayerInput.GetActionMap().Disable();
+
+
         gameObject.SetActive(true);
         _gameOverPanel.blocksRaycasts = true;
         
@@ -64,16 +64,16 @@ public class GameOverUI : MonoBehaviour
 
     }
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
     private void RestartInput(FadeComplete evt)
     {
         _systemChannelSo.RemoveListener<FadeComplete>(RestartInput);
         _uiInputReader.Controls.UI.Enable();
-        _player.PlayerInput.Controls.Player.Enable();
+        _player.PlayerInput.GetActionMap().Enable();
         SceneManager.LoadScene("MergeScene");
-    }
-
-    public void ExitGame()
-    {
-        Application.Quit();
     }
 }

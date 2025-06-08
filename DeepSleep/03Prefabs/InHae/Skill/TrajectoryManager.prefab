@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trajectoryCheckList: 01000000
+  _radius: 1.3
 --- !u!1 &4964243503950642263
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +150,7 @@ GameObject:
   - component: {fileID: 5998895981776984859}
   - component: {fileID: 1607228781471883985}
   m_Layer: 0
-  m_Name: Zizag
+  m_Name: Zigzag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -183,6 +184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trajectoryCheckList: 00000000
+  _zigzagInterval: 0.1
+  _zigzagAmount: 10
 --- !u!1 &6997301329607453255
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +231,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trajectoryCheckList: 0000000001000000
-  zigzagInterval: 0.5
-  zigzagAmount: 5
-  rotationSpeed: 2
-  radius: 0.5
+  _zigzagAmount: 8
+  _zigzagInterval: 0.1
+  _radius: 1.4

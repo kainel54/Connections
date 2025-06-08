@@ -13,7 +13,6 @@ public class OverlapBoxDamageCaster : DamageCaster
     public override bool CastDamage(float damage, Vector3 knockBack, bool isPowerAttack, LayerMask targetLayer)
     {
         int cnt = Physics.OverlapBoxNonAlloc(transform.position + damagePosition, damageSize, _hitResults, Quaternion.identity, targetLayer);
-        Debug.Log(cnt);
 
         for (int i = 0; i < cnt; i++)
         {
@@ -33,7 +32,13 @@ public class OverlapBoxDamageCaster : DamageCaster
             if (_hitResults[i].TryGetComponent(out IDamageable damageable))
             {
                 CameraManager.Instance.ShakeCamera(4, 4, 0.15f);
-                damageable.ApplyDamage(_owner.GetCompo<StatCompo>(), (int)damage);
+                
+                EntityStat statCompo = _owner.GetCompo<EntityStat>();
+                HitData hitData = new HitData(_owner, damage, 
+                    statCompo.GetElement("Critical").Value, 
+                    statCompo.GetElement("CriticalDamage").Value);
+                
+                damageable.ApplyDamage(hitData);
             }
         }
 

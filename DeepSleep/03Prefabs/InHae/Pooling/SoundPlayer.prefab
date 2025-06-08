@@ -142,6 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 301774b13ed44fc89d68ee963b35ebea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PoolType>k__BackingField: 17
+  _type: 1
   _sfxGroup: {fileID: -482049621053566679, guid: 0727bf919fbb76644a07924774c1175d, type: 2}
   _bgmGroup: {fileID: -1432645549789620103, guid: 0727bf919fbb76644a07924774c1175d, type: 2}

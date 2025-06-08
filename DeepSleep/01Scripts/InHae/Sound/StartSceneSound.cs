@@ -1,4 +1,4 @@
-using System;
+using IH.EventSystem.SoundEvent;
 using UnityEngine;
 using YH.EventSystem;
 
@@ -9,6 +9,7 @@ public class StartSceneSound : MonoBehaviour
     [SerializeField] private SoundSO _titleBgm;
     [SerializeField] private SoundSO _helpOpenAndNextSound;
     [SerializeField] private SoundSO _helpCloseSound;
+    [SerializeField] private SoundSO _buttonClickSound;
 
     private void Start()
     {
@@ -30,6 +31,15 @@ public class StartSceneSound : MonoBehaviour
     {
         var evt = SoundEvents.PlaySfxEvent;
         evt.clipData = _helpCloseSound;
+        evt.position = transform.position;
+
+        _soundChannel.RaiseEvent(evt); 
+    }
+    
+    public void HandleButtonClickSound()
+    {
+        var evt = SoundEvents.PlaySfxEvent;
+        evt.clipData = _buttonClickSound;
         evt.position = transform.position;
 
         _soundChannel.RaiseEvent(evt); 

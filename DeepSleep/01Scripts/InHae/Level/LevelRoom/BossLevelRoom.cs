@@ -1,11 +1,13 @@
+using IH.EventSystem.LevelEvent;
 using UnityEngine;
+using UnityEngine.Serialization;
 using YH.EventSystem;
 
 public class BossLevelRoom : LevelRoom
 {
+    [FormerlySerializedAs("_levelEvent")] [SerializeField] private GameEventChannelSO _levelEventChannel;
     [SerializeField] private BTEnemy _boss;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private GameEventChannelSO _levelEvent;
     [SerializeField] private DefaultRoomChest _chest;
     [SerializeField] private ClearPortal _portal;
 
@@ -15,18 +17,21 @@ public class BossLevelRoom : LevelRoom
         if(isClear)
             return;
 
+        var inCombatEvt = LevelEvents.InCombatCheckEvent;
+        inCombatEvt.isCombat = true;
+        _levelEventChannel.RaiseEvent(inCombatEvt);
+        
         _currentBoss = Instantiate(_boss, _spawnPoint.position, Quaternion.identity, transform);
-        var evt = LevelEvents.BossLevelEvent;
-        evt.boss = _currentBoss;
+        _currentBoss.GetCompo<EntityHealth>().OnDieEvent.AddListener(HandleDeadEvent);
         
-        _currentBoss.GetCompo<HealthCompo>().OnDieEvent.AddListener(HandleDeadEvent);
-        
-        _levelEvent.RaiseEvent(evt);
+        var bossLevelEvent = LevelEvents.BossLevelEvent;
+        bossLevelEvent.boss = _currentBoss;
+        _levelEventChannel.RaiseEvent(bossLevelEvent);
     }
 
     private void HandleDeadEvent()
     {
-        _currentBoss.GetCompo<HealthCompo>().OnDieEvent.RemoveListener(HandleDeadEvent);
+        _currentBoss.GetCompo<EntityHealth>().OnDieEvent.RemoveListener(HandleDeadEvent);
         
         ClearPortal closePortal = Instantiate(_portal, _spawnPoint.position, Quaternion.identity, transform);
         closePortal.Init();
@@ -34,7 +39,13 @@ public class BossLevelRoom : LevelRoom
 
     public override void LevelClear()
     {
+        if (isClear) 
+            return;
+        
         base.LevelClear();
-        _chest.Open();
+        
+        var inCombatEvt = LevelEvents.InCombatCheckEvent;
+        inCombatEvt.isCombat = false;
+        _levelEventChannel.RaiseEvent(inCombatEvt);
     }
 }

@@ -1,11 +1,13 @@
 using DG.Tweening;
-using IH.EventSystem;
+using IH.EventSystem.SystemEvent;
+using IH.EventSystem.UIEvent.PanelEvent;
 using UnityEngine;
 using UnityEngine.UI;
 using YH.EventSystem;
 
 public class FadeCanvas : MonoBehaviour
 {
+    [SerializeField] private GameEventChannelSO _uiEventChannel;
     [SerializeField] private GameEventChannelSO _systemChannel;
     [SerializeField] private Image _fadeImage;
 
@@ -29,6 +31,9 @@ public class FadeCanvas : MonoBehaviour
 
     private void HandleFadeScreen(FadeScreenEvent evt)
     {
+        if(!evt.isFadeIn)
+            UIInputLock(true);
+        
         int isCircle = evt.isCircle ? 1 : 0;
         _fadeImage.material.SetInt(_isCircleHash, isCircle);
 
@@ -46,8 +51,10 @@ public class FadeCanvas : MonoBehaviour
 
         _fadeImage.material.DOFloat(fadeValue, _circleValue, evt.fadeDuration).OnComplete(() =>
         {
+            if(evt.isFadeIn)
+                UIInputLock(false);
             _systemChannel.RaiseEvent(SystemEvents.FadeComplete);
-        });
+        }).SetUpdate(true);
     }
 
     private void DefaultType(FadeScreenEvent evt)
@@ -58,12 +65,22 @@ public class FadeCanvas : MonoBehaviour
 
         _fadeImage.material.DOFloat(fadeValue, _fadeValue, evt.fadeDuration).OnComplete(() =>
         {
+            if(evt.isFadeIn)
+                UIInputLock(false);
             _systemChannel.RaiseEvent(SystemEvents.FadeComplete);
-        });
+        }).SetUpdate(true);
+    }
+
+    private void UIInputLock(bool isActive)
+    {
+        var uiLockEvent = UIPanelEvent.WindowPanelLockEvent;
+        uiLockEvent.isOpenLocked = isActive;
+        _uiEventChannel.RaiseEvent(uiLockEvent);
     }
     
     private void HandleFirstFadeSetting(FirstFadeSetting evt)
     {
+        UIInputLock(true);
         _fadeImage.material.SetFloat(_fadeValue, 1f);
         _fadeImage.material.SetFloat(_circleValue, 2.5f);
     }

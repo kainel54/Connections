@@ -1,4 +1,5 @@
  using ObjectPooling;
+using System;
 using UnityEngine;
 using YH.Combat;
 using YH.Core;
@@ -10,7 +11,8 @@ public class Grenade : MonoBehaviour, IPoolable
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private PoolingItemSO _explosionEffect;
     [SerializeField] private GameEventChannelSO _spawnChannel;
-    [field: SerializeField] public PoolingType PoolType { get; set; }
+    [SerializeField] private SoundSO _bombSound;
+    [field: SerializeField] public PoolingKey PoolKey { get; set; }
     public GameObject GameObject { get => gameObject; set { } }
 
     private Rigidbody _rbCompo;
@@ -19,7 +21,9 @@ public class Grenade : MonoBehaviour, IPoolable
     private Entity _owner;
     private OverlapCircleDamageCaster _damageCaster;
     public float timeToTarget { get;private set; }
+    public Enum PoolEnum { get => _type; set { } }
 
+    [SerializeField] private ProjectileType _type;
     private void Awake()
     {
         _rbCompo = GetComponent<Rigidbody>();
@@ -69,7 +73,12 @@ public class Grenade : MonoBehaviour, IPoolable
         evt.position = transform.position;
         evt.rotation = Quaternion.identity;
         evt.effectItem = _explosionEffect;
-        
+        evt.scale = Vector3.one;
+
+        SoundPlayer sound = PoolManager.Instance.Pop(ObjectType.SoundPlayer) as SoundPlayer;
+        sound.PlaySound(_bombSound);
+        sound.transform.position = transform.position;
+
         CastDamage();
         CameraManager.Instance.ShakeCamera(4,4,0.15f);
         _spawnChannel.RaiseEvent(evt);
@@ -84,9 +93,15 @@ public class Grenade : MonoBehaviour, IPoolable
         _damageCaster.CastDamage(10f, Vector3.zero, false, _targetLayer);
     }
     
-    public void Init()
+
+    public void OnPop()
     {
         _rbCompo.linearVelocity = Vector3.zero;
         _rbCompo.angularVelocity = Vector3.zero;
+    }
+
+    public void OnPush()
+    {
+
     }
 }

@@ -1,15 +1,15 @@
-using System;
+using IH.EventSystem.UIEvent;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using YH.EventSystem;
 
 public class PlayerSkillHud : MonoBehaviour
 {
     [SerializeField] private Image _skillIcon;
-    [SerializeField] private TextMeshProUGUI _skillCoolTimeText;
     [SerializeField] private Image _skillCoolFadeImage;
+    [SerializeField] private TextMeshProUGUI _skillCoolTimeText;
+    [SerializeField] private TextMeshProUGUI _skillCountText;
     
     private Skill _currentSkill;
 
@@ -18,6 +18,8 @@ public class PlayerSkillHud : MonoBehaviour
         if (_currentSkill != null)
         {
             _currentSkill.CooldownEvent -= HandleCoolDownCheck;
+            _currentSkill.skillCountAction -= HandleCountCheck;
+            
             _skillIcon.color = Color.black;
         }
     }
@@ -28,6 +30,8 @@ public class PlayerSkillHud : MonoBehaviour
         if (_currentSkill != null)
         {
             _currentSkill.CooldownEvent -= HandleCoolDownCheck;
+            _currentSkill.skillCountAction -= HandleCountCheck;
+
             _skillIcon.color = Color.black;
         }
 
@@ -40,12 +44,25 @@ public class PlayerSkillHud : MonoBehaviour
         _currentSkill = evt.skill;
 
         _currentSkill.CooldownEvent += HandleCoolDownCheck;
+        _currentSkill.skillCountAction += HandleCountCheck;
     }
-
+    
     private void Init()
     {
         _skillCoolFadeImage.fillAmount = 0;
         _skillCoolTimeText.SetText("");
+        _skillCountText.SetText("");
+    }
+    
+    private void HandleCountCheck(int count)
+    {
+        if (count == 0)
+        {
+            _skillCountText.SetText("");
+            return;
+        }
+
+        _skillCountText.SetText(count.ToString());
     }
 
     private void HandleCoolDownCheck(float current, float total)

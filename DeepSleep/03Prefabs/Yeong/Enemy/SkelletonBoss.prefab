@@ -2030,6 +2030,7 @@ GameObject:
   - component: {fileID: 8666175451938190273}
   - component: {fileID: -8907436383647149607}
   - component: {fileID: 853887336138656823}
+  - component: {fileID: 5337244359396252313}
   m_Layer: 8
   m_Name: SkelletonBoss
   m_TagString: Enemy
@@ -2069,19 +2070,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _statusEventChannel: {fileID: 11400000, guid: 6668f721007b1ea458c7a39ac8c0e22d, type: 2}
+  _enemyPoolingType: 3
   player: {fileID: 0}
   _playerManagerSO: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
   turnSpeed: 10
   _whatIsTarget:
     serializedVersion: 2
     m_Bits: 128
-  _whatIsWall:
+  whatIsWall:
     serializedVersion: 2
-    m_Bits: 512
-  _whatIsGround:
+    m_Bits: 0
+  whatIsGround:
     serializedVersion: 2
-    m_Bits: 64
-  <PoolType>k__BackingField: 16
+    m_Bits: 0
 --- !u!114 &4095203799683123609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2100,7 +2101,6 @@ MonoBehaviour:
   - rid: 794983447115071815
   - rid: 794983447115071854
   - rid: 794983447115071855
-  - rid: 794983473176379587
   references:
     version: 2
     RefIds:
@@ -2136,14 +2136,6 @@ MonoBehaviour:
           m_Value1: 10541996424266384056
         Name: AttackRange
         m_Value: 15
-    - rid: 794983473176379587
-      type: {class: 'BlackboardVariable`1[[EnemyDamageCaster, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1296596724310235980
-          m_Value1: 4429017805056174715
-        Name: DamageCaster
-        m_Value: {fileID: 7546609304579345934}
 --- !u!195 &8718145882212578183
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2158,7 +2150,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.1
+  m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -2230,6 +2222,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnHitEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnDieEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2317,6 +2312,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6dfd3129b507da45aede6511b92ce4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5337244359396252313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6703038957400698605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7044947910558053899
 GameObject:
   m_ObjectHideFlags: 0

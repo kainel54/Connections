@@ -52,6 +52,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cf8a51df759986941b9f32aab1f94f21, type: 2}
   - {fileID: 11400000, guid: 4411394c25f700f49a65519d1eea8f6c, type: 2}
   - {fileID: 11400000, guid: a8155157329f51d49a492397c28d4b95, type: 2}
+  - {fileID: 11400000, guid: d081ba7b3e2b1f7468fa4ba0ed14e553, type: 2}
   player: {fileID: 0}
   shootCount: 0
   firedCount: 0

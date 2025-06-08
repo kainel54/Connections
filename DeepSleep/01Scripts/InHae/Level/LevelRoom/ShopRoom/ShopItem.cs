@@ -1,3 +1,4 @@
+using IH.EventSystem.UIEvent.PanelEvent;
 using TMPro;
 using UnityEngine;
 using YH.EventSystem;
@@ -24,23 +25,25 @@ public class ShopItem : MonoBehaviour
         
         _priceText.text = _item.itemData.price + "$";   
         
-        if (_item is PartsObject partsObject)
-            partsObject.VisualInit();
-
-        if (_item is SkillObject skillObject)
-            skillObject.VisualInit();
+        if (_item is ISpecialInitItem specialInitItem)
+            specialInitItem.VisualInit();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            var evt = UIEvents.ShopDescriptionEvent;
+            var evt = UIPanelEvent.ShopDescriptionPanelEvent;
             evt.isPanelActive = true;
             evt.itemDataSo = _item.itemData;
             evt.canBuyItem = _playerManager.CurrentCoin >= _item.itemData.price;
+            
+            if(_item.itemData as NodeAbilityItemSO)
+                evt.textColor = Color.cyan;
+            else
+                evt.textColor = Color.white;
+            
             evt.buyItemAction += Sold;
-
             _playerCollider = other;
 
             _uiEventChannel.RaiseEvent(evt);
@@ -65,7 +68,7 @@ public class ShopItem : MonoBehaviour
 
     private void UiDisable()
     {
-        var evt = UIEvents.ShopDescriptionEvent;
+        var evt = UIPanelEvent.ShopDescriptionPanelEvent;
         evt.isPanelActive = false;
         evt.itemDataSo = null;
         evt.buyItemAction -= Sold;

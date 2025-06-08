@@ -5,19 +5,19 @@ using UnityEngine.EventSystems;
 public class ChainSlotUI : ItemSlotUI
 {  
     [SerializeField] private GameObject _skillImageObj;
-    private PartNodeChainCheck _currentNode;
+    private PartNodeUIChainCheck _currentNodeUI;
     
     private void Awake()
     {
         _isDropable = false;
     }
 
-    public void Init(PartNodeChainCheck chain)
+    public void Init(PartNodeUIChainCheck uiChain)
     {
         if(isEmpty)
             return;
         
-        _currentNode = chain;
+        _currentNodeUI = uiChain;
     }
 
     public override void UpdateSlot(InventoryItem newItem)
@@ -74,13 +74,13 @@ public class ChainSlotUI : ItemSlotUI
     {
     }
 
-    public void ReturnInven()
+    public void ReturnInventory()
     {
         if(isEmpty)
             return;
         
         InventoryManager.Instance.AddInventoryItemWithSo(item.data);
-        _currentNode.RemoveChainPart(item as PartInventoryItem);
+        _currentNodeUI.RemoveChainPart(item as PartInventoryItem);
         item = null;
     }
 }

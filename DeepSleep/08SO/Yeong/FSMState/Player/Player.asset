@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17a2f699d08eed14892e1564bb76b9a3, type: 3}
+  m_Script: {fileID: 11500000, guid: 050e9e1ea5336fa439ca2903f6bd640f, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
   states:
   - {fileID: 11400000, guid: e78f5c3275b6fab47926ab7e232d71ef, type: 2}
   - {fileID: 11400000, guid: ece9c767c097bfa44842b557455a8676, type: 2}
   - {fileID: 11400000, guid: 4d3702a3b9775a74b9d34fbda89f2670, type: 2}
-  - {fileID: 11400000, guid: 90f3eb5107784164ab58d2e58bf3c522, type: 2}
-  - {fileID: 11400000, guid: d233047fb21b65643986cca6166cd9cf, type: 2}

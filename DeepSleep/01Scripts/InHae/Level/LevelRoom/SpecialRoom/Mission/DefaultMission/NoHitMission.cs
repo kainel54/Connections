@@ -4,8 +4,9 @@ public class NoHitMission : SpecialLevelMission
     {
         base.Init();
 
-        _specialLevelRoom.clearAction += HandleClearCheck;
-        _specialLevelRoom.player.GetCompo<HealthCompo>().OnHealthChangedEvent.AddListener(HandleHitCheck);
+        _specialLevelRoom.missionClearCheckAction += HandleClearCheck;
+        
+        _specialLevelRoom.player.GetCompo<EntityHealth>().OnHitEvent.AddListener(HandleHitCheck);
         _specialLevelRoom.StartSpawn();
     }
 
@@ -15,17 +16,17 @@ public class NoHitMission : SpecialLevelMission
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(true);
-        _specialLevelRoom.clearAction -= HandleClearCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(true);
+        _specialLevelRoom.missionClearCheckAction -= HandleClearCheck;
     }
 
-    private void HandleHitCheck(float arg0, float arg1, bool arg2)
+    private void HandleHitCheck()
     {
         if (_missionEnd)
             return;
 
         _missionEnd = true;
-        _specialLevelRoom.missionCheckAction.Invoke(false);
-        _specialLevelRoom.player.GetCompo<HealthCompo>().OnHealthChangedEvent.RemoveListener(HandleHitCheck);
+        _specialLevelRoom.missionActiveAction.Invoke(false);
+        _specialLevelRoom.player.GetCompo<EntityHealth>().OnHitEvent.RemoveListener(HandleHitCheck);
     }
 }

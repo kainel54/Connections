@@ -52,11 +52,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4852f0f0d78fd084b969fc6f978cf715, type: 2}
   - {fileID: 11400000, guid: c2e71634230dd804d9b3a7519629cbc3, type: 2}
   - {fileID: 11400000, guid: a7a234fb56e623a4c89db50483c24519, type: 2}
+  - {fileID: 11400000, guid: c9b8d34813dc37a4baaf54858bc9cc89, type: 2}
   player: {fileID: 0}
-  isFire: 1
+  shootCount: 0
+  firedCount: 0
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 256
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
   skillRangeObj: {fileID: 8019133412395251078, guid: c12af1a2e5d21ed4781a3adc266d5f4c, type: 3}
 --- !u!1001 &3603372283854787520
 PrefabInstance:

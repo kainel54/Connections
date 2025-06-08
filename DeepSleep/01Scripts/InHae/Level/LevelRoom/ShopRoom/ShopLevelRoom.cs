@@ -9,7 +9,7 @@ public class ShopLevelRoom : LevelRoom
     
     private void Start()
     {
-        isClear = true;
+        LevelClear();
         ConnectDoorDisable();
         
         ItemInit();
@@ -28,14 +28,21 @@ public class ShopLevelRoom : LevelRoom
         {
             DropItem dropItem = _itemList.RandItem();
 
-            if (dropItem is SkillObject skillObject)
-                skillObject.SkillInit(_itemList.RandSkill());
+            if (dropItem is ISpecialInitItem specialInitItem)
+            {
+                ItemDataSO dataSo = null;
 
-            if (dropItem is PartsObject partsObject)
-                partsObject.PartInit(_itemList.RandSkillParts());
+                if (dropItem as PartDropObject)
+                    dataSo = _itemList.RandSkillPart();
+                if (dropItem as SkillDropObject)
+                    dataSo = _itemList.RandSkill();
+                if(dropItem as NodeAbilityDropObject)
+                    dataSo = _itemList.RandNodeAbility();
+                
+                specialInitItem.SpecialInit(dataSo);
+            }
             
             ShopItem shopItem = _itemListParent.GetChild(i).GetComponent<ShopItem>();
-            Debug.Log($"{_itemListParent.GetChild(i).gameObject.name}");
             shopItem.Init(dropItem);
         }
     }

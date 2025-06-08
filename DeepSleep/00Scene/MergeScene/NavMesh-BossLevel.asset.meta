@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/00Scene/MergeScene/NavMesh-BossLevel.asset.meta
+guid: 686a565c6f5a44d4fafe2ecaf6dfa855
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 23800000
+========
+guid: 22ec5abe9b0ea5743ad968a6c92cf3b6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+>>>>>>>> HB:Assets/04ShaderAndMaterial/HB/barrier.mat.meta
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

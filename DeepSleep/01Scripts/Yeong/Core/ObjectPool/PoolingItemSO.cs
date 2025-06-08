@@ -8,7 +8,15 @@ namespace ObjectPooling
         public int poolCount;
         public MonoBehaviour prefab;
         public IPoolable PoolObj => prefab as IPoolable;
-        public PoolingType poolingType;
+        public PoolingKey poolingKey;
+
+        private void OnEnable()
+        {
+            if (poolingKey == null)
+            {
+                poolingKey = new PoolingKey(PoolObj.PoolEnum);
+            }
+        }
     }
 
 }

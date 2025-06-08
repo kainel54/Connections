@@ -49,7 +49,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -4891,7 +4891,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -9791,7 +9791,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -14624,7 +14624,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -19428,7 +19428,7 @@ GameObject:
   - component: {fileID: 4248706043444157369}
   - component: {fileID: 6645618905179975962}
   - component: {fileID: 2476276918062367197}
-  - component: {fileID: -1186876299657298558}
+  - component: {fileID: 7873513397520177804}
   m_Layer: 0
   m_Name: ShamanCircle
   m_TagString: Untagged
@@ -19472,7 +19472,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -24314,7 +24314,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &-1186876299657298558
+--- !u!114 &7873513397520177804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24323,10 +24323,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7227799504535421090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5b51446a2da85440818d72939ec2d58, type: 3}
+  m_Script: {fileID: 11500000, guid: c245523795914413b02ce5e4d85a45db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PoolType>k__BackingField: 21
+  _effectPoolingType: 4
 --- !u!1 &7987625827978070663
 GameObject:
   m_ObjectHideFlags: 0
@@ -24378,7 +24378,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1

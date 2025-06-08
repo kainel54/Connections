@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 479008baac47e51459f3152c0bcad57d, type: 3}
+  m_Name: CanSkillRangeSkillStat
+  m_EditorClassIdentifier: 
+  fieldType: 3
+  title: "\uC2A4\uD0AC \uC124\uCE58 \uBC94\uC704"
+  description: "\uC2A4\uD0AC\uC744 \uC5B4\uB290\uC815\uB3C4 \uBA40\uB9AC\uAE4C\uC9C0
+    \uC124\uCE58\uD560 \uC218 \uC788\uB294 \uC9C0\uC758 \uC815\uB3C4\uC785\uB2C8\uB2E4."
+  icon: {fileID: 21300000, guid: 4d574b4bfb585e945ba8d8ebdfea2d0b, type: 3}
+  minMaxValue: {x: 1, y: 1000}

@@ -379,7 +379,7 @@ RectTransform:
   m_GameObject: {fileID: 7767510266142425308}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1154095459249357896}
@@ -404,6 +404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd84cfd453d36d24d8c5850d6a603c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uiEventChannel: {fileID: 11400000, guid: f134ea3e70a47714099e843f3a932a07, type: 2}
+  _soundChannelSo: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
+  _clickSound: {fileID: 11400000, guid: 303509b71b2fefe4cb7e911b009474f6, type: 2}
   _itemImage: {fileID: 1309049801760451618}
   _amountText: {fileID: 1000070302052860619}
   slotIndex: 0
@@ -411,10 +414,10 @@ MonoBehaviour:
     data: {fileID: 0}
     stackSize: 0
     slotIndex: 0
-  _nodeEventChannel: {fileID: 11400000, guid: 041174eda0f894141a38a9314e337994, type: 2}
-  _canvas: {fileID: 0}
+  _nodeChainEventChannel: {fileID: 11400000, guid: 7df4d08a718774449996f6860e0e8680, type: 2}
+  _partNodeEventChannel: {fileID: 11400000, guid: 533faf2e29cbb0c45960b0863cc16455, type: 2}
   _skillImageObj: {fileID: 6420933682541777201}
-  _yOffset: 200
+  _xOffset: 75
 --- !u!114 &-8553398867571686815
 MonoBehaviour:
   m_ObjectHideFlags: 0

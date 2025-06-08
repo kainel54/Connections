@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using IH.EventSystem.SoundEvent;
 using UnityEngine;
 using YH.Entities;
 using YH.EventSystem;
@@ -12,7 +12,7 @@ public class PlayerSoundPlayer : MonoBehaviour, IEntityComponent
 
     [Header("Gun Sound")] 
     [SerializeField] private SoundSO _shootSound;
-    [SerializeField] private SoundSO _reloadSound;
+    [SerializeField] private SoundSO _dashSound;
     
     [Header("Health Sound")] 
     [SerializeField] private List<SoundSO> _hitSound;
@@ -31,13 +31,24 @@ public class PlayerSoundPlayer : MonoBehaviour, IEntityComponent
     private void Awake()
     {
         _player.GetCompo<PlayerAttackCompo>().FireEvent += HandleFireSound;
-        _player.GetCompo<PlayerAttackCompo>().ReloadEvent += HandleReloadSound;
+        _player.GetCompo<PlayerMovement>().OnDashEvent += HandleDashSound;
     }
-    
+
+    private void HandleDashSound(bool obj)
+    {
+        if (obj)
+        {
+            var evt = SoundEvents.PlaySfxEvent;
+            evt.clipData = _dashSound;
+            evt.position = transform.position;
+
+            _soundChannel.RaiseEvent(evt);
+        }
+    }
+
     private void OnDestroy()
     {
         _player.GetCompo<PlayerAttackCompo>().FireEvent -= HandleFireSound;
-        _player.GetCompo<PlayerAttackCompo>().ReloadEvent -= HandleReloadSound;
     }
 
     private void Update()
@@ -51,13 +62,13 @@ public class PlayerSoundPlayer : MonoBehaviour, IEntityComponent
     private void HandleReloadSound(float obj)
     {
         var evt = SoundEvents.PlaySfxEvent;
-        evt.clipData = _reloadSound;
+        evt.clipData = _dashSound;
         evt.position = transform.position;
 
         _soundChannel.RaiseEvent(evt);
     }
 
-    private void HandleFireSound(int arg1, int arg2)
+    private void HandleFireSound()
     {
         var evt = SoundEvents.PlaySfxEvent;
         evt.clipData = _shootSound;

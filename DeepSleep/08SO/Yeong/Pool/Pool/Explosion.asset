@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Explosion
   m_EditorClassIdentifier: 
   poolCount: 10
-  prefab: {fileID: -3137427201232071569, guid: aa97fb0faf051db4ab86a56c288b2a55, type: 3}
-  poolingType: 2
+  prefab: {fileID: 1919085297413730156, guid: aa97fb0faf051db4ab86a56c288b2a55, type: 3}

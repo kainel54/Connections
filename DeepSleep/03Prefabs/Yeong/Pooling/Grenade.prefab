@@ -74,10 +74,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 257
+    m_Bits: 261943
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -218,8 +218,8 @@ MonoBehaviour:
     m_Bits: 128
   _explosionEffect: {fileID: 11400000, guid: 5563708e0f6ded34ca738240cca27a99, type: 2}
   _spawnChannel: {fileID: 11400000, guid: 57b218c641cb90c44a0ce9f3758937e1, type: 2}
-  _speedMultiplier: 1.5
-  <PoolType>k__BackingField: 1
+  _bombSound: {fileID: 11400000, guid: ae4f75c80f4df4443a67ee5343731403, type: 2}
+  _type: 1
 --- !u!1001 &7666294286808521681
 PrefabInstance:
   m_ObjectHideFlags: 0

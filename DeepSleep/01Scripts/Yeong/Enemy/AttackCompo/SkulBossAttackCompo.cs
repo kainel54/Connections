@@ -35,27 +35,13 @@ namespace YH.Boss
             _damageCaster.Cast(_currentCircleCaster);
         }
 
-        public void DownHit()
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                int angle = _angleList[i];
-                SlashCreate evt = SpawnEvents.SlashCreate;
-                evt.position = _enemy.transform.position;
-                evt.rotation = Quaternion.Euler(0,angle,0);
-                evt.owner = _enemy;
-                SetPayload(evt.rotation * _enemy.transform.forward,10);
-                evt.payload = _bulletPayload;
-                _spawnChannel.RaiseEvent(evt);
-            }
-        }
 
         private void SetPayload(Vector3 bulletDirection,float bulletSpeed)
         {
             _bulletPayload.mass = 20f / bulletSpeed;
             _bulletPayload.shootingRange = _shootingRange;
             _bulletPayload.impactForce = _impactForce;
-            _bulletPayload.damage = _enemy.GetCompo<StatCompo>().GetElement(_damageSO).Value;
+            _bulletPayload.damage = _enemy.GetCompo<EntityStat>().GetElement(_damageSO).Value;
             _bulletPayload.velocity
                 = bulletDirection * bulletSpeed;
         }

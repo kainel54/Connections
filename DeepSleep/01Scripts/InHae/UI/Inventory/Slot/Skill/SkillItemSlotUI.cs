@@ -1,11 +1,17 @@
+using IH.EventSystem.NodeEvent.SkillNodeEvents;
+using IH.EventSystem.UIEvent;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using YH.EventSystem;
 
-public class SkillItemSlotUI : ItemSlotUI, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class SkillItemSlotUI : ItemSlotUI, IPointerClickHandler
 {
+    [SerializeField] private GameEventChannelSO _skillNodeEventChannelSo;
+    
     [SerializeField] private float _yOffset;
     [SerializeField] private GameObject _skillImageObj;
     [SerializeField] private Canvas _canvas;
+    
     public override void UpdateSlot(InventoryItem newItem)
     {
         _skillImageObj.SetActive(true);
@@ -42,58 +48,33 @@ public class SkillItemSlotUI : ItemSlotUI, IPointerEnterHandler, IPointerExitHan
             return;
         
         _skillImageObj.SetActive(false);
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Skill);
-        popUp.SetFix(false);
-        popUp.EndPopUp();
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if(isEmpty)
-            return;
-        
-        var drag = UIHelper.Instance.GetDragItem(DragItemType.SkillAndPart);
-        if(drag.isDragging)
-            return;
-  
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Skill);
-        Vector3 pos = eventData.position;
-        pos.y += _yOffset;
-
-        RectTransform popUpRect = popUp.transform as RectTransform;
-        RectTransform canvasRect = _canvas.transform as RectTransform;
-
-        Vector2 popUpSize = popUpRect.sizeDelta;
-        Vector2 screenSize = canvasRect.sizeDelta;
-
-        Vector2 anchoredPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, 
-            pos, _canvas.worldCamera, out anchoredPos);
-
-        float halfWidth = popUpSize.x * 0.5f;
-
-        if (anchoredPos.x + halfWidth > screenSize.x * 0.5f)
-            anchoredPos.x = screenSize.x * 0.5f - halfWidth;
-        else if (anchoredPos.x - halfWidth < -screenSize.x * 0.5f)
-            anchoredPos.x = -screenSize.x * 0.5f + halfWidth;
-
-        popUpRect.anchoredPosition = anchoredPos;
-        popUp.OnPopUp(item);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if(isEmpty)
-            return;
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Skill);
-        popUp.EndPopUp();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if(isEmpty)
             return;
-        var popUp = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Skill);
-        popUp.SetFix(true);
+        PlaySound();
+        switch (eventData.button)
+        {
+            case PointerEventData.InputButton.Left:
+            {
+                var equipPartInfoEvt = SkillNodeEvents.EquipPartInfoEvent;
+                equipPartInfoEvt.skillInventoryItem = item as SkillInventoryItem;
+                _skillNodeEventChannelSo.RaiseEvent(equipPartInfoEvt);
+                break;
+            }
+            case PointerEventData.InputButton.Right:
+            {
+                var skillAutoEquipEvt = SkillNodeEvents.SkillAutoEquipEvent;
+                skillAutoEquipEvt.skillInventoryItem = item as SkillInventoryItem;
+                _skillNodeEventChannelSo.RaiseEvent(skillAutoEquipEvt);
+
+                var slotSelectActiveEvt = UIEvents.ItemSlotSelectActiveEvent;
+                slotSelectActiveEvt.isActive = false;
+                _uiEventChannel.RaiseEvent(slotSelectActiveEvt);
+                break;
+            }
+        }
     }
 }

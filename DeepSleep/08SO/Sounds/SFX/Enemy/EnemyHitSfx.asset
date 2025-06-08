@@ -18,6 +18,6 @@ MonoBehaviour:
   isRandomizePitch: 0
   is3DSound: 0
   randomPitchModifier: 0.1
-  volume: 0.7
+  volume: 0.2
   pitch: 1
   startTime: 0.1

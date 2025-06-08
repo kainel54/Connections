@@ -18,7 +18,7 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 26.5
   intensity:
     m_OverrideState: 1
     m_Value: 1
@@ -87,31 +87,6 @@ MonoBehaviour:
   maxNits:
     m_OverrideState: 0
     m_Value: 1000
---- !u!114 &-566090360604549425
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
-  m_Name: FilmGrain
-  m_EditorClassIdentifier: 
-  active: 1
-  type:
-    m_OverrideState: 1
-    m_Value: 6
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0.35
-  response:
-    m_OverrideState: 1
-    m_Value: 0.4
-  texture:
-    m_OverrideState: 0
-    m_Value: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,34 +103,7 @@ MonoBehaviour:
   - {fileID: -7857282700165870406}
   - {fileID: -2145378424856805865}
   - {fileID: 7893205276719311039}
-  - {fileID: -566090360604549425}
-  - {fileID: 929375536883094425}
   - {fileID: 3918240412814471536}
---- !u!114 &929375536883094425
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccf1aba9553839d41ae37dd52e9ebcce, type: 3}
-  m_Name: MotionBlur
-  m_EditorClassIdentifier: 
-  active: 1
-  mode:
-    m_OverrideState: 1
-    m_Value: 1
-  quality:
-    m_OverrideState: 1
-    m_Value: 1
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0.25
-  clamp:
-    m_OverrideState: 1
-    m_Value: 0.2
 --- !u!114 &3918240412814471536
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -177,10 +125,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.211
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 0.629
   rounded:
     m_OverrideState: 1
     m_Value: 0

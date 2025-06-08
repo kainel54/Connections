@@ -36,7 +36,7 @@ Transform:
   - {fileID: 2518523823062412237}
   - {fileID: 1256572503775662801}
   - {fileID: 8893381464511211367}
-  - {fileID: 2567680402840595603}
+  - {fileID: 8131214570802414999}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2822553226914442233
@@ -52,6 +52,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skill: {fileID: 0}
+  _spawnEventChannelSO: {fileID: 11400000, guid: 57b218c641cb90c44a0ce9f3758937e1, type: 2}
+  _impactEffectPoolSO: {fileID: 11400000, guid: 8ac60374ac593544195671a043657467, type: 2}
+  _soundEventChannelSO: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
+  _hitSound: {fileID: 11400000, guid: e75b2b97d69cb184c9b00886ea358af4, type: 2}
+  _lifetime: 17
   _damageInterval: 2
   _particles:
   - {fileID: 6148295998962477567}
@@ -5046,7 +5051,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -14842,7 +14847,7 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!1001 &6236189865438776515
+--- !u!1001 &431992133524497863
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -14899,8 +14904,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9600fe708f765484cb73b01dc8634459, type: 3}
---- !u!4 &2567680402840595603 stripped
+--- !u!4 &8131214570802414999 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8442382453877055568, guid: 9600fe708f765484cb73b01dc8634459, type: 3}
-  m_PrefabInstance: {fileID: 6236189865438776515}
+  m_PrefabInstance: {fileID: 431992133524497863}
   m_PrefabAsset: {fileID: 0}

@@ -1,8 +1,10 @@
+using System;
+using IH.EventSystem.StatusEvent;
 using YH.Entities;
-using YH.FSM;
 using YH.StatSystem;
 using UnityEngine;
 using YH.EventSystem;
+using Unity.AppUI.UI;
 
 namespace YH.Players
 {
@@ -16,10 +18,10 @@ namespace YH.Players
         [field: SerializeField] private StatElementSO _attackCooldownSO;
         public StatElement attackCooldownStat { get; private set; }
         [field: SerializeField] public PlayerInputSO PlayerInput { get; private set; }
+        [SerializeField] private LayerMask _whatIsGround,_whatIsTower;
+        private Outline _outline;
 
-        private StateMachine _stateMachine;
-
-        private StatCompo _statCompo;
+        private EntityStat _statCompo;
         public bool isShooting { get; set; }
 
         public float attackDistance;
@@ -28,61 +30,75 @@ namespace YH.Players
 
         public LayerMask whatIsEnemy;
         public Transform fireTrm;
-        
+
+        public EntityHealth EntityHealth { get; private set; }
         protected override void Awake()
         {
             base.Awake();
             _playerManagerSO.SetPlayer(this);
             _playerManagerSO.InitCoin();
+            _outline = GetComponent<Outline>();
+            _outline.enabled = false;
+
+            EntityHealth = GetComponent<EntityHealth>();
         }
 
         protected override void AfterInitComponents()
         {
             base.AfterInitComponents();
 
-            _statCompo = GetCompo<StatCompo>();
+            _statCompo = GetCompo<EntityStat>();
 
             attackCooldownStat = _statCompo.GetElement(_attackCooldownSO);
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             PlayerInput.ClearSubscription();
         }
 
-#if UNITY_EDITOR
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.L))
+            SetOutLine();
+#if UNITY_STANDALONE_WIN
+            if (Input.GetKeyDown(KeyCode.B) && Input.GetKey(KeyCode.LeftControl))
             {
-                GetCompo<HealthCompo>().SetInvincible(true);
+                GetCompo<EntityHealth>().SetInvincible(true);
             }
-            
+            if (Input.GetKeyDown(KeyCode.K) && Input.GetKey(KeyCode.LeftControl))
+            {
+                _playerManagerSO.AddCoin(1000);
+            }
+#endif
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                GetCompo<EntityHealth>().SetInvincible(true);
+            }
             if (Input.GetKeyDown(KeyCode.K))
             {
-                var evt = StatusEvents.AddTimeStatusEvent;
-                evt.entity = this;
-                evt.time = 4f;
-                evt.status = StatusEnum.SpeedDownDebuff;
-
-                _statusEventChannel.RaiseEvent(evt);
+                _playerManagerSO.AddCoin(1000);
             }
-            
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                var evt = StatusEvents.RemoveStatusEvent;
-                evt.entity = this;
-                evt.status = StatusEnum.SpeedDownDebuff;
-
-                _statusEventChannel.RaiseEvent(evt);
-            }
-        }
 #endif
-
-        protected override void HandleDeadEvent()
-        {
-            base.HandleDeadEvent();
         }
+
+        private void SetOutLine()
+        {
+            Vector3 origin = Camera.main.transform.position;
+            Vector3 direction = (transform.position - origin).normalized;
+            float distance = Vector3.Distance(origin, transform.position);
+
+            if (Physics.SphereCast(origin, 1f, direction, out RaycastHit hit, distance, _whatIsTower))
+            {
+                _outline.enabled = true;
+            }
+            else
+            {
+                _outline.enabled = false;
+            }
+        }
+
         
         public void SetDead()
         {

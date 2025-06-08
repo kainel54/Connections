@@ -1,9 +1,6 @@
-using UnityEngine;
 using ObjectPooling;
+using UnityEngine;
 using YH.Entities;
-using YH.StatSystem;
-using YH.Combat;
-using YH.EventSystem;
 using YH.Projectile;
 
 public class BulletPayload
@@ -18,6 +15,7 @@ public class BulletPayload
 public class Bullet : ProjectileObj
 {
     protected TrailRenderer _trailRenderer;
+    [SerializeField] private SoundSO _impactSound;
 
     protected override void Awake()
     {
@@ -32,6 +30,13 @@ public class Bullet : ProjectileObj
         {
             _trailRenderer.time -= 2 * Time.deltaTime;
         }
+    }
+
+    protected override void OnCollisionEnter(Collision other)
+    {
+        base.OnCollisionEnter(other);
+        SoundPlayer sound = PoolManager.Instance.Pop(ObjectType.SoundPlayer) as SoundPlayer;
+        sound.PlaySound(_impactSound);
     }
 
     public override void Fire(Vector3 position, Quaternion rotation, BulletPayload payload,Entity owner)

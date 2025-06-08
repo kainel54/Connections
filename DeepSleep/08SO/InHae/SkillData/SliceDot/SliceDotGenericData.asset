@@ -13,10 +13,29 @@ MonoBehaviour:
   m_Name: SliceDotGenericData
   m_EditorClassIdentifier: 
   fieldType: 2
-  damage: 20
-  attackCount: 1
-  coolTime: 3
+  attackDamageStat:
+    statInfo: {fileID: 11400000, guid: c3875983c4f4b524f8548a76d529a5b9, type: 2}
+    _defaultValue: 20
+    currentValue: 0
+  attackCountStat:
+    statInfo: {fileID: 11400000, guid: 6561d74d7108c6446b84369ccad98eb6, type: 2}
+    _defaultValue: 1
+    currentValue: 0
+  coolTimeStat:
+    statInfo: {fileID: 11400000, guid: 85cd2c12f7097794c894cad3513100f8, type: 2}
+    _defaultValue: 3
+    currentValue: 0
+  reShootTimeStat:
+    statInfo: {fileID: 11400000, guid: 3cdb72a3e0c50b64fa1cbaa239f0816e, type: 2}
+    _defaultValue: 1
+    currentValue: 0
+  criticalChanceStat:
+    statInfo: {fileID: 11400000, guid: d2c5d39c970da04488694d6e386aee71, type: 2}
+    _defaultValue: 0
+    currentValue: 0
+  skillActiveDurationStat:
+    statInfo: {fileID: 11400000, guid: d97ac85f3558a0e449364258f7c95a4d, type: 2}
+    _defaultValue: 0
+    currentValue: 0
   skillDamageDelay: 0
   skillActiveDelay: 4
-  skillActiveDuration: 0
-  reShootTime: 1

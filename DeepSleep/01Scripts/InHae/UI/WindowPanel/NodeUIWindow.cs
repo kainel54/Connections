@@ -1,29 +1,44 @@
+using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
+using IH.EventSystem.NodeEvent.SkillNodeEvents;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.UI;
+using YH.EventSystem;
 
 public class NodeUIWindow : WindowPanel
 {
-    public UnityEvent closeEvent;
-    private CanvasGroup _canvasGroup;
+    [SerializeField] private GameEventChannelSO _skillNodeEventChannelSO;
+    [SerializeField] private float _tweenTime;
+    
+    private List<Scrollbar> _scrollbars;
 
     private void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();        
+        _scrollbars = GetComponentsInChildren<Scrollbar>().ToList();
     }
 
     public override void OpenWindow()
     {
-        _canvasGroup.alpha = 1;
-        _canvasGroup.blocksRaycasts = true;
+        foreach (var scrollbar in _scrollbars)
+            scrollbar.value = 1f;
+
+        transform.DOScale(Vector3.one, _tweenTime).SetUpdate(true);
+
+        var skillSelectEvt = SkillNodeEvents.EquipSkillSelectEvent;
+        skillSelectEvt.isSelected = true;
+        _skillNodeEventChannelSO.RaiseEvent(skillSelectEvt);
     }
 
     public override void CloseWindow()
     {
-        _canvasGroup.alpha = 0;
-        _canvasGroup.blocksRaycasts = false;
-        
-        closeEvent?.Invoke();
         var panel = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Chain);
         panel.EndPopUp();
+
+        transform.DOScale(Vector3.zero, _tweenTime).SetUpdate(true);
+        
+        var skillSelectEvt = SkillNodeEvents.EquipSkillSelectEvent;
+        skillSelectEvt.isSelected = false;
+        _skillNodeEventChannelSO.RaiseEvent(skillSelectEvt);
     }
 }

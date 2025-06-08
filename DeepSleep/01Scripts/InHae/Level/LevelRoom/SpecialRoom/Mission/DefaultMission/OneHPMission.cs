@@ -6,10 +6,11 @@ public class OneHPMission : SpecialLevelMission
     {
         base.Init();
 
-        _specialLevelRoom.clearAction += HandleClearCheck;
-        _specialLevelRoom.player.PlayerInput.FireEvent += HandleUseSkillCheck;
-        _specialLevelRoom.player.GetCompo<StatCompo>().GetElement("Health").AddModify("OneHP", 0, EModifyMode.Percnet);
-        _specialLevelRoom.player.GetCompo<StatCompo>().GetElement("Health").AddModify("OneHP", 1, EModifyMode.Add);
+        _specialLevelRoom.missionClearCheckAction += HandleClearCheck;
+        _specialLevelRoom.player.PlayerInput.AttackEvent += HandleUseSkillCheck;
+        _specialLevelRoom.player.GetCompo<EntityStat>().GetElement("Health").AddModify("OneHP", 0, EModifyMode.Percnet);
+        _specialLevelRoom.player.GetCompo<EntityStat>().GetElement("Health").AddModify("OneHP", 1, EModifyMode.Add);
+        
         _specialLevelRoom.StartSpawn();
     }
 
@@ -20,8 +21,8 @@ public class OneHPMission : SpecialLevelMission
 
         _missionEnd = true;
         MissionEnd();
-        _specialLevelRoom.missionCheckAction.Invoke(true);
-        _specialLevelRoom.clearAction -= HandleClearCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(true);
+        _specialLevelRoom.missionClearCheckAction -= HandleClearCheck;
     }
 
     private void HandleUseSkillCheck(bool arg0)
@@ -31,13 +32,13 @@ public class OneHPMission : SpecialLevelMission
 
         _missionEnd = true;
         MissionEnd();
-        _specialLevelRoom.missionCheckAction.Invoke(false);
-        _specialLevelRoom.player.PlayerInput.FireEvent -= HandleUseSkillCheck;
+        _specialLevelRoom.missionActiveAction.Invoke(false);
+        _specialLevelRoom.player.PlayerInput.AttackEvent -= HandleUseSkillCheck;
     }
 
     private void MissionEnd()
     {
-        _specialLevelRoom.player.GetCompo<StatCompo>().GetElement("Health").RemoveModify("OneHP", EModifyMode.Percnet);
-        _specialLevelRoom.player.GetCompo<StatCompo>().GetElement("Health").RemoveModify("OneHP", EModifyMode.Add);
+        _specialLevelRoom.player.GetCompo<EntityStat>().GetElement("Health").RemoveModify("OneHP", EModifyMode.Percnet);
+        _specialLevelRoom.player.GetCompo<EntityStat>().GetElement("Health").RemoveModify("OneHP", EModifyMode.Add);
     }
 }

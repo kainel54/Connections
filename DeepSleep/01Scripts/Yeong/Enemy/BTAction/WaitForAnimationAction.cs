@@ -28,10 +28,11 @@ public partial class WaitForAnimationAction : Action
     {
         AnimationTrigger.Value.OnAnimationEndTrigger -= HandleAnimationEnd;
     }
-    
+
     private void HandleAnimationEnd()
     {
         _isTriggered = true;
+
     }
 }
 

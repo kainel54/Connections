@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: BulletImpact
   m_EditorClassIdentifier: 
   poolCount: 10
-  prefab: {fileID: 3519270413431857443, guid: 5e9643b7111a5544c8d2a313de74d095, type: 3}
-  poolingType: 3
+  prefab: {fileID: 6589814794100429244, guid: 5e9643b7111a5544c8d2a313de74d095, type: 3}

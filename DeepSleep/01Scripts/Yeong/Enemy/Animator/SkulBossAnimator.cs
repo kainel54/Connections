@@ -11,8 +11,6 @@ public class SkulBossAnimator : EnemyAnimator
         base.Initialize(entity);
         _attackCompo = entity.GetCompo<SkulBossAttackCompo>();
     }
-
-    public void DownHit() => _attackCompo.DownHit();
     public void FireSphere() => _attackCompo.FireSphere();
     public void DashAttack() => _attackCompo.DashAttack();
 

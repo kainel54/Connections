@@ -16,7 +16,6 @@ public class PoisonDebuff : AilmentStat
 
         _buffTime = true;
         _statCompo.GetElement("Speed").AddModify("PoisonDebuff", -3, EModifyMode.Add);
-        mono.StartCoroutine("PoisonCoroutine");
     }
 
     private IEnumerator PoisonCoroutine()
@@ -24,7 +23,6 @@ public class PoisonDebuff : AilmentStat
         while (_buffTime)
         {
             _statCompo.GetElement("Health").AddModify("PoisonDebuff", -1, EModifyMode.Add);
-            Debug.Log("poison debuff");
             yield return new WaitForSeconds(_delay);
         }
     }
@@ -33,7 +31,6 @@ public class PoisonDebuff : AilmentStat
     {
         _buffTime = false;
         _statCompo.GetElement("Speed").RemoveModify("PoisonDebuff", EModifyMode.Add);
-        mono.StopCoroutine("PoisonCoroutine");
 
         base.RemoveStatus();
     }
