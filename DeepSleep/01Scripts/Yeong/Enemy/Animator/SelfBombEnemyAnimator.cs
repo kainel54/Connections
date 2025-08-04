@@ -26,15 +26,15 @@ public class SelfBombEnemyAnimator : EnemyAnimator
     {
         bombDisplayCnt++;
         _attackCompo.SelfBombDisplaySetting();
-        BombBlink();
+        //BombBlink();
     }
 
-    private void BombBlink()
-    {
-        _bombMesh.material.DOColor(Color.red, "_EmissionColor", 0.2f)
-            .SetLoops(-1, LoopType.Yoyo);
-        _bombMesh.material.DOFloat(2, "_EmmisionColor", 0.2f);
-    }
+    // private void BombBlink()
+    // {
+    //     _bombMesh.material.DOColor(Color.red, "_EmissionColor", 0.2f)
+    //         .SetLoops(-1, LoopType.Yoyo);
+    //     _bombMesh.material.DOFloat(2, "_EmissionColor", 0.2f);
+    // }
 
     public void BombEnabled(bool isEnabled)
     {

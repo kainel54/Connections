@@ -2,6 +2,7 @@ using IH.EventSystem.LevelEvent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.Serialization;
 using YH.EventSystem;
@@ -15,14 +16,16 @@ public enum LevelTypeEnum
     ShopLevel = 3,
     BossLevel = 4,
     BlacksmithLevel = 5,
+    TutorialLevel = 6,
 }
 
 public abstract class LevelRoom : MonoBehaviour
 {
-    [SerializeField] private GameEventChannelSO _endStageEventChannel;
-
     public LevelTypeEnum levelType;
     public bool isAutoOpen;
+
+    [SerializeField] protected BossRoomEnterCutScene _cutSceneObject;
+    public bool HasCutScene => _cutSceneObject != null;
 
     private List<LevelDoor> _doors;
     public List<LevelDoor> OpenDoors { get; private set; } = new();
@@ -40,8 +43,12 @@ public abstract class LevelRoom : MonoBehaviour
 
     public bool CanAddDoor => _doors.Count != OpenDoors.Count;
 
+    private NavMeshSurface _navMeshSurface;
+
     protected virtual void Awake()
     {
+        _navMeshSurface = GetComponent<NavMeshSurface>();
+
         _doors = new List<LevelDoor>();
         _doors = GetComponentsInChildren<LevelDoor>().ToList();
         _doors.ForEach(x =>
@@ -93,11 +100,18 @@ public abstract class LevelRoom : MonoBehaviour
             if (_doors.Count == OpenDoors.Count)
                 break;
 
-            int randIdx = Random.Range(0, _doors.Count - OpenDoors.Count);
-            int lastIdx = _doors.Count - OpenDoors.Count - 1;
+            if (levelType == LevelTypeEnum.TutorialLevel)
+            {
 
-            OpenDoors.Add(_doors[randIdx]);
-            (_doors[randIdx], _doors[lastIdx]) = (_doors[lastIdx], _doors[randIdx]);
+            }
+            else
+            {
+                int randIdx = Random.Range(0, _doors.Count - OpenDoors.Count);
+                int lastIdx = _doors.Count - OpenDoors.Count - 1;
+
+                OpenDoors.Add(_doors[randIdx]);
+                (_doors[randIdx], _doors[lastIdx]) = (_doors[lastIdx], _doors[randIdx]);
+            }
         }
 
         CloseDoorUpdate();
@@ -147,10 +161,17 @@ public abstract class LevelRoom : MonoBehaviour
         return DoorDir.Bottom;
     }
 
+    public LevelDoor GetDoor(DoorDir dir)
+    {
+        return _doors.Where(x => x.GetDir() == dir).FirstOrDefault();
+    }
+
     public void DoorInvalidateCheck()
     {
         foreach (var door in _doors.Where(door => !door.isOpen))
             door.InvalidateMode();
+
+        _navMeshSurface.BuildNavMesh();
     }
 
     public virtual void EnterEvent() { }
@@ -163,12 +184,7 @@ public abstract class LevelRoom : MonoBehaviour
         isClear = true;
         ClearEvent?.Invoke();
 
-        //var evt = LevelEvents.StageEndEvent;
-
-       // if (!(levelType == LevelTypeEnum.StartLevel))
-       //     _endStageEventChannel.RaiseEvent(evt);
-
-        if (isAutoOpen) 
+        if (isAutoOpen)
             ConnectDoorOpen();
     }
 

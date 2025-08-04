@@ -136,4 +136,6 @@ MonoBehaviour:
   _soundEventChannelSo: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
   _readySound: {fileID: 11400000, guid: af6d23e2f1d69654ba0dfab780724d68, type: 2}
   _bombSound: {fileID: 11400000, guid: d928e83e8eb8ce645afbe97e1c109686, type: 2}
+  _range: 4
+  _bombWaitTime: 2.5
   bombObject: {fileID: 178152044478350897, guid: 0406ac7feb4695842b6f8f41616cf86e, type: 3}

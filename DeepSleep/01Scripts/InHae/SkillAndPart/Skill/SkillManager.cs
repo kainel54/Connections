@@ -4,11 +4,13 @@ using System.Collections.Generic;
 public class SkillManager : MonoSingleton<SkillManager>
 {
     private Dictionary<Type, Skill> _skills;
+    private Dictionary<string, Type> _skillTypes = new ();
 
     private void Start()
     {
-        _skills = new Dictionary<Type, Skill>(); 
-
+        _skills = new Dictionary<Type, Skill>();
+        _skillTypes = new Dictionary<string, Type>();
+        
         foreach (var skill in GetComponentsInChildren<Skill>())
         {
             Type type = skill.GetType();
@@ -30,4 +32,12 @@ public class SkillManager : MonoSingleton<SkillManager>
     {
         return _skills.GetValueOrDefault(t);
     }
-}
+    
+    public Skill GetSkill(string skillTypeName)
+    {
+        if (!_skillTypes.ContainsKey(skillTypeName))
+            _skillTypes[skillTypeName] = Type.GetType(skillTypeName);
+        
+        Type t = _skillTypes[skillTypeName];
+        return _skills.GetValueOrDefault(t);
+    }}

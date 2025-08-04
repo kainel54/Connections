@@ -41,6 +41,8 @@ public class PlayerAnimator : MonoBehaviour, IEntityComponent, IAfterInitable
         _playerMovement.OnDashEvent += HandleDashEvent;
         _playerAttack = _player.GetCompo<PlayerAttackCompo>();
         _playerAttack.FireEvent += HandleFireEvent;
+
+        _meshRender = GetComponentInChildren<SkinnedMeshRenderer>();
     }
     public void AfterInit()
     {

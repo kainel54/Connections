@@ -1,48 +1,38 @@
-using System.Collections.Generic;
 using UnityEngine;
 using YH.Combat;
 
 public class Arrow : SkillProjectileObj
 {
-    [SerializeField] private float _damageInterval = 1;
+    private SkillDamageCasterParent _skillDamageCasterParent;
 
-    private Dictionary<Collider, float> _lastDamageTime = new Dictionary<Collider, float>();
-
-    private void OnTriggerStay(Collider other)
+    protected override void Awake()
     {
-        if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Tower"))
-        {
-            if (_lastDamageTime.TryGetValue(other, out float lastTime))
-            {
-                if (Time.time - lastTime >= _damageInterval)
-                {
-                    ApplyDamage(other);
-                }
-            }
-            else
-            {
-                ApplyDamage(other);
-            }
-        }
+        base.Awake();
+        _skillDamageCasterParent = GetComponentInChildren<SkillDamageCasterParent>();
     }
 
-    private void ApplyDamage(Collider collider)
+    protected override void OnDestroy()
     {
-        // todo: apply damage
+        base.OnDestroy();
+        _skillDamageCasterParent.HitAction -= ApplyDamageAction;
+    }
+
+    public override void Initialize(Skill currentSkill, Transform shootTrm)
+    {
+        base.Initialize(currentSkill, shootTrm);
+        
+        _skillDamageCasterParent.Init(this, false);
+        _skillDamageCasterParent.HitAction += ApplyDamageAction;
+    }
+    
+    private void ApplyDamageAction(Collider other)
+    {
         ImpactEffectPlay();
-        if (collider.gameObject.TryGetComponent(out IDamageable damageable))
-        {
-            ImpactEffectPlay();
-            damageable.ApplyDamage(GetHitData());
-        }
+    }
 
-        if (_penetrationCount <= _currentPenetrationCount)
-            CallDestroyEvent();
-        else
-            _currentPenetrationCount++;
-
-        // todo: apply other effects like slow, stun, etc.
-        _lastDamageTime[collider] = Time.time; // ��ųʸ��� �ݶ��̴��� ������ �ð��� ����
-                                               // todo: push this object (object pooling)
+    public override void OnPush()
+    {
+        base.OnPush();
+        _skillDamageCasterParent.HitAction -= ApplyDamageAction;
     }
 }

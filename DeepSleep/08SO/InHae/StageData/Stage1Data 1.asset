@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Stage1Data 1
   m_EditorClassIdentifier: 
   DefaultSoundSo: {fileID: 11400000, guid: f64f1414b550c3445bccdf2c87a308b2, type: 2}
-  roomCount: 15
+  roomCount: 25
   minDeadEndRoom: 4
-  specialRoomCount: 3
+  specialRoomCount: 6
   roomPairs:
   - levelTypeEnum: 0
     levelRooms:

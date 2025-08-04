@@ -3,16 +3,23 @@ using IH.Manager;
 using ObjectPooling;
 using UnityEngine;
 
-public class NodeAbilityDropObject : DropItem, IPoolable, ISpecialInitItem
+public class NodeAbilityDropObject : DropItem, ISpecialInitItem
 {
     public NodeAbilityItemSO nodeAbilityItemSo;
+    [SerializeField] private ObjectType _type;
+    public override Enum PoolEnum => _type;
 
+    private Transform _visualTrm;
+    private bool _isInit;
+    
+    public override bool IsCollectAble => InventoryManager.Instance.CanAddItem(nodeAbilityItemSo);
+    
     public override void PickUp(Collider other)
     {
-        if (InventoryManager.Instance.CanAddItem(nodeAbilityItemSo))
+        if (IsCollectAble)
         {
             InventoryManager.Instance.AddInventoryItemWithSo(nodeAbilityItemSo);
-            Destroy(gameObject);
+            base.PickUp(other);
         }
     }
 
@@ -24,27 +31,17 @@ public class NodeAbilityDropObject : DropItem, IPoolable, ISpecialInitItem
 
     public void VisualInit()
     {
-        Transform visualTrm = Instantiate(nodeAbilityItemSo.visual, transform).transform;
-        visualTrm.localPosition = Vector3.zero;
+        if (!_isInit)
+            _isInit = true;
+        
+        _visualTrm = Instantiate(nodeAbilityItemSo.visual, transform).transform;
+        _visualTrm.localPosition = Vector3.zero;
     }
-
-    public GameObject GameObject { get => gameObject; set { } }
-    public Enum PoolEnum { get => _type; set { } }
-    [SerializeField] private ObjectType _type;
     
-    public void Init()
+    public override void OnPush()
     {
-        itemData = null;
-        nodeAbilityItemSo = null;
-    }
-
-    public void OnPop()
-    {
-
-    }
-
-    public void OnPush()
-    {
-
+        base.OnPush();
+        if (_isInit)
+            Destroy(_visualTrm.gameObject);
     }
 }

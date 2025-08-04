@@ -23,16 +23,24 @@ namespace ObjectPooling
     public enum EffectPoolingType
     {
         Explosion, BulletImpact, EnergyBallImpact, MuzzleFlash, ShamanEnemyCircle, FallMagicImpact, SpawnNotice,
-        PartNodeEquipEffect, DefenceBuff, DamageBuff, HealingBuff, DebuffEffectCircle
+        PartNodeEquipEffect, DefenceBuff, DamageBuff, HealingBuff, DebuffEffectCircle, ClickEffect, ItemEpicExplode,
+        ItemLegendaryExplode, ItemRareExplode, ItemEpicGlow, ItemLegendaryGlow, ItemRareGlow
     }
 
-    public enum PlayerSkillProjectileType
+    public enum PlayerSkillPoolingType
     {
-        EnergyBall, Arrow,
+        JudgementSlash, Arrow, MagicSphere, GroundSlash, SliceDot, FlameZone, NeedleShot, SpinningSlashSlash,
+            SpinningSlashKnife,
     }
 
     public enum PlayerSkillProjectileEffectType
     {
-        EnergyBallImpact, ArrowImpact,
+        EnergyBallImpact, ArrowImpact, SpinningSlashKnifeImpact,
+    }
+
+    public enum NodeUIPoolingType
+    {
+        SkillNode, PartNode, SpecialPartNode, DefaultUpgradeSkillNode, DefaultUpgradePartNode,
+        DefaultUpgradeSpecialPartNode, SpecialUpgradeSkillNode, SpecialUpgradePartNode, SpecialUpgradeSpecialPartNode
     }
 }

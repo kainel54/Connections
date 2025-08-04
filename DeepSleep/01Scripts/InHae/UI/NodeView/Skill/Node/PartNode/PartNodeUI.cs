@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using IH.EventSystem.NodeEvent.PartNodeEvents;
 using IH.Manager;
 using ObjectPooling;
 using UnityEngine;
+using YH.EventSystem;
 
 public class PartNodeUI : BaseNode
 {
+    [SerializeField] protected GameEventChannelSO _partNodeEventChannel;
+    
     [HideInInspector] public SkillNodeUI skillNode;
-
-    [HideInInspector] public int index;
     [HideInInspector] public bool isSkillConnected;
     private bool _isDisable;
     
@@ -27,7 +29,7 @@ public class PartNodeUI : BaseNode
 
     private Dictionary<Type, IPartNodeUIComponent> _partNodeUIComponents = new ();
 
-    private PartNodeUIChainCheck _uiChainCheck;
+    //private PartNodeUIChainCheck _uiChainCheck;
     
     protected override void Awake()
     {
@@ -38,7 +40,7 @@ public class PartNodeUI : BaseNode
         foreach (var partNodeUIComponent in _partNodeUIComponents.Values)
             partNodeUIComponent.Initialize(this);
         
-        _uiChainCheck = GetCompo<PartNodeUIChainCheck>();
+        //_uiChainCheck = GetCompo<PartNodeUIChainCheck>();
     }
 
     public void Init(SkillNodeUI skillNodeUI, NodeData nodeData)
@@ -108,17 +110,18 @@ public class PartNodeUI : BaseNode
             return;
         }
         
-        _uiChainCheck.Init();
+        //_uiChainCheck.Init();
 
-        var effect = PoolManager.Instance.Pop(EffectPoolingType.PartNodeEquipEffect) as PartNodeEquipEffect;
-        effect.Init(transform, false);
+        var viewPortCheckEvent = PartNodeEvent.InViewPortNodeParticleEvent;
+        viewPortCheckEvent.nodeRectTrm = transform as RectTransform;
+        _partNodeEventChannel.RaiseEvent(viewPortCheckEvent);
         
         UpdateSlotImage(CurrentEquipData.partInventoryItem.data.icon, Color.white);
     }
 
     private void ClearSlotUI()
     {
-        _uiChainCheck.CleanUp();
+        //_uiChainCheck.CleanUp();
 
         skillNode.currentSkillItem.equipNodeData[index].partInventoryItem = null;
         CurrentEquipData.partInventoryItem = null;
@@ -220,5 +223,13 @@ public class PartNodeUI : BaseNode
             return (T)component;
 
         return default;
+    }
+
+    public override void OnPush()
+    {
+        base.OnPush();
+        isSkillConnected = false;
+        _isDisable = false;
+        isSpecialMode = false;
     }
 }

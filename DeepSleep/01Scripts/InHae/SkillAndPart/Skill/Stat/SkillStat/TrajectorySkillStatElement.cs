@@ -7,6 +7,12 @@ public class TrajectorySkillStatElement : BaseSkillStatElement
 {
     [SerializeField] private List<TrajectoryType> _defaultTrajectory;
     public List<TrajectoryType> currentTrajectory = new List<TrajectoryType>();
+
+    public TrajectorySkillStatElement(DefaultSkillStatInfoSO defaultSkillStatInfo) : base(defaultSkillStatInfo)
+    {
+    }
+
+    public List<TrajectoryType> DefaultTrajectory => _defaultTrajectory;
     
     public override void ValueInit()
     {

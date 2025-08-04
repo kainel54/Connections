@@ -6,6 +6,11 @@ public class DefaultSkillStatElement : BaseSkillStatElement
 {
     [SerializeField] private float _defaultValue;
     [HideInInspector] public float currentValue;
+
+    public DefaultSkillStatElement(DefaultSkillStatInfoSO defaultSkillStatInfo) : base(defaultSkillStatInfo)
+    {
+    }
+
     public DefaultSkillStatInfoSO defaultSkillInfo => statInfo as DefaultSkillStatInfoSO;
     
     public float Defaultvalue

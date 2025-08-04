@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerAttackState
   m_EditorClassIdentifier: 
   stateName: 2
-  className: PlayerAttackState
-  animParam: {fileID: 0}
+  className: YH.Players.PlayerAttackState
+  animParam: {fileID: 11400000, guid: c0159ad9cb3e68c47a2b261abef8936e, type: 2}

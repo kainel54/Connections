@@ -29,8 +29,12 @@ public partial class MoveToTargetAction : Action
     {
         if (Target.Value == null)
             return Status.Failure;
+        if (Mover.Value is IKnockBackable knockBackAble && knockBackAble.IsKnockBack)
+            return Status.Failure;
 
-        Entity.Value.FaceToTarget(Mover.Value.GetNextPathPoint());
+        Vector3 targetPos = Mover.Value.GetNextPathPoint();
+
+        Entity.Value.FaceToTarget(targetPos);
         if (_lastChaseTime + calcPeriod < Time.time)
         {
             Mover.Value.SetDestination(Target.Value.position);

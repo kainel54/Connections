@@ -5,24 +5,36 @@ using YH.EventSystem;
 public class BarrierTrigger : MonoBehaviour
 {
     [SerializeField] private GameEventChannelSO _startStageEventChannel;
+    private BoxCollider _boxCollider;
+    
+    private LevelRoom _levelRoom;
 
-    private void OnEnable()
+    private bool _isEnd;
+
+    private void Awake()
     {
-       // _startStageEventChannel.AddListener<StageStartEvent>((evt) => Destroy(this.gameObject));
+        _levelRoom = GetComponentInParent<LevelRoom>();
+        _boxCollider = GetComponent<BoxCollider>();
+        _startStageEventChannel.AddListener<StageStartEvent>(OnStageStart);
     }
 
     private void OnDestroy()
     {
-        //.RemoveListener<StageStartEvent>((evt) => Destroy(this.gameObject));
+        _startStageEventChannel.RemoveListener<StageStartEvent>(OnStageStart);
+    }
+
+    private void OnStageStart(StageStartEvent evt)
+    {
+        if (this.isActiveAndEnabled)
+            _boxCollider.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !_levelRoom.isClear)
         {
-           //var evt = LevelEvents.StageStartEvent;
-           //
-           //_startStageEventChannel.RaiseEvent(evt);
+            var evt = LevelEvents.StageStartEvent;
+            _startStageEventChannel.RaiseEvent(evt);
         }
     }
 }

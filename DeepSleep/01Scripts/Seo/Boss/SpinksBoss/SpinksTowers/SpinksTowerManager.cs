@@ -1,19 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using IH.EventSystem.SoundEvent;
 using UnityEngine;
+using YH.EventSystem;
 
 public class SpinksTowerManager : MonoBehaviour
 {
-    [SerializeField] private SpinksBossArrow _spinksBossArrow;  //TODO_SE
-
     [SerializeField] private List<SpinksBossTower> _towers = new();
     [SerializeField] private Transform[] _tornadoSpawnPos = new Transform[28];
     [SerializeField] private Transform _spawnPointTrm;
 
+    private SpinksBossArrow _spinksBossArrow;  
     private SpinksBossTower _selectedTower;
 
     private int _randIdx;
+    
+    [SerializeField] private GameEventChannelSO _soundChannelSO;
+    [SerializeField] private SoundSO _raiseSound;
+
+    private void Awake()
+    {
+        _spinksBossArrow = GetComponentInChildren<SpinksBossArrow>();
+    }
 
     public void SettingTowers(BTEnemy enemy)
     {
@@ -22,13 +31,17 @@ public class SpinksTowerManager : MonoBehaviour
 
     public void TopUpEvent()
     {
+        var soundEvt = SoundEvents.PlaySfxEvent;
+        soundEvt.position = transform.position;
+        soundEvt.clipData = _raiseSound;
+        _soundChannelSO.RaiseEvent(soundEvt);
+        
         _towers.ForEach(x => x.HandleGotoPhase2Event());
     }
 
-
     public bool CanGetAliveTower()
     {
-        if (_towers.Any(x => x.IsDie == false))// ÇÑ°³¶óµµ »ì¾ÆÀÖÀ½
+        if (_towers.Any(x => x.IsDie == false))// ï¿½Ñ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             return true;
 
         return false;
@@ -36,7 +49,6 @@ public class SpinksTowerManager : MonoBehaviour
 
     public SpinksBossTower GetRandomAliveTower()
     {
-
         List<SpinksBossTower> aliveTowers = new(4);
         if (CanGetAliveTower() == false)
         {
@@ -45,7 +57,7 @@ public class SpinksTowerManager : MonoBehaviour
         }
 
 
-        foreach (SpinksBossTower _tower in _towers)  //TOFIX_SE
+        foreach (SpinksBossTower _tower in _towers)
         {
             if (_tower.IsDie == false)
             {
@@ -54,6 +66,8 @@ public class SpinksTowerManager : MonoBehaviour
         }
 
         _selectedTower = aliveTowers[Random.Range(0, aliveTowers.Count)];
+
+
 
         return _selectedTower;
     }
@@ -96,10 +110,20 @@ public class SpinksTowerManager : MonoBehaviour
 
     public void CanAttackToTower()
     {
+        Debug.Log("== CanAttackToTower Called ==");
+        Debug.Log("This script's GameObject: " + gameObject.name);
+        Debug.Log("activeSelf: " + gameObject.activeSelf);
+        Debug.Log("activeInHierarchy: " + gameObject.activeInHierarchy);
+
         _selectedTower.SetCanAttack(true);
+        _spinksBossArrow.gameObject.SetActive(true);
+        _spinksBossArrow.SetMove(_selectedTower.transform.position);
     }
+
     public void CantAttackToTower()
     {
         _selectedTower.SetCanAttack(false);
+        _spinksBossArrow.StopMove();
+        _spinksBossArrow.gameObject.SetActive(false);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using System.Collections;
 using IH.EventSystem.SoundEvent;
@@ -13,11 +14,12 @@ public class BombPartSkillObject : MonoBehaviour
     [SerializeField] private SoundSO _readySound;
     [SerializeField] private SoundSO _bombSound;
     
+    [SerializeField] private float _range;
+    [SerializeField] private float _bombWaitTime;
+    
     public GameObject bombObject;
     private Skill _usingSkill;
 
-    private float _range;
-    private float _skillActiveDelay;
     private float _bombDamage;
     private float _throwSpeed;
 
@@ -26,10 +28,6 @@ public class BombPartSkillObject : MonoBehaviour
         PlaySound(_readySound);
         
         _usingSkill = skill;
-        _range = (_usingSkill.GetSkillData(SkillFieldDataType.Range) as RangeSkillDataSO)
-            .rangeAttackSizeStat.currentSphereValue;
-        
-        _skillActiveDelay = (_usingSkill.GetSkillData(SkillFieldDataType.Generic) as GenericSkillDataSO).skillActiveDelay;
         
         _bombDamage = (_usingSkill.GetSkillData(SkillFieldDataType.Generic) as GenericSkillDataSO)
             .attackDamageStat.currentValue * 1.5f;
@@ -42,7 +40,7 @@ public class BombPartSkillObject : MonoBehaviour
 
     private IEnumerator DelayBomb()
     {
-        yield return new WaitForSeconds(_skillActiveDelay);
+        yield return new WaitForSeconds(_bombWaitTime);
 
         PlaySound(_bombSound);
         
@@ -71,5 +69,11 @@ public class BombPartSkillObject : MonoBehaviour
         soundEvt.position = transform.position;
         soundEvt.clipData = clip;
         _soundEventChannelSo.RaiseEvent(soundEvt);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _range);
     }
 }

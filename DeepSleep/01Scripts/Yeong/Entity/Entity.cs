@@ -11,6 +11,7 @@ namespace YH.Entities
         public int DeadBodyLayer { get; private set; }
         
         public bool IsDead { get; set; }
+        public Action OnDieEvent;
         
         protected Dictionary<Type, IEntityComponent> _components;
         

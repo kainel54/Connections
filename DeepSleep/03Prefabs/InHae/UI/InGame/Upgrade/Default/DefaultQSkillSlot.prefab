@@ -169,7 +169,9 @@ MonoBehaviour:
   _upgradeEventChannel: {fileID: 11400000, guid: 0d1353af770c24149aa36a00f8fe1cb3, type: 2}
   _uiEventChannel: {fileID: 11400000, guid: f134ea3e70a47714099e843f3a932a07, type: 2}
   _skillImage: {fileID: 6548875863505646750}
+  _skillKeyText: {fileID: 287169482335383533}
   index: 0
+  _playerManagerSo: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
 --- !u!1 &2370925852983759246
 GameObject:
   m_ObjectHideFlags: 0

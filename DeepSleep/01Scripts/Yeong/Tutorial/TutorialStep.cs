@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using YH.Players;
 
 [Serializable]
 public class TutorialInfo
@@ -10,25 +11,21 @@ public class TutorialInfo
 
 public abstract class TutorialStep : MonoBehaviour
 {
-    protected TutorialManager _tutorialManager;
+    protected MOBAPlayer _player;
 
     [SerializeField]
     private TutorialStep[] _withActiveStep;
 
-    public virtual void Initialize(TutorialManager tutorialManager)
-    {
-        _tutorialManager = tutorialManager;
-    }
 
     public virtual void OnEnter()
     {
-        foreach (var step in _withActiveStep)
-            _tutorialManager.SetActiveStep(step, true);
+        //foreach (var step in _withActiveStep)
+        // _tutorialManager.SetActiveStep(step, true);
     }
     public virtual void OnUpdate() { }
     public virtual void OnExit()
     {
-        foreach (var step in _withActiveStep)
-            _tutorialManager.SetActiveStep(step, false);
+        // foreach (var step in _withActiveStep)
+        //_tutorialManager.SetActiveStep(step, false);
     }
 }

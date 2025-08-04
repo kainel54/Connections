@@ -14,15 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveDifficult: 0
   waveList:
-  - enemyType: 05000000
-    spawnType: 3
-    spawnDelay: 0.1
-    isReverse: 1
-  - enemyType: 
-    spawnType: 0
-    spawnDelay: 0
-    isReverse: 0
-  - enemyType: 09000000
+  - enemyType: 00000000
     spawnType: 0
     spawnDelay: 0
     isReverse: 0

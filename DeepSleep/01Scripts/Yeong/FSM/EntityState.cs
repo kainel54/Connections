@@ -39,5 +39,6 @@ namespace YH.FSM
         {
             _isTriggerCall = true;
         }
+
     }
 }

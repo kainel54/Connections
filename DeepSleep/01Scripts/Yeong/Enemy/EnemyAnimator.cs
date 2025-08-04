@@ -12,7 +12,7 @@ public abstract class EnemyAnimator : MonoBehaviour, IEntityComponent, IAfterIni
     protected Entity _entity;
     private Animator _animator;
     public Animator Animator => _animator;
-    
+
     protected EnemyMovement _movement;
 
     public event Action<bool> SetDamageCasterEvent;
@@ -27,7 +27,7 @@ public abstract class EnemyAnimator : MonoBehaviour, IEntityComponent, IAfterIni
     {
         _entity = entity;
         _animator = GetComponent<Animator>();
-        _movement = _entity.GetCompo<EnemyMovement>();
+        _movement = _entity.GetCompo<EnemyMovement>(true);
         _renderer = GetComponentInChildren<Renderer>();
         _blinkFeedBack = _entity.GetComponentInChildren<BlinkFeedback>();
         _blinkMat = _renderer.material;
@@ -36,12 +36,12 @@ public abstract class EnemyAnimator : MonoBehaviour, IEntityComponent, IAfterIni
         Color color = new Color(1, 1, 1, 1);
         _blinkMat.SetColor(_alphaColorParam, color);
     }
-  
+
     public void StartManualMove() => _movement.SetManualMove(true);
     public void StopManualMove() => _movement.SetManualMove(false);
     public void StartManualRotation() => _movement.SetManualRotation(true);
     public void StopManualRotation() => _movement.SetManualRotation(false);
-   
+
 
     public void StartCast() => SetDamageCasterEvent?.Invoke(true);
     public void StopCast() => SetDamageCasterEvent?.Invoke(false);
@@ -71,6 +71,6 @@ public abstract class EnemyAnimator : MonoBehaviour, IEntityComponent, IAfterIni
 
     public void Dispose()
     {
-        
+
     }
 }

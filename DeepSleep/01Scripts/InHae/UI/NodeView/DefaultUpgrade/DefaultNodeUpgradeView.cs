@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using IH.EventSystem.NodeEvent.DefaultNodeUpgradeEvent;
 using IH.UI;
+using ObjectPooling;
 using UnityEngine;
 
 public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
 {
-    [SerializeField] private DefaultUpgradePartNode _defaultUpgradePartNode;
-    [SerializeField] private DefaultUpgradePartNode _defaultUpgradeSpecialPartNode;
-    [SerializeField] private DefaultUpgradeSkillNode _defaultUpgradeSkillNode;
     private DefaultUpgradeSkillNode _skillNode;
     
     private Dictionary<Vector2Int, DefaultUpgradePartNode> _nodeUIDictionary = new ();
@@ -65,7 +63,12 @@ public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
 
     private void NodeInit()
     {
-        DefaultUpgradeSkillNode skillNode = Instantiate(_defaultUpgradeSkillNode, _nodeParent);
+        DefaultUpgradeSkillNode skillNode = PoolManager.Instance.Pop(NodeUIPoolingType.DefaultUpgradeSkillNode) 
+            as DefaultUpgradeSkillNode;
+        skillNode.transform.SetParent(_nodeParent);
+        skillNode.transform.localPosition = Vector3.zero;
+        skillNode.transform.localScale = Vector3.one;
+        
         skillNode.SkillNodeInit(_selectedItem);
         _skillNode = skillNode;
         
@@ -75,12 +78,16 @@ public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
             
             DefaultUpgradePartNode currentPartNode;
             if(node.isSpecial)
-                currentPartNode = Instantiate(_defaultUpgradeSpecialPartNode, _nodeParent);
+                currentPartNode = PoolManager.Instance.Pop(NodeUIPoolingType.DefaultUpgradeSpecialPartNode) 
+                    as DefaultUpgradePartNode;
             else
-                currentPartNode = Instantiate(_defaultUpgradePartNode, _nodeParent);
+                currentPartNode = PoolManager.Instance.Pop(NodeUIPoolingType.DefaultUpgradePartNode)
+                    as DefaultUpgradePartNode;
             
+            currentPartNode.transform.SetParent(_nodeParent);
+            currentPartNode.transform.localScale = Vector3.one;
             currentPartNode.transform.SetAsLastSibling();
-            currentPartNode.transform.localPosition =
+            currentPartNode.transform.localPosition = 
                 new Vector2(node.grid.x * 0.5f * _nodeOffset, node.grid.y * _nodeOffset);
             
             _nodeUIDictionary.Add(nodeData.Key,currentPartNode);
@@ -95,10 +102,12 @@ public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
 
     public void CreateNodes()
     {
-        _nodeUIDictionary.Clear();
+        if(_skillNode !=null)
+            PoolManager.Instance.Push(_skillNode, true);
+        foreach (var node in _nodeUIDictionary.Values)
+            PoolManager.Instance.Push(node, true);
         
-        for (int i = 0; i < _nodeParent.childCount; i++)
-            Destroy(_nodeParent.GetChild(i).gameObject);
+        _nodeUIDictionary.Clear();
         
         NodeInit();
         AddConnectAbleNode();
@@ -106,7 +115,11 @@ public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
 
     public void AddNode(DefaultUpgradePartNode baseNode, NodeData newNodeData)
     {
-        DefaultUpgradePartNode partNode = Instantiate(_defaultUpgradePartNode, _nodeParent);
+        DefaultUpgradePartNode partNode = PoolManager.Instance.Pop(NodeUIPoolingType.DefaultUpgradePartNode)
+            as DefaultUpgradePartNode;
+        
+        partNode.transform.SetParent(_nodeParent);
+        partNode.transform.localScale = Vector3.one;
         Vector2Int grid = newNodeData.grid;
         
         partNode.transform.SetAsLastSibling();
@@ -116,7 +129,7 @@ public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
         _nodeUIDictionary.Add(grid, partNode);
         
         baseNode.connectedNodes.Add(partNode);
-        baseNode.LineConnect();
+        baseNode.LineConnectAndEnableCheck();
 
         StartCoroutine(EndCheck());
     }
@@ -127,10 +140,10 @@ public class DefaultNodeUpgradeView : MonoBehaviour, IDefaultNodeUpgradeCompo
         DefaultUpgradePartNode newPartNode = _nodeUIDictionary[newNodeGrid];
         
         newPartNode.connectedNodes.Add(basePartNode);
-        newPartNode.LineConnect();
+        newPartNode.LineConnectAndEnableCheck();
         
         basePartNode.connectedNodes.Add(newPartNode);
-        basePartNode.LineConnect();
+        basePartNode.LineConnectAndEnableCheck();
         
         StartCoroutine(EndCheck());
     }

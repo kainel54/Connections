@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 
 public class SpecialLevelRoom : LevelRoom
 {
+    [SerializeField] private GameEventChannelSO _endStageEventChannel;
     [SerializeField] private GameEventChannelSO _levelEventChannel;
     [SerializeField] private GameEventChannelSO _missionEventChannel;
     
@@ -44,6 +45,28 @@ public class SpecialLevelRoom : LevelRoom
     private void OnDestroy()
     {
         _playerManagerSo.SetUpPlayerEvent -= HandleSettingPlayer;
+    }
+    
+    private void Update()
+    {
+#if UNITY_STANDALONE_WIN
+        if(_chest.gameObject.activeInHierarchy)
+            return;
+        
+        if (Input.GetKeyDown(KeyCode.O) && Input.GetKey(KeyCode.LeftControl))
+        {
+            _chest.gameObject.SetActive(true);
+        }
+#endif
+#if UNITY_EDITOR
+        if(_chest.gameObject.activeInHierarchy)
+            return;
+        
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            _chest.gameObject.SetActive(true);
+        }
+#endif
     }
 
     private void HandleSettingPlayer()
@@ -91,6 +114,9 @@ public class SpecialLevelRoom : LevelRoom
         if (isClear) 
             return;
         base.LevelClear();
+        
+        var evt = LevelEvents.StageEndEvent;
+        _endStageEventChannel.RaiseEvent(evt);
         
         var inCombatEvt = LevelEvents.InCombatCheckEvent;
         inCombatEvt.isCombat = false;

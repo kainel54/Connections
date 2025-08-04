@@ -28,12 +28,18 @@ public class SpecialPartNodeUIEquipProcess : MonoBehaviour, IPartNodeUIComponent
         
         foreach (var connectedNode in _partNodeUI.connectedNodes)
         {
-            PartNodeUI connectPartNode = connectedNode as PartNodeUI;
-            if(connectPartNode.isPartEmpty)
-                continue;
-            
-            _currentInventoryItem.nodeAbility
-                .ApplyAbility(_partNodeUI.index, connectPartNode.index, _partNodeUI.currentSkill);
+            bool isValidTarget = false;
+
+            if (connectedNode is PartNodeUI partNodeUI && !partNodeUI.isPartEmpty)
+                isValidTarget = true;
+            else if (connectedNode is SkillNodeUI)
+                isValidTarget = true;
+
+            if (isValidTarget)
+            {
+                _currentInventoryItem.nodeAbility
+                    .ApplyAbility(_partNodeUI.index, connectedNode.index, _partNodeUI.currentSkill);
+            }
         }
     }
 
@@ -44,9 +50,18 @@ public class SpecialPartNodeUIEquipProcess : MonoBehaviour, IPartNodeUIComponent
         
         foreach (var connectedNode in _partNodeUI.connectedNodes)
         {
-            PartNodeUI connectPartNode = connectedNode as PartNodeUI;
-            _currentInventoryItem.nodeAbility
-                .UnApplyAbility(_partNodeUI.index,connectPartNode.index, _partNodeUI.currentSkill);
+            bool isValidTarget = false;
+
+            if (connectedNode is PartNodeUI partNodeUI && !partNodeUI.isPartEmpty)
+                isValidTarget = true;
+            else if (connectedNode is SkillNodeUI)
+                isValidTarget = true;
+
+            if (isValidTarget)
+            {
+                _currentInventoryItem.nodeAbility
+                    .UnApplyAbility(_partNodeUI.index, connectedNode.index, _partNodeUI.currentSkill);
+            }
         }
     }
 

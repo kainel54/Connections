@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using IH.EventSystem.NodeEvent.SpecialPartNodeEvent;
 using IH.UI;
+using ObjectPooling;
 using UnityEngine;
 
 public class SpecialNodeUpgradeView : MonoBehaviour, ISpecialNodeUpgradeCompo
 {
-    [SerializeField] private SpecialUpgradePartNode _specialUpgradePartNode;
-    [SerializeField] private SpecialUpgradePartNode _specialUpgradeSpecialPartNode;
-    [SerializeField] private SpecialUpgradeSkillNode _specialUpgradeSkillNode;
     private SpecialUpgradeSkillNode _skillNode;
     
     private Dictionary<Vector2Int, SpecialUpgradePartNode> _nodeUIDictionary = new ();
@@ -65,7 +63,12 @@ public class SpecialNodeUpgradeView : MonoBehaviour, ISpecialNodeUpgradeCompo
 
     private void NodeInit()
     {
-        SpecialUpgradeSkillNode skillNode = Instantiate(_specialUpgradeSkillNode, _nodeParent);
+        SpecialUpgradeSkillNode skillNode = PoolManager.Instance.Pop(NodeUIPoolingType.SpecialUpgradeSkillNode) 
+            as SpecialUpgradeSkillNode;
+        skillNode.transform.SetParent(_nodeParent);
+        skillNode.transform.localPosition = Vector3.zero;
+        skillNode.transform.localScale = Vector3.one;
+        
         skillNode.SkillNodeInit(_selectedItem);
         _skillNode = skillNode;
         
@@ -75,10 +78,14 @@ public class SpecialNodeUpgradeView : MonoBehaviour, ISpecialNodeUpgradeCompo
             
             SpecialUpgradePartNode currentPartNode;
             if(node.isSpecial)
-                currentPartNode = Instantiate(_specialUpgradeSpecialPartNode, _nodeParent);
+                currentPartNode = PoolManager.Instance.Pop(NodeUIPoolingType.SpecialUpgradeSpecialPartNode) 
+                    as SpecialUpgradePartNode;
             else
-                currentPartNode = Instantiate(_specialUpgradePartNode, _nodeParent);
+                currentPartNode = PoolManager.Instance.Pop(NodeUIPoolingType.SpecialUpgradePartNode)
+                    as SpecialUpgradePartNode;
             
+            currentPartNode.transform.SetParent(_nodeParent);
+            currentPartNode.transform.localScale = Vector3.one;
             currentPartNode.transform.SetAsLastSibling();
             currentPartNode.transform.localPosition =
                 new Vector2(node.grid.x * 0.5f * _nodeOffset, node.grid.y * _nodeOffset);
@@ -95,10 +102,12 @@ public class SpecialNodeUpgradeView : MonoBehaviour, ISpecialNodeUpgradeCompo
 
     public void CreateNodes()
     {
-        _nodeUIDictionary.Clear();
+        if(_skillNode !=null)
+            PoolManager.Instance.Push(_skillNode, true);
+        foreach (var node in _nodeUIDictionary.Values)
+            PoolManager.Instance.Push(node, true);
         
-        for (int i = 0; i < _nodeParent.childCount; i++)
-            Destroy(_nodeParent.GetChild(i).gameObject);
+        _nodeUIDictionary.Clear();
         
         NodeInit();
         AddConnectAbleNode();

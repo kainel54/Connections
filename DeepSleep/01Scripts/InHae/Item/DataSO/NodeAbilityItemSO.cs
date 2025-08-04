@@ -6,7 +6,7 @@ public class NodeAbilityItemSO : ItemDataSO
 {
     private void Awake()
     {
-        inventoryType = InventoryType.NodeAbility;
+        itemType = ItemType.NodeAbility;
     }
 
     public string reflectionNodeAbilityName;

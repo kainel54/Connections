@@ -3,39 +3,40 @@ using UnityEngine;
 
 public class RangeSkill : Skill
 {
-    [SerializeField] private SkillRangeObj skillRangeObj;
-
-    private RangeSkillDataSO _rangeDataSO;
-    private GenericSkillDataSO _genericDataSO;
+    protected RangeSkillDataSO _rangeDataSO;
+    protected GenericSkillDataSO _genericDataSO;
+    
+    protected Vector3 _forwardVector;
+    
     public override void UseSkill(Transform shootTrm)
     {
         base.UseSkill(shootTrm);
-        if (GetShootCount() <= 0)
-            SetCoolTime();
         
         _rangeDataSO = GetSkillData(SkillFieldDataType.Range) as RangeSkillDataSO;
         _genericDataSO = GetSkillData(SkillFieldDataType.Generic) as GenericSkillDataSO;
 
+        _forwardVector = shootTrm.forward;
+        
         StartCoroutine(RangeAttack(shootTrm));
     }
 
-    private IEnumerator RangeAttack(Transform shootTrm)
+    protected virtual IEnumerator RangeAttack(Transform hipShootTrm)
     {
         for (int i = 1; i <= _genericDataSO!.attackCountStat.currentValue; i++)
         {
             PlaySound();
-            for (int j = 0; j < _rangeDataSO!.rangeObjCountStat.currentValue; j++)
+            for (int j = 1; j <= _rangeDataSO!.rangeObjCountStat.currentValue; j++)
             {
-                float startAngle = 360 / _rangeDataSO!.rangeObjCountStat.currentValue * (j + 1);
+                float startAngle = 360 / _rangeDataSO!.rangeObjCountStat.currentValue * j;
 
-                SkillRangeObj range = Instantiate(skillRangeObj, shootTrm.position + new Vector3(0, 1.1f, 0), Quaternion.identity);
-
+                SkillRangeObj rangeObj = PoolManager.Instance.Pop(_popSkillObj.PoolEnum) as SkillRangeObj;
+                
                 Quaternion rotation = Quaternion.Euler(0, startAngle, 0);
-                Vector3 playerAngleSet = rotation * shootTrm.forward;
-                range.transform.position = shootTrm.position; //+ playerAngleSet; //<<  It can be another part  
-                range.transform.forward = playerAngleSet.normalized;
-                range.RangeInit(i);
-                range.Initialize(this, shootTrm);
+                Vector3 playerAngleSet = rotation * _forwardVector;
+                rangeObj.transform.position = hipShootTrm.position; //+ playerAngleSet; //<<  It can be another part  
+                rangeObj.transform.forward = playerAngleSet.normalized;
+                rangeObj.RangeInit(i);
+                rangeObj.Initialize(this, hipShootTrm);
             }
             yield return new WaitForSeconds(_genericDataSO.reShootTimeStat.currentValue);
         }

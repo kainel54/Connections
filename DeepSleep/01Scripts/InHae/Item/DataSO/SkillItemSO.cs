@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum SkillAttackType
 {
@@ -11,10 +12,11 @@ public class SkillItemSO : ItemDataSO
 {
     private void Awake()
     {
-        inventoryType = InventoryType.Skill;
+        itemType = ItemType.Skill;
     }
 
-    public List<SkillStatInfoSO> skillStats = new List<SkillStatInfoSO>();
+    [FormerlySerializedAs("skillStats")]
+    public List<SkillStatInfoSO> descriptionUseSkillStat = new List<SkillStatInfoSO>();
     
     public string reflectionName;
     public GameObject visual;

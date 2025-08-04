@@ -19,6 +19,7 @@ namespace YH.EventSystem
             if (_lookUp.ContainsKey(handler) == false) //이미 구독중인 매서드는 추가 구독하지 않는다.
             {
                 Action<GameEvent> castHandler = (evt) =>  handler(evt as T);
+
                 _lookUp[handler] = castHandler;
                 
                 Type evtType = typeof(T);

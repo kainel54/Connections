@@ -21,6 +21,7 @@ public partial class PatrolMoverAction : Action
     protected override Status OnStart()
     {
         Mover.Value.SetStop(false);
+        Entity.Value.Setting(Entity.Value.transform.position, Quaternion.identity);
 
         Vector3 randPos = Random.insideUnitSphere * Random.Range(_minMoveDis, _maxMoveDis);
         randPos.y = 0;

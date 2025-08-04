@@ -77,13 +77,14 @@ GameObject:
   - component: {fileID: 3435093538177266165}
   - component: {fileID: 1250570812964585522}
   - component: {fileID: 2402745535166451090}
-  - component: {fileID: 5169774213806658361}
   - component: {fileID: 533985162574181492}
   - component: {fileID: 2940544711152027054}
   - component: {fileID: 3723741591779969531}
   - component: {fileID: -5651325405439982050}
   - component: {fileID: -1534493756364678221}
   - component: {fileID: -8842792414925915146}
+  - component: {fileID: -5813682352017771056}
+  - component: {fileID: 1363836614282811833}
   m_Layer: 8
   m_Name: SelfBombEnemy
   m_TagString: Enemy
@@ -132,7 +133,7 @@ MonoBehaviour:
     m_Bits: 128
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 8393216
+    m_Bits: 25170432
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -155,6 +156,8 @@ MonoBehaviour:
   - rid: 7314996116533018955
   - rid: 7314996117350121996
   - rid: 7314996117350122257
+  m_IsInitialised: 0
+  m_IsStarted: 0
   references:
     version: 2
     RefIds:
@@ -197,7 +200,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 256199992595717586}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.3
   m_Speed: 3.5
@@ -235,19 +238,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &5169774213806658361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 256199992595717586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4ae2fe1a433aa409b8d3d1ea6ed26a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
 --- !u!114 &533985162574181492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,6 +388,48 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!54 &-5813682352017771056
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256199992595717586}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!114 &1363836614282811833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256199992595717586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0775cb728925040bbd92a842f8ae52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
+  _knockbackThreshold: 0.3
+  _maxKnockbackTime: 0.3
 --- !u!1 &422866850370100947
 GameObject:
   m_ObjectHideFlags: 0

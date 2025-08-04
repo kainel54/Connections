@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,30 +12,40 @@ namespace YH.Players
         PointNClick
     }
 
-
-
     [CreateAssetMenu(fileName = "PlayerInputSO", menuName = "SO/PlayerInputSO")]
     public class PlayerInputSO : ScriptableObject, Controls.IWASDActions, Controls.IPointNClickActions
     {
-        public event Action MoveEvent;
-        public event Action DashEvent;
-        public event Action<bool> AttackEvent;
-        public event Action StopEvent;
+        public Action<bool> MoveEvent;
+        public Action StopEvent;
+        public Action DashEvent;
+        public event Action<bool> LeftClickWaitEvent;
+        public Action<bool> AttackEvent;
         public Action InteractEvent;
 
         public List<Action> SkillActions = new List<Action>(4)
         {
             null, null, null, null
         };
-        
-        public event Action ReloadEvent;
+
+        private List<string> pointNClickSkillKeyNames = new List<string>(4)
+        {
+            "Q", "W", "E", "R"
+        };
+
+        private List<string> WASDSkillKeyNames = new List<string>(4)
+        {
+            "Q", "E", "C", "Shift"
+        };
 
         public Vector2 Movement { get; private set; }
         public Vector2 MousePosition { get; private set; }
 
         [SerializeField] private LayerMask _whatIsEnemy;
         [SerializeField] private LayerMask _whatIsGround;
+        [SerializeField] private LayerMask _whatIsMouseCheck;
         [SerializeField] private ControlType _controlType;
+
+        public ControlType ControlType => _controlType;
 
         private Controls _controls;
         public Controls Controls => _controls;
@@ -45,12 +56,20 @@ namespace YH.Players
         {
             DashEvent = null;
             AttackEvent = null;
+            StopEvent = null;
             MoveEvent = null;
             InteractEvent = null;
             for(byte i = 0; i < SkillActions.Count; i++)
                 SkillActions[i] = null;
         }
 
+        public string GetSkillKeyName(int skillIdx)
+        {
+            if (_controlType == ControlType.PointNClick)
+                return pointNClickSkillKeyNames[skillIdx];
+            else
+                return WASDSkillKeyNames[skillIdx];
+        }   
         private void OnEnable()
         {
             if (_controls == null)
@@ -75,7 +94,7 @@ namespace YH.Players
         {
             GetActionMap()?.Disable();
         }
-
+        
         public InputActionMap GetActionMap()
         {
             return _controlType switch
@@ -86,24 +105,26 @@ namespace YH.Players
             };
         }
 
-
         public void OnDash(InputAction.CallbackContext context)
         {
             if (context.performed)
                 DashEvent?.Invoke();
         }
 
-
         public void OnMove(InputAction.CallbackContext context)
         {
-            MoveEvent?.Invoke();
+            if (context.performed || context.started)
+                MoveEvent?.Invoke(true);
+            else
+                MoveEvent?.Invoke(false);
+
             Movement = context.ReadValue<Vector2>();
         }
         public Vector3 GetWorldMousePosition()
         {
             Ray ray = Camera.main.ScreenPointToRay(MousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _whatIsGround))
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _whatIsMouseCheck))
             {
                 _beforeMousePos = hitInfo.point;
                 return hitInfo.point;
@@ -111,7 +132,17 @@ namespace YH.Players
             return _beforeMousePos;
         }
 
+        public RaycastHit GetMouseGroundHit()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+            RaycastHit hit = default;
 
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _whatIsGround))
+                hit = hitInfo;
+            
+            return hit;
+        }
+        
         public RaycastHit GetMouseHitInfo()
         {
             float radius = 0.5f;
@@ -132,16 +163,18 @@ namespace YH.Players
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            // UI 클릭했을 때 발사 안되게 일단 처리 근데 마음에 안들어서 나중에 바꿀 계획
-            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-                return;
-
-            if (context.performed)
-                AttackEvent?.Invoke(true);
-            else if (context.canceled)
-                AttackEvent?.Invoke(false);
+            AttackCheck(context);
         }
 
+        private void AttackCheck(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                LeftClickWaitEvent?.Invoke(true);
+            else if (context.canceled)
+                LeftClickWaitEvent?.Invoke(false);
+
+        }
+        
         public void OnSkill1(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -175,6 +208,14 @@ namespace YH.Players
         {
             if (context.performed)
                 StopEvent?.Invoke();
+        }
+
+        public void OnMoveClick(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                MoveEvent?.Invoke(true);
+            else
+                MoveEvent?.Invoke(false);
         }
     }
 }

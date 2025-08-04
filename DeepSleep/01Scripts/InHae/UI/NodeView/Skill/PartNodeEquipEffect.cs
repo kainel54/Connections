@@ -1,6 +1,5 @@
 using System;
 using IH.EventSystem.NodeEvent.SkillNodeEvents;
-using IH.EventSystem.SoundEvent;
 using ObjectPooling;
 using UnityEngine;
 using YH.EventSystem;
@@ -9,6 +8,7 @@ public class PartNodeEquipEffect : MonoBehaviour, IPoolable
 {
     [SerializeField] private GameEventChannelSO _skillNodeEventChannelSO;
 
+    [SerializeField] private float _scale;
     [SerializeField] private Color _specialColor;
     [SerializeField] private EffectPoolingType _type;
     public GameObject GameObject => gameObject;
@@ -30,6 +30,12 @@ public class PartNodeEquipEffect : MonoBehaviour, IPoolable
         _skillNodeEventChannelSO.RemoveListener<EquipSkillSelectEvent>(HandleEquipSkillSelect);
     }
 
+    private void Update()
+    {
+        if(_particleSystem.isPlaying && !_isNodePanelOpen)
+            OnParticleSystemStopped();
+    }
+
     private void HandleEquipSkillSelect(EquipSkillSelectEvent evt)
     {
         _isNodePanelOpen = evt.isSelected;
@@ -40,7 +46,7 @@ public class PartNodeEquipEffect : MonoBehaviour, IPoolable
         PoolManager.Instance.Push(this, true);
     }
 
-    public void Init(Transform parent, bool isSpecial)
+    public void Init(RectTransform parent, bool isSpecial)
     {
         if (!_isNodePanelOpen)
         {
@@ -53,7 +59,7 @@ public class PartNodeEquipEffect : MonoBehaviour, IPoolable
         
         transform.SetParent(parent);
         transform.localPosition = new Vector3(0, 0, -10f);
-        transform.localScale = Vector3.one * 0.4f;
+        transform.localScale = Vector3.one * _scale;
         
         _particleSystem.Play();
     }

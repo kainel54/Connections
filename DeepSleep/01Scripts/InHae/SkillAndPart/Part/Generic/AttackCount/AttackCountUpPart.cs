@@ -7,7 +7,6 @@ public class AttackCountUpPart : SkillPart, IAttackCountPart
         if (_skill.GetSkillData(SkillFieldDataType.Generic) is GenericSkillDataSO data)
         {
             data.attackCountStat.currentValue += count;
-            AddUseSkillStat();
         }
     }
     public void DeCreaseAttackCount(int count)
@@ -16,9 +15,6 @@ public class AttackCountUpPart : SkillPart, IAttackCountPart
         {
             data.attackCountStat.currentValue = Mathf.Max(data.attackCountStat.defaultSkillInfo.minMaxValue.x, 
                 data.attackCountStat.currentValue - count);
-            
-            if(data.attackCountStat.currentValue <= 1)
-                RemoveUseSkillStat();
         }
     }
 }

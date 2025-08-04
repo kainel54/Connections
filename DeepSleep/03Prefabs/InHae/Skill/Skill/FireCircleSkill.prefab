@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1879348871194841195}
   - component: {fileID: 8440471726320982832}
+  - component: {fileID: 1077416629761615479}
   m_Layer: 0
   m_Name: FireCircleSkill
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7179147429636307229}
+  - {fileID: 4441171908596760137}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8440471726320982832
@@ -45,24 +46,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6f6023784eb62489b355e709f23714, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugList: []
+  _popSkillObj: {fileID: 8580413176338225127, guid: fa7d5d6e0eb2bb84cb7ee2ca47b76c74, type: 3}
+  _playerSkillPointEnum: 0
   _playerManager: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
-  _partParent: {fileID: 7179147429636307229}
+  player: {fileID: 0}
+  _soundEventChannel: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
+  _soundSo: {fileID: 11400000, guid: 1e650be246d82e44ea137d4d9754ab0e, type: 2}
   _skillFieldDataSO:
   - {fileID: 11400000, guid: da7f0d7b6cc1b1b4ba20ad2684f77c57, type: 2}
   - {fileID: 11400000, guid: 2649be5bd6b1b5f44a177766ae781480, type: 2}
   - {fileID: 11400000, guid: ee629f01e7a99f043896517043cf8e7b, type: 2}
   - {fileID: 11400000, guid: ff06ad849bd363f4c8d65b5684df16da, type: 2}
-  player: {fileID: 0}
-  isFire: 1
+  _defaultUseSkillStats:
+  - {fileID: 11400000, guid: d97ac85f3558a0e449364258f7c95a4d, type: 2}
+  - {fileID: 11400000, guid: 6561d74d7108c6446b84369ccad98eb6, type: 2}
+  - {fileID: 11400000, guid: c3875983c4f4b524f8548a76d529a5b9, type: 2}
+  - {fileID: 11400000, guid: 85cd2c12f7097794c894cad3513100f8, type: 2}
+  - {fileID: 11400000, guid: d2c5d39c970da04488694d6e386aee71, type: 2}
+  - {fileID: 11400000, guid: 33e7af80409709b48b22a09fcce264f2, type: 2}
+  - {fileID: 11400000, guid: ba4fb3a67ac7a09488ddd39d8f10f819, type: 2}
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2097408
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  skilltargetingObj: {fileID: 8580413176338225127, guid: fa7d5d6e0eb2bb84cb7ee2ca47b76c74, type: 3}
---- !u!1001 &6098840536914747232
+--- !u!114 &1077416629761615479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827444649188290909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1232a195c4fcc654fb37c6c1008e3829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationClip: {fileID: 7400000, guid: daa1cbf8c2bf39540a43dab81c6cb4f8, type: 2}
+  isPlayAnimation: 1
+--- !u!1001 &765662484717983796
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -119,8 +142,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 794612f42f692024899299f507eea02a, type: 3}
---- !u!4 &7179147429636307229 stripped
+--- !u!4 &4441171908596760137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3963761044050880125, guid: 794612f42f692024899299f507eea02a, type: 3}
-  m_PrefabInstance: {fileID: 6098840536914747232}
+  m_PrefabInstance: {fileID: 765662484717983796}
   m_PrefabAsset: {fileID: 0}

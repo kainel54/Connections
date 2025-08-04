@@ -4930,9 +4930,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 244198135378936621}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.68266994, y: -0, z: -0, w: 0.73072696}
+  m_LocalRotation: {x: -0.6826682, y: 0, z: 0, w: 0.7307285}
   m_LocalPosition: {x: 0.000015258789, y: -1.5338997, z: -374.5014}
-  m_LocalScale: {x: 0.44, y: 0.44, z: 0.44}
+  m_LocalScale: {x: 40, y: 40, z: 40}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 874274178254684998}
@@ -4959,7 +4959,7 @@ ParticleSystem:
   lengthInSec: 0.1
   simulationSpeed: 1
   stopAction: 3
-  cullingMode: 1
+  cullingMode: 2
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
@@ -5023,7 +5023,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -9853,7 +9853,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
 --- !u!114 &3532498438764884499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9867,8 +9867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skillNodeEventChannelSO: {fileID: 11400000, guid: 041174eda0f894141a38a9314e337994, type: 2}
-  _soundChannelSO: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
-  _equipPartSound: {fileID: 11400000, guid: 96343d4b194aa4548b13ef4e239c6154, type: 2}
+  _scale: 40
   _specialColor: {r: 0, g: 0.8117647, b: 1, a: 1}
   _type: 7
 --- !u!1 &2244329748864715185

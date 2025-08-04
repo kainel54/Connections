@@ -77,7 +77,7 @@ namespace YH.Entities
         private void Move()
         {
             if(_characterCompo.enabled)
-            _characterCompo.Move(_velocity);
+                _characterCompo.Move(_velocity);
         }
 
         public void SetMovement(Vector3 movement, bool isRotation = true)

@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 131328
   _whatIsGround:
     serializedVersion: 2
-    m_Bits: 1053248
+    m_Bits: 64
+  _whatIsMouseCheck:
+    serializedVersion: 2
+    m_Bits: 9441856
+  _controlType: 0

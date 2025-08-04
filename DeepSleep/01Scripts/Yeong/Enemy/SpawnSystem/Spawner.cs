@@ -25,7 +25,6 @@ public class Spawner : MonoBehaviour
     private List<BTEnemy> _spawnEnemy = new List<BTEnemy>();
 
     private Player _player;
-    private bool _debugTextOn;
     private WaveSO _currentWaveSO;
     private WaveData _currentWaveData;
     private byte _currentWaveCnt;
@@ -63,7 +62,6 @@ public class Spawner : MonoBehaviour
             Debug.Log($"{_currentWaveSO.name}/ 난이도{_currentWaveSO.waveDifficult.ToString()}, 웨이브개수{_currentWaveSO.waveList.Count}개");
             _testText.text = $"{_currentWaveSO.name}/ 난이도{_currentWaveSO.waveDifficult.ToString()}, 웨이브개수{_currentWaveSO.waveList.Count}개";
             _testText.enabled = true;
-            _debugTextOn = true;
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -86,6 +84,12 @@ public class Spawner : MonoBehaviour
     {
         StartCoroutine(SpawnRoutine());
     }
+    
+    public List<BTEnemy> GetSpawnedEnemies()
+    {
+        return _spawnEnemy;
+    }
+
 
     private IEnumerator SpawnRoutine()
     {

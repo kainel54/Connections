@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -13,20 +14,33 @@ namespace IH.UI
         public Color lineColor;
         
         [SerializeField] private Material _lineMaterial;
-        private readonly int _lineColorParam = Shader.PropertyToID("_LineColor");
+        private readonly int _lineEnableValueParam = Shader.PropertyToID("_UVXValue");
         private Material _uiLineMaterial;
 
-        protected override void Awake()
+        private Tween _chargeTween;
+        
+        protected override void OnEnable()
         {
-            base.Awake();
-            _uiLineMaterial = new Material(_lineMaterial);
+            base.OnEnable();
+            InitMaterialIfNeeded();
         }
 
-        // protected override void OnValidate()
-        // {
-        //     base.OnValidate();
-        //     SetVerticesDirty();
-        // }
+        public void InitMaterialIfNeeded()
+        {
+            if (_uiLineMaterial == null && _lineMaterial != null)
+            {
+                _uiLineMaterial = new Material(_lineMaterial);
+                _uiLineMaterial.name = "UILineMaterial (Instance)";
+                _uiLineMaterial.hideFlags = HideFlags.HideAndDontSave;
+                SetVerticesDirty();
+                SetMaterialDirty();
+            }
+        }
+
+        public void Init()
+        {
+            points = new Vector2[points.Length];
+        }
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
@@ -37,7 +51,6 @@ namespace IH.UI
             for (int i = 0; i < points.Length - 1; i++)
             {
                 CreateLineSegment(points[i], points[i + 1], vh);
-                //뭔가 할꺼야
                 int index = i * 5;
 
                 vh.AddTriangle(index, index + 1, index + 3);
@@ -78,7 +91,7 @@ namespace IH.UI
             }
 
             _uiLineMaterial = toUse;
-            return toUse;
+            return _uiLineMaterial;
         }
 
         private void CreateLineSegment(Vector3 point1, Vector3 point2, VertexHelper vh)
@@ -89,24 +102,29 @@ namespace IH.UI
             vertex.color = lineColor;
     
             Quaternion point1Rot = Quaternion.Euler(0, 0, RotatePointToward(point1, point2) + 90f);
-            vertex.position = point1Rot * new Vector3(-thickness * 0.5f, 0); //왼쪽에 있는 점 회전
+            vertex.position = point1Rot * new Vector3(-thickness * 0.5f, 0);
             vertex.position += point1 - offset;
+            vertex.uv0 = new Vector2(0f, 0f);
             vh.AddVert(vertex);
     
-            vertex.position = point1Rot * new Vector3(thickness * 0.5f, 0); //오른쪽에 있는 점 회전
+            vertex.position = point1Rot * new Vector3(thickness * 0.5f, 0);
             vertex.position += point1 - offset;
+            vertex.uv0 = new Vector2(0f, 1f);
             vh.AddVert(vertex);
     
             Quaternion point2Rot = Quaternion.Euler(0, 0, RotatePointToward(point2, point1) - 90f);
-            vertex.position = point2Rot * new Vector3(-thickness * 0.5f, 0); //왼쪽에 있는 점 회전
+            vertex.position = point2Rot * new Vector3(-thickness * 0.5f, 0);
             vertex.position += point2 - offset;
+            vertex.uv0 = new Vector2(1f, 0f);
             vh.AddVert(vertex);
     
-            vertex.position = point2Rot * new Vector3(thickness * 0.5f, 0); //오른쪽에 있는 점 회전
+            vertex.position = point2Rot * new Vector3(thickness * 0.5f, 0);
             vertex.position += point2 - offset;
+            vertex.uv0 = new Vector2(1f, 1f);
             vh.AddVert(vertex);
 
             vertex.position = point2 - offset;
+            vertex.uv0 = new Vector2(0.5f, 0.5f);
             vh.AddVert(vertex);
         }
 
@@ -115,12 +133,27 @@ namespace IH.UI
 
         public void LineEnable()
         {
-            _uiLineMaterial.SetColor(_lineColorParam, Color.yellow);
+            InitMaterialIfNeeded();
+            _uiLineMaterial.SetFloat(_lineEnableValueParam, 1.0f);
         }
 
         public void LineDisable()
         {
-            _uiLineMaterial.SetColor(_lineColorParam, new Color(0.3f, 0.3f, 0.3f));
+            if (_chargeTween.IsActive() && _chargeTween.IsPlaying())
+            {
+                _chargeTween.Kill();
+            }
+            
+            InitMaterialIfNeeded();
+            _uiLineMaterial.SetFloat(_lineEnableValueParam, 0.0f);
+        }
+
+        public void LineLerpEnable()
+        {
+            InitMaterialIfNeeded();
+            
+            _chargeTween = _uiLineMaterial.DOFloat(1.0f, _lineEnableValueParam, 0.75f).SetUpdate(true)
+                .SetEase(Ease.OutExpo);
         }
     }
 }

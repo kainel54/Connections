@@ -1,8 +1,10 @@
 using IH.EventSystem.UIEvent;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using YH.Players;
 
 public class PlayerSkillHud : MonoBehaviour
 {
@@ -10,8 +12,22 @@ public class PlayerSkillHud : MonoBehaviour
     [SerializeField] private Image _skillCoolFadeImage;
     [SerializeField] private TextMeshProUGUI _skillCoolTimeText;
     [SerializeField] private TextMeshProUGUI _skillCountText;
-    
+    [SerializeField] private TextMeshProUGUI _skillKeyText;
+
+    [SerializeField] private PlayerManagerSO _playerManagerSo;
+    [SerializeField] private int _skillIdx;
+
     private Skill _currentSkill;
+
+    private void Awake()
+    {
+        _playerManagerSo.SetUpPlayerEvent += HandleSetUpPlayer;
+    }
+
+    private void HandleSetUpPlayer()
+    {
+        _skillKeyText.SetText(_playerManagerSo.Player.PlayerInput.GetSkillKeyName(_skillIdx));
+    }
 
     private void OnDestroy()
     {

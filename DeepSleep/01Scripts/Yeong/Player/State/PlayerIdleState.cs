@@ -5,20 +5,15 @@ using UnityEngine;
 
 namespace YH.Players
 {
-    public class PlayerIdleState : EntityState
+    public class PlayerIdleState : PlayerGroundState
     {
-        private PointNClickPlayer _player;
-        private EntityAIMover _mover;
         public PlayerIdleState(Entity entity, AnimParamSO animParam) : base(entity, animParam)
         {
-            _player = entity as PointNClickPlayer;
-            _mover = entity.GetCompo<EntityAIMover>();
         }
 
         public override void Enter()
         {
             base.Enter();
-            Debug.Log("Idle");
             _mover.StopImmediately();
         }
 

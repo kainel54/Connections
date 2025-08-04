@@ -63,7 +63,7 @@ public class EntityHealth : MonoBehaviour, IEntityComponent, IAfterInitable, IDa
         OnHealthChangedEvent?.Invoke(prevHealth, Health, false);
     }
 
-    public void ApplyDamage(HitData hitData, bool isChangeVisible = true, bool isTextVisible = true, float damageDecrease = 1)
+    public void ApplyDamage(HitData hitData, bool isChangeVisible = true, bool isTextVisible = true, float damageMultiplier = 1)
     {
         if (_isDie) return;
         if (_isInvincible) return;
@@ -76,7 +76,7 @@ public class EntityHealth : MonoBehaviour, IEntityComponent, IAfterInitable, IDa
         //damage = 100 / (100 + statCompo.GetElement("Defense").Value) * damage;
         //damage = damage * Mathf.Log(damage / statCompo.GetElement("Defense").Value * 10);
         
-        damage = damage * Mathf.Log10(damage / _statCompo.GetElement("Defense").Value * 10) * damageDecrease;
+        damage = damage * Mathf.Log10(damage / _statCompo.GetElement("Defense").Value * 10) * damageMultiplier;
         if (random < hitData.ciriticalChance)
         {
             isCritical = true;

@@ -1,12 +1,16 @@
+using TMPro;
 using YH.EventSystem;
 
 namespace IH.EventSystem.NodeEvent.SkillNodeEvents
 {
     public static class SkillNodeEvents
     {
-        public static InitNodeSkillEvent InitNodeSkillEvent = new InitNodeSkillEvent();
-        public static SkillStatViewInitEvent SkillStatViewInitEvent = new SkillStatViewInitEvent();
+        public static SkillNodeInitEvent SkillNodeInitEvent = new SkillNodeInitEvent();
+        public static SkillUnEquipCheckEvent SkillUnEquipCheckEvent = new SkillUnEquipCheckEvent();
         
+        public static SetSkillResultDescriptionEvent SetSkillResultDescriptionEvent = new();
+        public static SkillStatViewInitEvent SkillStatViewInitEvent = new SkillStatViewInitEvent();
+
         public static EquipPartInfoInitEvent EquipPartInfoInitEvent = new EquipPartInfoInitEvent();
         public static EquipPartInfoEvent EquipPartInfoEvent = new EquipPartInfoEvent();
         
@@ -15,10 +19,22 @@ namespace IH.EventSystem.NodeEvent.SkillNodeEvents
         public static SkillAutoEquipEvent SkillAutoEquipEvent = new SkillAutoEquipEvent();
     }
 
-    public class InitNodeSkillEvent : GameEvent
+    public class SkillNodeInitEvent : GameEvent
     {
         public SkillInventoryItem skillInventoryItem;
         public Skill skill;
+    }
+
+    public class SkillUnEquipCheckEvent : GameEvent
+    {
+        public Skill skill;
+    }
+
+    public class SetSkillResultDescriptionEvent : GameEvent
+    {
+        public SkillInventoryItem skillInventoryItem;
+        public SkillResultDescription targetDescription;
+        public TextMeshProUGUI attackTypeAndTypeText;
     }
 
     public class SkillStatViewInitEvent : GameEvent

@@ -18,7 +18,6 @@ public class DelayStep : TutorialStep
         _delayTimer += Time.deltaTime;
         if (_delayTimer > _delayTime)
         {
-            _tutorialManager.NextStep();
         }
     }
 }

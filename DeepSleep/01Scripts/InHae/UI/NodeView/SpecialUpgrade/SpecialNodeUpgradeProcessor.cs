@@ -24,8 +24,6 @@ public class SpecialNodeUpgradeProcessor : MonoBehaviour, ISpecialNodeUpgradeCom
 
     private bool _canUpgrade;
 
-    public event Action UpgradeAction;
-    
     public void Initialize(SpecialNodeUpgradeManager manager)
     {
         _manager = manager;

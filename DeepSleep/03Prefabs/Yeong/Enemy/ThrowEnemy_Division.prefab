@@ -334,12 +334,13 @@ GameObject:
   - component: {fileID: 3211411407779661174}
   - component: {fileID: 9088597465586244100}
   - component: {fileID: 8624865548856882608}
-  - component: {fileID: 6679382682985518593}
   - component: {fileID: 3501556711417923344}
   - component: {fileID: 4280730269878055858}
   - component: {fileID: 8864605419406652446}
   - component: {fileID: 8323378462425101117}
   - component: {fileID: 6284964407866500088}
+  - component: {fileID: 8424297113478687639}
+  - component: {fileID: 1395084142930516511}
   m_Layer: 8
   m_Name: ThrowEnemy_Division
   m_TagString: Enemy
@@ -387,7 +388,7 @@ MonoBehaviour:
     m_Bits: 128
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 8393216
+    m_Bits: 25170432
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -412,6 +413,8 @@ MonoBehaviour:
   - rid: 7314996117350121996
   - rid: 7314996117350122257
   - rid: 3004151788853003218
+  m_IsInitialised: 0
+  m_IsStarted: 0
   references:
     version: 2
     RefIds:
@@ -462,7 +465,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989220315994550441}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.3
   m_Speed: 3.5
@@ -500,19 +503,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6679382682985518593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 989220315994550441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4ae2fe1a433aa409b8d3d1ea6ed26a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
 --- !u!114 &3501556711417923344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -631,6 +621,48 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!54 &8424297113478687639
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989220315994550441}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!114 &1395084142930516511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989220315994550441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0775cb728925040bbd92a842f8ae52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
+  _knockbackThreshold: 0.3
+  _maxKnockbackTime: 0.3
 --- !u!1 &1244745592007476670
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using IH.EventSystem.NodeEvent.SpecialPartNodeEvent;
+using ObjectPooling;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,6 +32,12 @@ public class SpecialUpgradePartNode : BaseNode, IPointerClickHandler
     {
         CurrentNodeData = nodeData;
         CurrentEquipData = nodeEquipData;
+
+        if (_poolingType == NodeUIPoolingType.SpecialUpgradePartNode)
+        {
+            foreach (var edge in _edgeImageList)
+                edge.color = Color.white;
+        }
         
         gameObject.SetActive(true);
         UpdateNode(nodeEquipData);
@@ -50,11 +57,11 @@ public class SpecialUpgradePartNode : BaseNode, IPointerClickHandler
         image.color = color;
     }
 
-    public override void NodeConnectCheck()
+    public override void NodeConnectCheckAndEnable()
     {
         for (int i = 0; i < connectedNodes.Count; i++)
         {
-            var node = connectedNodes[i] as DefaultUpgradePartNode;
+            var node = connectedNodes[i] as SpecialUpgradePartNode;
             if (node.isEmpty)
                 continue;
             
@@ -64,7 +71,7 @@ public class SpecialUpgradePartNode : BaseNode, IPointerClickHandler
 
             node.activeFrame.ActiveFrameEnable();
             _isConnect = true;
-            node.NodeConnectCheck();
+            node.NodeConnectCheckAndEnable();
         }
     }
 
@@ -86,5 +93,11 @@ public class SpecialUpgradePartNode : BaseNode, IPointerClickHandler
         {
             Tween tween = _edgeImageList[i].DOColor(_specialColor, time);
         }
+    }
+
+    public override void OnPush()
+    {
+        base.OnPush();
+        _isConnect = false;
     }
 }

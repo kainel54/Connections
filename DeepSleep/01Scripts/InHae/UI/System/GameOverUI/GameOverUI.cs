@@ -25,20 +25,19 @@ public class GameOverUI : MonoBehaviour
         _playerManagerSO.SetUpPlayerEvent -= HandlePlayerSetUp;
         
         if(_player != null)
-            _player.GetCompo<PlayerAnimator>().OnDieEvent -= HandleDeadEvent;
+            _player.OnDieEvent -= HandleDeadEvent;
     }
 
     private void HandlePlayerSetUp()
     {
         _player = _playerManagerSO.Player;
-        //_player.GetCompo<PlayerAnimator>().OnDieEvent += HandleDeadEvent;
+        _player.OnDieEvent += HandleDeadEvent;
     }
 
     private void HandleDeadEvent()
     {
         _uiInputReader.Controls.UI.Disable();
         _player.PlayerInput.GetActionMap().Disable();
-
 
         gameObject.SetActive(true);
         _gameOverPanel.blocksRaycasts = true;

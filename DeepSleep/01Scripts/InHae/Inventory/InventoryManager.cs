@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+ using System.Collections.Generic;
 using System.Linq;
 
 namespace IH.Manager
 {
     public class InventoryManager : MonoSingleton<InventoryManager>
     {
-        private Dictionary<InventoryType, Inventory> _inventoryDictionary = new Dictionary<InventoryType, Inventory>();
+        private Dictionary<ItemType, Inventory> _inventoryDictionary = new Dictionary<ItemType, Inventory>();
 
         private void Awake()
         {
@@ -13,24 +13,24 @@ namespace IH.Manager
         }
 
         public void AddInventoryItemWithSo(ItemDataSO itemData) => 
-            _inventoryDictionary[itemData.inventoryType].AddItemWithSo(itemData);
+            _inventoryDictionary[itemData.itemType].AddItemWithSo(itemData);
         
-        public void AddInventoryItem(InventoryType type, InventoryItem item) => 
+        public void AddInventoryItem(ItemType type, InventoryItem item) => 
             _inventoryDictionary[type].AddItem(item);
 
         public void RemoveInventoryItemWithSo(ItemDataSO itemData) => 
-            _inventoryDictionary[itemData.inventoryType].RemoveItemWithSo(itemData);
+            _inventoryDictionary[itemData.itemType].RemoveItemWithSo(itemData);
         
-        public void RemoveInventoryItem(InventoryType type, InventoryItem item) => 
+        public void RemoveInventoryItem(ItemType type, InventoryItem item) => 
             _inventoryDictionary[type].RemoveItem(item);
         
         public bool CanAddItem(ItemDataSO itemData) => 
-            _inventoryDictionary[itemData.inventoryType].CanAddItem(itemData);
+            _inventoryDictionary[itemData.itemType].CanAddItem(itemData);
         
-        public Inventory GetInventory(InventoryType type) => 
+        public Inventory GetInventory(ItemType type) => 
             _inventoryDictionary[type];
         
-        public void SetStash(InventoryType type, Stash stash) => 
+        public void SetStash(ItemType type, Stash stash) => 
             _inventoryDictionary[type].SetStash(stash);
     }
 }

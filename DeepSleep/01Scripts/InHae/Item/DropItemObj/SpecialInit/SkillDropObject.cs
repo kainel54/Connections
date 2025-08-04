@@ -3,52 +3,46 @@ using ObjectPooling;
 using System;
 using UnityEngine;
 
-public class SkillDropObject : DropItem, IPoolable, ISpecialInitItem
+public class SkillDropObject : DropItem, ISpecialInitItem
 {
     public SkillItemSO skillItem;
 
-    public GameObject GameObject { get => gameObject; set { } }
     [SerializeField] private ObjectType _type;
-    public Enum PoolEnum { get => _type; set { } }
+    public override Enum PoolEnum => _type;
+
+    private Transform _visualTrm;
+    private bool _isInit;
+
+    public override bool IsCollectAble => InventoryManager.Instance.CanAddItem(skillItem);
 
     public override void PickUp(Collider other)
     {
-        if (InventoryManager.Instance.CanAddItem(skillItem))
+        if (IsCollectAble)
         {
             InventoryManager.Instance.AddInventoryItemWithSo(skillItem);
-            Destroy(gameObject);
+            base.PickUp(other);
         }
     }
 
     public void SpecialInit(ItemDataSO dataSo)
     {
         itemData = dataSo;
-        this.skillItem = dataSo as SkillItemSO;
+        skillItem = dataSo as SkillItemSO;
     }
 
     public void VisualInit()
     {
-        Transform visualTrm = Instantiate(skillItem.visual, transform).transform;
-        visualTrm.localPosition = Vector3.zero;
+        if (!_isInit)
+            _isInit = true;
+        
+        _visualTrm = Instantiate(skillItem.visual, transform).transform;
+        _visualTrm.localPosition = Vector3.zero;
     }
-
-    public void VisualInit(Transform parent)
+    
+    public override void OnPush()
     {
-        Transform visualTrm = Instantiate(skillItem.visual, parent).transform;
-        visualTrm.localPosition = Vector3.zero;
-    }
-
-    public void Init()
-    {
-        itemData = null;
-        skillItem = null;
-    }
-
-    public void OnPop()
-    {
-    }
-
-    public void OnPush()
-    {
+        base.OnPush();
+        if (_isInit)
+            Destroy(_visualTrm.gameObject);
     }
 }

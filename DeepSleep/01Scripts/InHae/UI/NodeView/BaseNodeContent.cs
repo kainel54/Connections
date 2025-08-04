@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BaseNodeContent : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerExitHandler
+public abstract class BaseNodeContent : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _whellSpeed;
@@ -10,7 +10,7 @@ public class BaseNodeContent : MonoBehaviour, IDragHandler, IPointerEnterHandler
 
     private float _currentScale = 1;
     private bool _isMouseOver;
-    
+
     public void OnDrag(PointerEventData eventData)
     {
         if(eventData.button != PointerEventData.InputButton.Left)

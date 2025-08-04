@@ -1,6 +1,8 @@
+using System;
 using IH.EventSystem.LevelEvent;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using YH.EventSystem;
 
 public class Barrier : MonoBehaviour
@@ -10,24 +12,56 @@ public class Barrier : MonoBehaviour
 
     private readonly int _offset = Shader.PropertyToID("_Offset");
     private MeshRenderer _barrierMaterial;
+    private BoxCollider _boxCollider;
+    private NavMeshObstacle _navMeshObstacle;
 
     private float _startValue = 0;
     private float _endValue = 0.8f;
 
     private void OnEnable()
     {
+        _navMeshObstacle = GetComponent<NavMeshObstacle>();
         _barrierMaterial = GetComponent<MeshRenderer>();
+        _boxCollider = GetComponent<BoxCollider>();
+        
+        _boxCollider.enabled = false;
+        _navMeshObstacle.enabled = false;
         _barrierMaterial.material.SetFloat(_offset, 0);
 
-        if (!gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy)
         {
-            _startStageEventChannel.AddListener<StageStartEvent>((evt) => StartCoroutine(RaiseBarrier()));
-            _endStageEventChannel.AddListener<StageEndEvent>((evt) => StartCoroutine(LowerBarrier()));
+            _startStageEventChannel.AddListener<StageStartEvent>(Raise);
+            _endStageEventChannel.AddListener<StageEndEvent>(Lower);
         }
+    }
+    
+    private void OnDisable()
+    {
+        _startStageEventChannel.RemoveListener<StageStartEvent>(Raise);
+        _endStageEventChannel.RemoveListener<StageEndEvent>(Lower);
+    }
+
+    private void OnDestroy()
+    {
+        _startStageEventChannel.RemoveListener<StageStartEvent>(Raise);
+        _endStageEventChannel.RemoveListener<StageEndEvent>(Lower);
+    }
+
+    private void Raise(StageStartEvent evt)
+    {
+        StartCoroutine(RaiseBarrier());
+    }
+
+    private void Lower(StageEndEvent evt)
+    {
+        StartCoroutine(LowerBarrier());
     }
 
     public IEnumerator RaiseBarrier()
     {
+        _boxCollider.enabled = true;
+        _navMeshObstacle.enabled = true;
+
         float startValue = _startValue;
         float endValue = _endValue;
 
@@ -48,6 +82,9 @@ public class Barrier : MonoBehaviour
 
     public IEnumerator LowerBarrier()
     {
+        _boxCollider.enabled = false;
+        _navMeshObstacle.enabled = false;
+
         float startValue = _endValue;
         float endValue = _startValue;
 
@@ -64,11 +101,5 @@ public class Barrier : MonoBehaviour
 
             yield return null;
         }
-    }
-
-    private void OnDisable()
-    {
-        _startStageEventChannel.RemoveListener<StageStartEvent>((evt) => StartCoroutine(RaiseBarrier()));
-        _endStageEventChannel.RemoveListener<StageEndEvent>((evt) => StartCoroutine(LowerBarrier()));
     }
 }

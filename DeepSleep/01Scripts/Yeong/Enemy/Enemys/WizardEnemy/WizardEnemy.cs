@@ -26,7 +26,7 @@ public class WizardEnemy : DefaultEnemy, IDodgeable
         if (_lastDodgeTime + _dodgeCoolTime < Time.time)
         {
             _lastDodgeTime = Time.time;
-            GetCompo<EnemyMovement>().Dodge();
+            GetCompo<EnemyMovement>(true).Dodge();
             var evt = SpawnEvents.EffectSpawn;
             evt.position = transform.position;
             evt.rotation = Quaternion.identity;

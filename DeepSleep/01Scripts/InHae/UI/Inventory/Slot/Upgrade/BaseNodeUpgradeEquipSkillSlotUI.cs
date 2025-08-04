@@ -1,8 +1,11 @@
+using System;
 using IH.EventSystem.UIEvent;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using YH.EventSystem;
+using YH.Players;
 
 public abstract class BaseNodeUpgradeEquipSkillSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -10,15 +13,34 @@ public abstract class BaseNodeUpgradeEquipSkillSlotUI : MonoBehaviour, IPointerE
     [SerializeField] protected GameEventChannelSO _upgradeEventChannel;
     [SerializeField] private GameEventChannelSO _uiEventChannel;
     [SerializeField] private Image _skillImage;
+    [SerializeField] private TextMeshProUGUI _skillKeyText;
     public int index;
 
     protected SkillInventoryItem _currentSkillItem;
+    
+    [SerializeField] private PlayerManagerSO _playerManagerSo;
+
     protected bool _isEmpty => _currentSkillItem == null || _currentSkillItem.data == null;
     protected bool _isLocked;
+
+    protected virtual void Awake()
+    {
+        _playerManagerSo.SetUpPlayerEvent += HandleSetUpPlayer;
+    }
     
+    protected virtual void OnDestroy()
+    {
+        _playerManagerSo.SetUpPlayerEvent -= HandleSetUpPlayer;
+    }
+    
+    private void HandleSetUpPlayer()
+    {
+        _skillKeyText.SetText(_playerManagerSo.Player.PlayerInput.GetSkillKeyName(index));
+    }
+
     public void Init(SkillEquipSlot slot)
     {
-        if (slot == null || slot.isEmpty)
+        if (slot == null || slot.IsEmpty)
             return;
         
         _currentSkillItem = slot.currentSkillItem;

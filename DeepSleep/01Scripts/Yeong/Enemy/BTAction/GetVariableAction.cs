@@ -14,13 +14,13 @@ public partial class GetVariableAction : Action
     protected override Status OnStart()
     {
         BTEnemy enemy = Entity.Value;
-        
-        enemy.SetVariable("Mover", enemy.GetCompo<EnemyMovement>());
+
+        enemy.SetVariable("Mover", enemy.GetCompo<EnemyMovement>(true));
         enemy.SetVariable("Renderer", enemy.GetCompo<EnemyAnimator>());
         enemy.SetVariable("AnimTrigger", enemy.GetCompo<EntityAnimationTrigger>());
         enemy.SetVariable("DamageCaster", enemy.GetCompo<EnemyDamageCaster>());
         enemy.SetVariable("Target", enemy.player);
-        
+
         return Status.Running;
     }
 }

@@ -25,8 +25,8 @@ public partial class DashAction : Action
 
     protected override Status OnStart()
     {
-        _movement = Agent.Value.GetCompo<EnemyMovement>();
-
+        _movement = Agent.Value.GetCompo<EnemyMovement>(true);
+        _movement.NavMeshEnable(false);
         Vector3 direction = Target.Value.position - Agent.Value.transform.position;
         direction.y = 0;
         direction.Normalize();
@@ -62,6 +62,7 @@ public partial class DashAction : Action
         if (Time.time >= _startTime + Duration ||
             Vector3.Distance(Agent.Value.transform.position, _targetPosition) < 0.05f)
         {
+            _movement.NavMeshEnable(true);
             return Status.Success;
         }
 

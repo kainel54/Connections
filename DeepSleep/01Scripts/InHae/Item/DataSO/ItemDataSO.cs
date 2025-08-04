@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum ItemTier
 {
@@ -11,7 +12,7 @@ public enum ItemTier
 [CreateAssetMenu(fileName = "ItemDataSO", menuName = "SO/Item/ItemDataSO")]
 public class ItemDataSO : ScriptableObject
 {
-    public InventoryType inventoryType;
+    [FormerlySerializedAs("inventoryType")] public ItemType itemType;
     public ItemTier itemTier;
     
     public Sprite icon;

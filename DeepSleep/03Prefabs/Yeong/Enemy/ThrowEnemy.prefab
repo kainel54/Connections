@@ -1070,12 +1070,13 @@ GameObject:
   - component: {fileID: 3711470766620505169}
   - component: {fileID: 3457857667048659448}
   - component: {fileID: 8475831932098104613}
-  - component: {fileID: 7743198215112249966}
   - component: {fileID: 2204631840235518565}
   - component: {fileID: 2367965038674598062}
   - component: {fileID: 2138722877586480311}
   - component: {fileID: -4862371051022507675}
   - component: {fileID: -3158699756727293186}
+  - component: {fileID: 3573288618123597014}
+  - component: {fileID: 612898364969713451}
   m_Layer: 8
   m_Name: ThrowEnemy
   m_TagString: Enemy
@@ -1123,7 +1124,7 @@ MonoBehaviour:
     m_Bits: 128
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 8393216
+    m_Bits: 25170432
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -1148,6 +1149,8 @@ MonoBehaviour:
   - rid: 7314996117350121996
   - rid: 7314996117350122257
   - rid: 3004151788853003218
+  m_IsInitialised: 0
+  m_IsStarted: 0
   references:
     version: 2
     RefIds:
@@ -1198,7 +1201,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4755180648745780483}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.3
   m_Speed: 3.5
@@ -1236,19 +1239,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7743198215112249966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4755180648745780483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4ae2fe1a433aa409b8d3d1ea6ed26a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
 --- !u!114 &2204631840235518565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1367,6 +1357,48 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!54 &3573288618123597014
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755180648745780483}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!114 &612898364969713451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755180648745780483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0775cb728925040bbd92a842f8ae52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
+  _knockbackThreshold: 0.3
+  _maxKnockbackTime: 0.3
 --- !u!1 &4822996182373177345
 GameObject:
   m_ObjectHideFlags: 0

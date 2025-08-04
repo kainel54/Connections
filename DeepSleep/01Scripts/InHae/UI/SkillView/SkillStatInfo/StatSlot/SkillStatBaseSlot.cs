@@ -8,40 +8,44 @@ public abstract class SkillStatBaseSlot : MonoBehaviour, IPointerEnterHandler, I
 {
     public SkillStatInfoSO statInfo;
     [SerializeField] protected Image _iconImage;
+    [SerializeField] protected TextMeshProUGUI _statNameText;
     [SerializeField] protected TextMeshProUGUI _valueText;
-    private Image _image;
+    [SerializeField] private float _disableAlpha;
     
     private SkillStatPopUpUI _skillStatPopUp;
     private RectTransform _popUpPanelRectTransform => _skillStatPopUp.transform as RectTransform;
     
-    private Color _defaultColor;
     private Color _imageDefaultColor;
     private Color _textDefaultColor;
 
     private void Start()
     {
-        _image = GetComponent<Image>();
         _skillStatPopUp = UIHelper.Instance.GetSkillStatPopUpUI();
         
-        _defaultColor = _image.color;
         _imageDefaultColor = _iconImage.color;
         _textDefaultColor = _valueText.color;
     }
 
     public virtual void Init(BaseSkillStatElement baseSkillStatElement)
     {
-        _image.color = _defaultColor;
+        _statNameText.text = baseSkillStatElement.statInfo.title;
+        
         _iconImage.color = _imageDefaultColor;
         _valueText.color = _textDefaultColor;
+        _statNameText.color = _textDefaultColor;
         
         _iconImage.sprite = baseSkillStatElement.statInfo.icon;
+        _iconImage.color = baseSkillStatElement.statInfo.iconColor;
     }
 
     public void Disable()
     {
-        _image.color = new Color(1, 1, 1, 0.1f);
-        _iconImage.color = new Color(1, 1, 1, 0.1f);
-        _valueText.color = new Color(1, 1, 1, 0.1f);
+        _valueText.color = new Color(1, 1, 1, _disableAlpha);
+        _statNameText.color = new Color(1, 1, 1, _disableAlpha);
+        
+        Color iconColor = _iconImage.color;
+        iconColor.a = _disableAlpha;
+        _iconImage.color = iconColor;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

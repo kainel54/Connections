@@ -77,12 +77,13 @@ GameObject:
   - component: {fileID: 1204439268391796960}
   - component: {fileID: 8917841135644898174}
   - component: {fileID: 3881111001696120575}
-  - component: {fileID: 8219672486782556332}
   - component: {fileID: 7997413302781791472}
   - component: {fileID: 4116111486740696737}
   - component: {fileID: 5029384920773595125}
   - component: {fileID: 782105312925155295}
   - component: {fileID: 5860496418785109327}
+  - component: {fileID: -3766977867561139212}
+  - component: {fileID: 1630605215235608626}
   m_Layer: 8
   m_Name: DashEnemy
   m_TagString: Enemy
@@ -131,7 +132,7 @@ MonoBehaviour:
     m_Bits: 128
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 8393216
+    m_Bits: 25170432
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -153,6 +154,8 @@ MonoBehaviour:
   - rid: 7314996116533018955
   - rid: 7314996117350121996
   - rid: 7314996117350122257
+  m_IsInitialised: 0
+  m_IsStarted: 0
   references:
     version: 2
     RefIds:
@@ -195,7 +198,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241004620319060129}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.3
   m_Speed: 3.5
@@ -233,19 +236,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &8219672486782556332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1241004620319060129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4ae2fe1a433aa409b8d3d1ea6ed26a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
 --- !u!114 &7997413302781791472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,6 +357,48 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!54 &-3766977867561139212
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241004620319060129}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!114 &1630605215235608626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241004620319060129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0775cb728925040bbd92a842f8ae52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedSO: {fileID: 11400000, guid: 646a98131ca8d0143b0500c096910bd8, type: 2}
+  _knockbackThreshold: 0.3
+  _maxKnockbackTime: 0.3
 --- !u!1 &1261799574342244137
 GameObject:
   m_ObjectHideFlags: 0

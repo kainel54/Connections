@@ -1,14 +1,18 @@
 using DG.Tweening;
+using IH.EventSystem.SoundEvent;
 using ObjectPooling;
 using UnityEngine;
 using UnityEngine.Events;
 using YH.Combat;
 using YH.Enemy;
+using YH.EventSystem;
 using YH.StatSystem;
 
 public class SpinksBossTower : MonoBehaviour, IDamageable
 {
     [SerializeField] private AnimatorOverrideController _overrideAnimation;
+    [SerializeField] private GameEventChannelSO _soundChannelSO;
+    [SerializeField] private SoundSO _lowerSound;
 
     public UnityEvent OnDieEvent;
 
@@ -22,9 +26,12 @@ public class SpinksBossTower : MonoBehaviour, IDamageable
     protected SpinksEnemyAttackCompo _attackCompo;
 
     private Transform _objTopTrm;
+
+    private Transform _visualTrm;
     private void Start()
     {
         _objTopTrm = transform.Find("TopTrm").transform;
+        _visualTrm = transform.Find("Visual").transform;
     }
 
     public void SetBoss(BTEnemy enemy)
@@ -85,10 +92,17 @@ public class SpinksBossTower : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        if (IsDie) return;
+        if (IsDie)
+            return;
+
+        var soundEvt = SoundEvents.PlaySfxEvent;
+        soundEvt.position = transform.position;
+        soundEvt.clipData = _lowerSound;
+        _soundChannelSO.RaiseEvent(soundEvt);
+
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(transform.DOShakePosition(1.5f, .6f));
+        seq.Append(_visualTrm.DOShakePosition(1.5f, .6f));
         seq.Append(transform.DOLocalMoveY(-8, 2));
 
         IsDie = true;

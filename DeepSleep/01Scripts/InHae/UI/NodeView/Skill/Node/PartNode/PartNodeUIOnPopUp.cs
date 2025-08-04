@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PartNodeUIOnPopUp : MonoBehaviour, IPartNodeUIComponent
@@ -5,7 +6,7 @@ public class PartNodeUIOnPopUp : MonoBehaviour, IPartNodeUIComponent
     [SerializeField] protected float _xOffset;
     protected ItemPopUpPanel _popUpPanel;
 
-    private void Awake()
+    private void Start()
     {
         _popUpPanel = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Part);
     }

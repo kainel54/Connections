@@ -15,6 +15,8 @@ public class DefaultRoomChest : MonoBehaviour
     [SerializeField] private ParticleSystem _openParticle;
     [SerializeField] private SoundSO _openSO;
 
+    [SerializeField] private LayerMask _layerMask;
+
     private void OnEnable()
     {
         _chestMeshFilter = GetComponent<MeshFilter>();
@@ -38,7 +40,6 @@ public class DefaultRoomChest : MonoBehaviour
 
     public void Open()
     {
-        //ParticleSystem openParticle = Instantiate(_openParticle, _spawnPoint.position, Quaternion.identity);
         _chestMeshFilter.mesh = _openedChestMest;
 
         SoundPlayer sound = PoolManager.Instance.Pop(ObjectType.SoundPlayer) as SoundPlayer;
@@ -51,7 +52,9 @@ public class DefaultRoomChest : MonoBehaviour
             Vector3 dropPos = new Vector3(transform.position.x + randomPoint.y * 1.2f, transform.position.y,
                 transform.position.z + randomPoint.x * 0.8f);
 
-            DropItem dropItem = Instantiate(_itemList.RandItem(), transform, true);
+            DropItem dropItem = PoolManager.Instance.Pop(_itemList.RandItem().PoolEnum) as DropItem;
+            dropItem.transform.position = dropPos;
+            dropItem.transform.parent = transform;
 
             if (dropItem is ISpecialInitItem specialInitItem)
             {
@@ -59,9 +62,9 @@ public class DefaultRoomChest : MonoBehaviour
 
                 if (dropItem as PartDropObject)
                     dataSo = _itemList.RandSkillPart();
-                if(dropItem as SkillDropObject)
+                if (dropItem as SkillDropObject)
                     dataSo = _itemList.RandSkill();
-                if(dropItem as NodeAbilityDropObject)
+                if (dropItem as NodeAbilityDropObject)
                     dataSo = _itemList.RandNodeAbility();
                 
                 specialInitItem.SpecialInit(dataSo);
@@ -69,10 +72,10 @@ public class DefaultRoomChest : MonoBehaviour
             }
 
             dropItem.transform.position = _spawnPoint.position;
-            dropItem.SetItemDropPosition(dropPos);
+            dropItem.SetItemDropPosition(dropPos, _layerMask);
         }
 
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             Vector2 randomPoint = Random.insideUnitCircle * _dropRange;
             Vector3 dropPos = new Vector3(transform.position.x + randomPoint.y * 1.2f, transform.position.y,
@@ -81,7 +84,7 @@ public class DefaultRoomChest : MonoBehaviour
             Coin coin = PoolManager.Instance.Pop(ObjectType.Coin) as Coin;
             coin.transform.position = _spawnPoint.position;
 
-            coin.SetItemDropPosition(dropPos);
+            coin.SetItemDropPosition(dropPos, _layerMask);
             coin.value = Random.Range(5, 10);
         }
     }

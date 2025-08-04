@@ -1,3 +1,4 @@
+using System.Collections;
 using IH.EventSystem.NodeEvent.DefaultNodeUpgradeEvent;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -36,7 +37,18 @@ public class DefaultUpgradePartNode : BaseNode, IPointerClickHandler
         image.color = color;
     }
 
-    public override void NodeConnectCheck()
+    public void LineConnectAndEnableCheck()
+    {
+        StartCoroutine(WaitLineConnect());
+    }
+
+    protected override IEnumerator WaitLineConnect()
+    {
+        yield return base.WaitLineConnect();
+        NodeConnectCheckAndEnable();
+    }
+
+    public override void NodeConnectCheckAndEnable()
     {
         for (int i = 0; i < connectedNodes.Count; i++)
         {
@@ -45,12 +57,13 @@ public class DefaultUpgradePartNode : BaseNode, IPointerClickHandler
                 continue;
             
             _uiLineRenderers[i].LineEnable();
+            
             if (_isConnect) 
                 continue;
 
             node.activeFrame.ActiveFrameEnable();
             _isConnect = true;
-            node.NodeConnectCheck();
+            node.LineConnectAndEnableCheck();
         }
     }
 
@@ -61,5 +74,11 @@ public class DefaultUpgradePartNode : BaseNode, IPointerClickHandler
         evt.isSelected = true;
         
         _defaultNodeEventChannel.RaiseEvent(evt);
+    }
+
+    public override void OnPush()
+    {
+        base.OnPush();
+        _isConnect = false;
     }
 }

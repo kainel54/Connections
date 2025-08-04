@@ -3,16 +3,24 @@ using ObjectPooling;
 using System;
 using UnityEngine;
 
-public class PartDropObject : DropItem, IPoolable, ISpecialInitItem
+public class PartDropObject : DropItem, ISpecialInitItem
 {
     public PartItemSO partItem;
+    [SerializeField] private ObjectType _type;
+    public override Enum PoolEnum => _type;
 
+    private Transform _visualTrm;
+
+    private bool _isInit;
+    
+    public override bool IsCollectAble => InventoryManager.Instance.CanAddItem(partItem);
+    
     public override void PickUp(Collider other)
     {
-        if (InventoryManager.Instance.CanAddItem(partItem))
+        if (IsCollectAble)
         {
             InventoryManager.Instance.AddInventoryItemWithSo(partItem);
-            Destroy(gameObject);
+            base.PickUp(other);
         }
     }
 
@@ -24,26 +32,17 @@ public class PartDropObject : DropItem, IPoolable, ISpecialInitItem
 
     public void VisualInit()
     {
-        Transform visualTrm = Instantiate(partItem.visual, transform).transform;
-        visualTrm.localPosition = Vector3.zero;
+        if (!_isInit)
+            _isInit = true;
+        
+        _visualTrm = Instantiate(partItem.visual, transform).transform;
+        _visualTrm.localPosition = Vector3.zero;
     }
 
-    public GameObject GameObject { get => gameObject; set { } }
-    public Enum PoolEnum { get => _type; set { } }
-    [SerializeField] private ObjectType _type;
-    public void Init()
+    public override void OnPush()
     {
-        itemData = null;
-        partItem = null;
-    }
-
-    public void OnPop()
-    {
-
-    }
-
-    public void OnPush()
-    {
-
+        base.OnPush();
+        if (_isInit)
+            Destroy(_visualTrm.gameObject);
     }
 }

@@ -509,7 +509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5295300070474422102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1038,7 +1038,6 @@ GameObject:
   - component: {fileID: 585730159435895044}
   - component: {fileID: 6325725043100260314}
   - component: {fileID: 4819635939586427898}
-  - component: {fileID: 4135983287733789042}
   - component: {fileID: 5762744089161608921}
   - component: {fileID: 7393456575163547131}
   - component: {fileID: -1528540045530333816}
@@ -1089,13 +1088,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 054c50b12ed9f5f4f837b4208aa2a563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _poolingType: 1
   currentSkill: {fileID: 0}
   image: {fileID: 7279311500342548015}
   _lineParent: {fileID: 2072247969735465879}
   connectedNodes: []
   activeFrame: {fileID: 3909369812607888939}
-  skillNode: {fileID: 0}
+  isNewEnableNode: 0
   index: 0
+  _partNodeEventChannel: {fileID: 11400000, guid: 533faf2e29cbb0c45960b0863cc16455, type: 2}
+  skillNode: {fileID: 0}
   isSkillConnected: 0
   isSpecialMode: 0
 --- !u!114 &4819635939586427898
@@ -1112,26 +1114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _soundChannelSO: {fileID: 11400000, guid: 209792f74066ed84bb80386f21ecc80d, type: 2}
   _equipPartSound: {fileID: 11400000, guid: 96343d4b194aa4548b13ef4e239c6154, type: 2}
---- !u!114 &4135983287733789042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6691600497329456936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7070174d3ebc434dabe7bfd4adc68d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chainAbleListSO: {fileID: 11400000, guid: 2e217415d91cb4949bf6a7e4ba1d2444, type: 2}
-  _nodeChainEventChannel: {fileID: 11400000, guid: 7df4d08a718774449996f6860e0e8680, type: 2}
-  _cantChainImage: {fileID: 311588507284610349}
-  _canChainImage: {fileID: 2268372238061836399}
-  _yOffset: 75
-  isChainAble: 0
-  isChainMode: 0
-  isChained: 0
 --- !u!114 &5762744089161608921
 MonoBehaviour:
   m_ObjectHideFlags: 0

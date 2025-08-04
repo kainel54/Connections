@@ -692,6 +692,9 @@ MonoBehaviour:
   _skillCoolFadeImage: {fileID: 2141540959309110829}
   _skillCoolTimeText: {fileID: 3638356693499193457}
   _skillCountText: {fileID: 8607687232738877072}
+  _skillKeyText: {fileID: 4057333007296407255}
+  _playerManagerSo: {fileID: 11400000, guid: 0a3a4c8f2bf9ee34cbdeef1c37944c07, type: 2}
+  _skillIdx: 0
 --- !u!1 &8912155242506224121
 GameObject:
   m_ObjectHideFlags: 0

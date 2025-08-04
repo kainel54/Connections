@@ -1,17 +1,18 @@
-using System;
 using IH.EventSystem.NodeEvent.DefaultNodeUpgradeEvent;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DefaultNodeUpgradeEquipSkillSlotUI : BaseNodeUpgradeEquipSkillSlotUI, IPointerClickHandler
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _upgradeEventChannel.AddListener<UpgradeSkillSelectLockEvent>(HandleLockChange);
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         _upgradeEventChannel.RemoveListener<UpgradeSkillSelectLockEvent>(HandleLockChange);
     }
     

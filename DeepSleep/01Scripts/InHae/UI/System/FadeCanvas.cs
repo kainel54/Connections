@@ -21,7 +21,7 @@ public class FadeCanvas : MonoBehaviour
         _systemChannel.AddListener<FadeScreenEvent>(HandleFadeScreen);
         _systemChannel.AddListener<FirstFadeSetting>(HandleFirstFadeSetting);
     }
-    
+
 
     private void OnDestroy()
     {
@@ -31,9 +31,9 @@ public class FadeCanvas : MonoBehaviour
 
     private void HandleFadeScreen(FadeScreenEvent evt)
     {
-        if(!evt.isFadeIn)
+        if (!evt.isFadeIn)
             UIInputLock(true);
-        
+
         int isCircle = evt.isCircle ? 1 : 0;
         _fadeImage.material.SetInt(_isCircleHash, isCircle);
 
@@ -51,9 +51,14 @@ public class FadeCanvas : MonoBehaviour
 
         _fadeImage.material.DOFloat(fadeValue, _circleValue, evt.fadeDuration).OnComplete(() =>
         {
-            if(evt.isFadeIn)
+            FadeComplete systemEvt = SystemEvents.FadeComplete;
+            systemEvt.isFadeIn = evt.isFadeIn;
+
+            if (evt.isFadeIn)
+            {
                 UIInputLock(false);
-            _systemChannel.RaiseEvent(SystemEvents.FadeComplete);
+            }
+            _systemChannel.RaiseEvent(systemEvt);
         }).SetUpdate(true);
     }
 
@@ -65,7 +70,7 @@ public class FadeCanvas : MonoBehaviour
 
         _fadeImage.material.DOFloat(fadeValue, _fadeValue, evt.fadeDuration).OnComplete(() =>
         {
-            if(evt.isFadeIn)
+            if (evt.isFadeIn)
                 UIInputLock(false);
             _systemChannel.RaiseEvent(SystemEvents.FadeComplete);
         }).SetUpdate(true);
@@ -77,7 +82,7 @@ public class FadeCanvas : MonoBehaviour
         uiLockEvent.isOpenLocked = isActive;
         _uiEventChannel.RaiseEvent(uiLockEvent);
     }
-    
+
     private void HandleFirstFadeSetting(FirstFadeSetting evt)
     {
         UIInputLock(true);

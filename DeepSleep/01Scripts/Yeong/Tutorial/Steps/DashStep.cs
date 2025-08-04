@@ -5,27 +5,19 @@ using YH.Players;
 public class DashStep : TutorialStep
 {
     private bool _isDashed;
-    private Player _player;
-    private PlayerMovement _playerMover;
-    [SerializeField] private PlayerManagerSO _playermanager;
 
     public override void OnEnter()
     {
         base.OnEnter();
-        _player = _playermanager.Player;
-        _playerMover = _player.GetCompo<PlayerMovement>();
+        _player.DashEvent += HandleDash;
     }
 
-    public override void OnUpdate()
+    private void HandleDash()
     {
-        base.OnUpdate();
+        _isDashed = true;
         if (_isDashed)
         {
-            _tutorialManager.NextStep();
-        }
-        if (!_isDashed)
-        {
-            _isDashed = _playerMover.IsDash;
+            _player.DashEvent -= HandleDash;
         }
     }
 }

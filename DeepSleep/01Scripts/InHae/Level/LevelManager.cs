@@ -12,11 +12,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private LevelTypeEnum _moveType;
     [SerializeField] private LevelTypeEnum _moveType2;
+    [SerializeField] private LevelTypeEnum _moveType3;
 
     [SerializeField] private GameEventChannelSO _levelChannel;
     [SerializeField] private GameEventChannelSO _systemChannel;
     [SerializeField] private GameEventChannelSO _startStageEventChannel;
-    [SerializeField] private GameEventChannelSO _endStageEventChannel;
 
     private Dictionary<Vector2Int, LevelRoom> _levelGridDictionary;
     private Vector2Int _currentGrid = Vector2Int.zero;
@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
     private DoorDir _beforeDir;
     private LevelTypeEnum _moveLevelType;
 
-    private CharacterController _playerController;
+    private bool _isLevelMoving;
 
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class LevelManager : MonoBehaviour
         _levelChannel.AddListener<BasicLevelMoveEvent>(HandleBasicLevelMoveEvent);
         _levelChannel.AddListener<PosLevelMoveEvent>(HandlePosLevelMoveEvent);
         _levelChannel.AddListener<TypeLevelMoveEvent>(HandleTypeLevelMoveEvent);
-        _startStageEventChannel.AddListener<StageStartEvent>((evt) => _currentRoom.EnterEvent());
+        _startStageEventChannel.AddListener<StageStartEvent>(HandleStartEnterEvent);
     }
 
     private void OnDestroy()
@@ -44,7 +44,7 @@ public class LevelManager : MonoBehaviour
         _levelChannel.RemoveListener<BasicLevelMoveEvent>(HandleBasicLevelMoveEvent);
         _levelChannel.RemoveListener<PosLevelMoveEvent>(HandlePosLevelMoveEvent);
         _levelChannel.RemoveListener<TypeLevelMoveEvent>(HandleTypeLevelMoveEvent);
-        _startStageEventChannel.RemoveListener<StageStartEvent>((evt) => _currentRoom.EnterEvent());
+        _startStageEventChannel.RemoveListener<StageStartEvent>(HandleStartEnterEvent);
     }
 
     private void Update()
@@ -56,7 +56,7 @@ public class LevelManager : MonoBehaviour
             evt.levelType = _moveType;
             _levelChannel.RaiseEvent(evt);
         }
-        if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl))
         {
             _levelGridDictionary[_currentGrid].LevelClear();
         }
@@ -64,6 +64,12 @@ public class LevelManager : MonoBehaviour
         {
             var evt = LevelEvents.TypeLevelMoveEvent;
             evt.levelType = _moveType2;
+            _levelChannel.RaiseEvent(evt);
+        }
+        if (Input.GetKeyDown(KeyCode.Y) && Input.GetKey(KeyCode.LeftControl))
+        {
+            var evt = LevelEvents.TypeLevelMoveEvent;
+            evt.levelType = _moveType3;
             _levelChannel.RaiseEvent(evt);
         }
 #endif
@@ -74,7 +80,7 @@ public class LevelManager : MonoBehaviour
             evt.levelType = _moveType2;
             _levelChannel.RaiseEvent(evt);
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.V))
         {
             _levelGridDictionary[_currentGrid].LevelClear();
         }
@@ -84,19 +90,34 @@ public class LevelManager : MonoBehaviour
             evt.levelType = _moveType;
             _levelChannel.RaiseEvent(evt);
         }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            var evt = LevelEvents.TypeLevelMoveEvent;
+            evt.levelType = _moveType3;
+            _levelChannel.RaiseEvent(evt);
+        }
 #endif
     }
 
+    private void HandleStartEnterEvent(StageStartEvent evt)
+    {
+        _currentRoom.EnterEvent();
+        Debug.Log("is Working");
+    }
 
     private void HandleBasicLevelMoveEvent(BasicLevelMoveEvent evt)
     {
-        _currentGrid += LevelModuler.GetNextGrid(evt.enterDoorDir);
+        if (_isLevelMoving)
+            return;
 
+        _currentGrid += LevelModuler.GetNextGrid(evt.enterDoorDir);
         if (!_levelGridDictionary.ContainsKey(_currentGrid))
         {
             _currentGrid -= LevelModuler.GetNextGrid(evt.enterDoorDir);
             return;
         }
+
+        _isLevelMoving = true;
 
         _beforeDir = evt.enterDoorDir;
         _systemChannel.AddListener<FadeComplete>(HandleBasicFadeOutCompleteEvent);
@@ -107,6 +128,7 @@ public class LevelManager : MonoBehaviour
     {
         _currentGrid = evt.pos;
         _systemChannel.AddListener<FadeComplete>(HandleFadeOutCompleteEvent);
+
         FadeOut();
     }
 
@@ -114,6 +136,8 @@ public class LevelManager : MonoBehaviour
     {
         _currentGrid = _levelGridDictionary.Values.ToList().Find(x => x.levelType == evt.levelType).GridPos;
         _systemChannel.AddListener<FadeComplete>(HandleFadeOutCompleteEvent);
+
+
         FadeOut();
     }
 
@@ -122,6 +146,11 @@ public class LevelManager : MonoBehaviour
         _systemChannel.RemoveListener<FadeComplete>(HandleBasicFadeOutCompleteEvent);
         FadeOutCompleteProcess();
         BasicLevelMove();
+
+        if (_currentRoom.HasCutScene == true)
+        {
+            _currentRoom.EnterEvent();
+        }
     }
 
 
@@ -130,6 +159,11 @@ public class LevelManager : MonoBehaviour
         _systemChannel.RemoveListener<FadeComplete>(HandleFadeOutCompleteEvent);
         FadeOutCompleteProcess();
         LevelMove();
+
+        if (_currentRoom.HasCutScene == true)
+        {
+            _currentRoom.EnterEvent();
+        }
     }
 
     private void FadeOutCompleteProcess()
@@ -138,7 +172,6 @@ public class LevelManager : MonoBehaviour
         CurrentRoomChange();
 
         DoorProcess();
-        _currentRoom.EnterEvent(); // Todo: 이건 방에 들어가자마자 몬스터 나오게 하는거
 
         StartCoroutine(FadeIn());
     }
@@ -160,9 +193,9 @@ public class LevelManager : MonoBehaviour
         fadeInEvent.isCircle = true;
         fadeInEvent.fadeDuration = 0.4f;
 
-        yield return new WaitForSeconds(0.4f);
-
+        yield return new WaitForSecondsRealtime(0.4f);
         _systemChannel.RaiseEvent(fadeInEvent);
+        _isLevelMoving = false;
     }
 
     private void BasicLevelMove()
@@ -179,9 +212,7 @@ public class LevelManager : MonoBehaviour
 
     private void PlayerMove(LevelDoor levelDoor)
     {
-        _playerController.enabled = false;
-        _player.transform.position = levelDoor.spawnPoint.position;
-        _playerController.enabled = true;
+        _player.PlayerLevelMove(levelDoor.spawnPoint.position);
     }
 
     private void CurrentRoomChange()
@@ -212,13 +243,15 @@ public class LevelManager : MonoBehaviour
 
         _currentRoom = _levelGridDictionary[_currentGrid];
         _currentRoom.gameObject.SetActive(true);
+        Transform playerTransform;
 
-        Transform playerTransform = (_currentRoom as StartLevelRoom).playerSpawnPoint;
+        if (_currentRoom.levelType == LevelTypeEnum.TutorialLevel)
+            playerTransform = (_currentRoom as TutorialLevelRoom).playerSpawnPoint;
+        else
+            playerTransform = (_currentRoom as StartLevelRoom).playerSpawnPoint;
+
         _player = Instantiate(_player, playerTransform.position, Quaternion.identity);
-
-        //_playerController = _player.GetCompo<PlayerMovement>().CharacterControllerCompo;
     }
-
     private void LevelMoveCompleteEvent()
     {
         var evt = LevelEvents.LevelMoveCompleteEvent;

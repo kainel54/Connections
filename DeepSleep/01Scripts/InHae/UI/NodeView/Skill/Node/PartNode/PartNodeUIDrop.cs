@@ -7,7 +7,7 @@ using YH.EventSystem;
 public class PartNodeUIDrop : MonoBehaviour, IDropHandler, IPartNodeUIComponent
 {
     protected PartNodeUI _partNodeUI;
-    private PartNodeUIChainCheck _partNodeUIChainCheck;
+    //private PartNodeUIChainCheck _partNodeUIChainCheck;
     
     protected PartNodeUIOnPopUp _partNodeUIOnPopUp;
     
@@ -17,7 +17,7 @@ public class PartNodeUIDrop : MonoBehaviour, IDropHandler, IPartNodeUIComponent
     public virtual void Initialize(PartNodeUI partNodeUI)
     {
         _partNodeUI = partNodeUI;
-        _partNodeUIChainCheck = _partNodeUI.GetCompo<PartNodeUIChainCheck>();
+        //_partNodeUIChainCheck = _partNodeUI.GetCompo<PartNodeUIChainCheck>();
         _partNodeUIOnPopUp = _partNodeUI.GetCompo<PartNodeUIOnPopUp>();
     }
 
@@ -32,11 +32,11 @@ public class PartNodeUIDrop : MonoBehaviour, IDropHandler, IPartNodeUIComponent
         if(eventData.button != PointerEventData.InputButton.Left)
             return;
         
-        if (_partNodeUIChainCheck.isChainMode)
-        {
-            DropIsChainMode(eventData);
-            return;
-        }
+        // if (_partNodeUIChainCheck.isChainMode)
+        // {
+        //     DropIsChainMode(eventData);
+        //     return;
+        // }
         
         // 인벤에서 노드로 오는 경우
         DropPartIsInventory(eventData);
@@ -44,21 +44,21 @@ public class PartNodeUIDrop : MonoBehaviour, IDropHandler, IPartNodeUIComponent
         DropIsNode(eventData);
     }
 
-    private void DropIsChainMode(PointerEventData eventData)
-    {
-        GameObject gameObject = eventData.pointerDrag;
-        PartItemSlotUI partSlotUI = gameObject.GetComponent<PartItemSlotUI>();
-
-        if (partSlotUI == null || partSlotUI.isEmpty || !_partNodeUIChainCheck.isChainAble)
-            return;
-        
-        SoundPlay();
-
-        _partNodeUIChainCheck.AddChainItem(partSlotUI.item as PartInventoryItem);
-        _partNodeUIChainCheck.FindChainNode();
-
-        InventoryManager.Instance.RemoveInventoryItemWithSo(partSlotUI.item.data);
-    }
+    // private void DropIsChainMode(PointerEventData eventData)
+    // {
+    //     GameObject gameObject = eventData.pointerDrag;
+    //     PartItemSlotUI partSlotUI = gameObject.GetComponent<PartItemSlotUI>();
+    //
+    //     if (partSlotUI == null || partSlotUI.isEmpty || !_partNodeUIChainCheck.isChainAble)
+    //         return;
+    //     
+    //     SoundPlay();
+    //
+    //     _partNodeUIChainCheck.AddChainItem(partSlotUI.item as PartInventoryItem);
+    //     _partNodeUIChainCheck.FindChainNode();
+    //
+    //     InventoryManager.Instance.RemoveInventoryItemWithSo(partSlotUI.item.data);
+    // }
 
     protected virtual void DropIsNode(PointerEventData eventData)
     {
@@ -121,6 +121,7 @@ public class PartNodeUIDrop : MonoBehaviour, IDropHandler, IPartNodeUIComponent
             }
             SoundPlay();
 
+            _partNodeUI.isNewEnableNode = true;
             _partNodeUI.UpdateNode(nodeEquipData);
             _partNodeUI.skillNode.SkillNodeUpdate();
             

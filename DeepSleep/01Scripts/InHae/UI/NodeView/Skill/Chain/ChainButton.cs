@@ -20,18 +20,18 @@ public class ChainButton : MonoBehaviour
         _button = GetComponent<Button>();
         _button.onClick.AddListener(ChainButtonClicked);
         
-        _skillNodeEventChannel.AddListener<InitNodeSkillEvent>(HandleChainModeInit);
+        _skillNodeEventChannel.AddListener<SkillNodeInitEvent>(HandleChainModeInit);
         _nodeChainEventChannel.AddListener<ChainModeChangeEvent>(HandleChainModeChange);
     }
     
     private void OnDestroy()
     {
         _button.onClick.RemoveListener(ChainButtonClicked);
-        _skillNodeEventChannel.RemoveListener<InitNodeSkillEvent>(HandleChainModeInit);
+        _skillNodeEventChannel.RemoveListener<SkillNodeInitEvent>(HandleChainModeInit);
         _nodeChainEventChannel.RemoveListener<ChainModeChangeEvent>(HandleChainModeChange);
     }
     
-    private void HandleChainModeInit(InitNodeSkillEvent evt)
+    private void HandleChainModeInit(SkillNodeInitEvent evt)
     {
         ChangeChainMode(false);
         _isChainMode = true;

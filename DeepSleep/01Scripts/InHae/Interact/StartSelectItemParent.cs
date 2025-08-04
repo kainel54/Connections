@@ -11,20 +11,23 @@ public class StartSelectItemParent : MonoBehaviour
     
     [SerializeField] private StartItemListSO _startItemListSO;
     
-    private List<StartSelectItem> _startSelectItems = new List<StartSelectItem>();
+    private List<StartSelectItem> _startSelectItems = new();
 
     private bool _isStopSound;
 
     private void Awake()
     {
         _startSelectItems = GetComponentsInChildren<StartSelectItem>().ToList();
-        _startSelectItems.ForEach(x =>
-        {
-            x.SpecialInit(_startItemListSO.GetRandomSkillItem());
-            x.VisualInit();
 
-            x.HandleInteractAction += HandleGetCheck;
-        });
+        List<SkillItemSO> randItems = _startItemListSO.GetRandomNoDuplicationSkillItems(4);
+
+        for (int i = 0; i < randItems.Count; i++)
+        {
+            _startSelectItems[i].SpecialInit(randItems[i]);
+            _startSelectItems[i].VisualInit();
+
+            _startSelectItems[i].HandleInteractAction += HandleGetCheck;
+        }
     }
 
     private void HandleGetCheck()

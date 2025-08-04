@@ -1,4 +1,3 @@
-using System;
 using IH.EventSystem.NodeEvent.DefaultNodeUpgradeEvent;
 using UnityEngine;
 using UnityEngine.EventSystems;

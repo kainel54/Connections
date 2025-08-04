@@ -1,5 +1,4 @@
 using UnityEngine;
-using YH.Players;
 
 public class ItemCollector : MonoBehaviour
 {
@@ -8,25 +7,28 @@ public class ItemCollector : MonoBehaviour
     [SerializeField] private int _collectCount;
 
     private Collider[] _colliders;
-
-    private Player _player;
-
+    
     private void Awake()
     {
-        _colliders = new Collider[_collectCount];
-        _player = GetComponent<Player>();
+        _colliders = new Collider[100];
     }
 
     private void FixedUpdate()
     {
-        int count = Physics.OverlapSphereNonAlloc(
-            transform.position, collectRadius, _colliders, _whatIsItem);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, collectRadius, 
+            _colliders, _whatIsItem);
 
-        for (int i = 0; i <count; i++)
+        int collectAbleCount = 0;
+        for (int i = 0; i < count; i++)
         {
-            if (_colliders[i].TryGetComponent(out DropItem item))
+            if (collectAbleCount >= _collectCount)
+                break;
+
+            var collider = _colliders[i];
+            if (collider.TryGetComponent(out DropItem item) && item.IsCollectAble)
             {
                 item.PickUpItem(transform);
+                collectAbleCount++;
             }
         }
     }

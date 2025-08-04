@@ -65,12 +65,12 @@ public class SkillEquipSlotParent : MonoBehaviour
             return;
         
         List<SkillEquipSlot> equipSlotList = _skillSlots
-            .Where(x => x.isEmpty).OrderBy(x => x.skillIdx).ToList();
+            .Where(x => x.IsEmpty).OrderBy(x => x.skillIdx).ToList();
         
         if(equipSlotList.Count == 0)
             return;
         
         equipSlotList[0].UpdateSlot(evt.skillInventoryItem);
-        InventoryManager.Instance.RemoveInventoryItem(InventoryType.Skill, evt.skillInventoryItem);
+        InventoryManager.Instance.RemoveInventoryItem(ItemType.Skill, evt.skillInventoryItem);
     }
 }

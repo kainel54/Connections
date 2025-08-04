@@ -1,4 +1,4 @@
-using System;
+using IH.EventSystem.NodeEvent.PartNodeEvents;
 using IH.EventSystem.NodeEvent.SpecialPartNodeEvent;
 using IH.Manager;
 using ObjectPooling;
@@ -58,8 +58,9 @@ public class SpecialPartNodeUI : PartNodeUI
         }
         else
         {
-            var effect = PoolManager.Instance.Pop(EffectPoolingType.PartNodeEquipEffect) as PartNodeEquipEffect;
-            effect.Init(transform, true);
+            var viewPortCheckEvent = PartNodeEvent.InViewPortNodeParticleEvent;
+            viewPortCheckEvent.nodeRectTrm = transform as RectTransform;
+            _partNodeEventChannel.RaiseEvent(viewPortCheckEvent);
         }
         
         SpecialModeChangedAction?.Invoke(isSpecialMode);
@@ -84,8 +85,10 @@ public class SpecialPartNodeUI : PartNodeUI
         
         if(isAbilityEmpty)
             return;
-        var effect = PoolManager.Instance.Pop(EffectPoolingType.PartNodeEquipEffect) as PartNodeEquipEffect;
-        effect.Init(transform, true);
+        
+        var viewPortCheckEvent = PartNodeEvent.InViewPortNodeParticleEvent;
+        viewPortCheckEvent.nodeRectTrm = transform as RectTransform;
+        _partNodeEventChannel.RaiseEvent(viewPortCheckEvent);
     }
 
     public void ReturnNodeAbility()

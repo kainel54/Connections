@@ -1,20 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using IH.UI;
+using ObjectPooling;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public abstract class BaseNode : MonoBehaviour
+public abstract class BaseNode : MonoBehaviour, IPoolable
 {
+    [SerializeField] protected NodeUIPoolingType _poolingType;
+    
     [HideInInspector] public Skill currentSkill;
-    [FormerlySerializedAs("_image")] public Image image;
+    [FormerlySerializedAs("_image")] 
+    public Image image;
     [SerializeField] private RectTransform _lineParent;
     
     protected UILineRenderer[] _uiLineRenderers;
     
-    public List<BaseNode> connectedNodes = new List<BaseNode>();
+    public List<BaseNode> connectedNodes = new ();
     public NodeActiveFrame activeFrame;
+    public bool isNewEnableNode;
+    
+    public int index;
 
     protected virtual void Awake()
     {
@@ -24,17 +32,17 @@ public abstract class BaseNode : MonoBehaviour
     public virtual void LineConnect()
     {
         StartCoroutine(WaitLineConnect());
-        DisableAllLines();
     }
 
     protected virtual IEnumerator WaitLineConnect()
     {
+        yield return null;
+        
         for (int i = 0; i < connectedNodes.Count; i++)
         {
             if (connectedNodes[i].transform.GetSiblingIndex() < transform.GetSiblingIndex())
                 continue;
-            
-            yield return new WaitForSecondsRealtime(0.02f);
+
             _uiLineRenderers[i].gameObject.SetActive(true);
 
             Vector3 startPos = new Vector3(0, 0);
@@ -46,28 +54,40 @@ public abstract class BaseNode : MonoBehaviour
                 relativePos
             };
             
-            _uiLineRenderers[i].SetVerticesDirty();
             yield return null;
+            _uiLineRenderers[i].InitMaterialIfNeeded();
+            _uiLineRenderers[i].SetVerticesDirty();
+            _uiLineRenderers[i].SetMaterialDirty();
         }
+        DisableAllLines();
     }
 
-    public virtual void NodeConnectCheck()
+    public virtual void NodeConnectCheckAndEnable()
     {
         for (int i = 0; i < connectedNodes.Count; i++)
         {
             var node = connectedNodes[i] as PartNodeUI;
             
-            if (node.isPartEmpty)
+            if ( connectedNodes[i] is SkillNodeUI || node.isPartEmpty)
                 continue;
+
+            if (node.isNewEnableNode)
+            {
+                node.isNewEnableNode = false;
+                _uiLineRenderers[i].LineLerpEnable();
+            }
+            else
+            {
+                _uiLineRenderers[i].LineEnable();
+            }
             
-            _uiLineRenderers[i].LineEnable();
             if (node.isSkillConnected)
                 continue;
 
             node.activeFrame.ActiveFrameEnable();
             node.isSkillConnected = true;
             node.skillNode.ConnectNode(node);
-            node.NodeConnectCheck();
+            node.NodeConnectCheckAndEnable();
         }
     }
 
@@ -75,8 +95,21 @@ public abstract class BaseNode : MonoBehaviour
     {
         activeFrame.ActiveFrameInit();
         foreach (var line in _uiLineRenderers)
-        {
             line.LineDisable();
-        }
+    }
+
+    public GameObject GameObject => gameObject;
+    public Enum PoolEnum => _poolingType;
+    public virtual void OnPop()
+    {
+    }
+
+    public virtual void OnPush()
+    {
+        foreach (var uiLine in _uiLineRenderers)
+            uiLine.Init();
+        
+        isNewEnableNode = false;
+        connectedNodes.Clear();
     }
 }

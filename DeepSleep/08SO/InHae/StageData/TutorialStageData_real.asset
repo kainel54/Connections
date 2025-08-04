@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 475d5bdf0173470284d1958220f2313d, type: 3}
+  m_Name: TutorialStageData_real
+  m_EditorClassIdentifier: 
+  DefaultSoundSo: {fileID: 11400000, guid: f64f1414b550c3445bccdf2c87a308b2, type: 2}
+  roomCount: 3
+  minDeadEndRoom: 1
+  specialRoomCount: 1
+  roomPairs:
+  - levelTypeEnum: 6
+    levelRooms:
+    - {fileID: 6910873639265475360, guid: 3ddf5d09e64e305478064dd51a37176e, type: 3}
+    - {fileID: 5228559312785954306, guid: 121e9aef5e81f9c40971ec4300413d16, type: 3}
+    - {fileID: 1214994525110407528, guid: 9c098c3d4a1f0c948b5a7025ebfa098b, type: 3}
+  deadEndOrder: 

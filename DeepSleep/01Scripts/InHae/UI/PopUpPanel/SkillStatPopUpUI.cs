@@ -11,6 +11,8 @@ public class SkillStatPopUpUI : MonoBehaviour
     public void Init(SkillStatInfoSO skillStatInfoSo)
     {
         _statImage.sprite = skillStatInfoSo.icon;
+        _statImage.color = skillStatInfoSo.iconColor;
+        
         _titleText.SetText(skillStatInfoSo.title);
         _descriptionText.SetText(skillStatInfoSo.description);
     }

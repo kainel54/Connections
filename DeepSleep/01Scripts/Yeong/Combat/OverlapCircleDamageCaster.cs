@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using YH.Core;
+using YH.Players;
 using YH.StatSystem;
 
 namespace YH.Combat
@@ -9,42 +10,67 @@ namespace YH.Combat
     {
         public float damageRadius;
         public Vector3 damagePosition;
+        private float _impactForce = 1.5f;
 
         public override bool CastDamage(float damage, Vector3 knockBack, bool isPowerAttack,LayerMask targetLayer)
         {
             int cnt = Physics.OverlapSphereNonAlloc(transform.position + damagePosition, damageRadius, _hitResults,targetLayer);
+          
 
-            
             for (int i = 0; i < cnt; i++)
             {
                 Transform target = _hitResults[i].transform;
 
-                if (_hitObjects.Contains(target.root))
+                if (_hitObjects.Contains(target))
+                {
                     continue;
-            
-                _hitObjects.Add(target.root);
+                }
+
+                _hitObjects.Add(target);
 
                 if (knockBack != Vector3.zero)
                 {
-                    Vector2 direction = (_hitResults[i].transform.position - _owner.transform.position).normalized;
-                    knockBack.x *= Mathf.Sign(direction.x);
+                    Vector3 direction = (_hitResults[i].transform.position - _owner.transform.position).normalized;
+
+                    knockBack = new Vector3(
+                        Mathf.Abs(knockBack.x) * Mathf.Sign(direction.x),
+                        0,
+                        Mathf.Abs(knockBack.z) * Mathf.Sign(direction.z)
+                    );
+                     
+                    if (target.TryGetComponent(out IKnockBackable knockbackable))
+                        ApplyKnockBackToTarget(target,knockBack);
                 }
 
-                if (_hitResults[i].TryGetComponent(out IDamageable damageable))
+                //if (isPowerAttack&&target.TryGetComponent(out IStunable))
+                //{
+                //}
+
+                if (target.TryGetComponent(out IDamageable damageable))
                 {
                     CameraManager.Instance.ShakeCamera(4, 4, 0.15f);
-                    
-                    
+                    if (_owner as Player)
+                        Debug.Log("Hit");
                     EntityStat statCompo = _owner.GetCompo<EntityStat>();
                     HitData hitData = new HitData(_owner, damage, 
                         statCompo.GetElement("Critical").Value, 
                         statCompo.GetElement("CriticalDamage").Value);
                     damageable.ApplyDamage(hitData);
                 }
-                //todo 나중에 넉백도 적용
+                
             }
 
             return cnt > 0;
+        }
+
+
+        protected void ApplyKnockBackToTarget(Transform target,Vector3 force)
+        {
+            if (target.gameObject.TryGetComponent(out IKnockBackable knockbackable))
+            {
+                Debug.Log(force);
+                knockbackable.KnockBack(force, target.forward);
+            }
         }
 
         public override ICounterable GetCounterableTarget(LayerMask whatIsCounterable)

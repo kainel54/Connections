@@ -12,10 +12,10 @@ public class DefaultUpgradeSkillNode : BaseNode
     protected override IEnumerator WaitLineConnect()
     {
         yield return base.WaitLineConnect();
-        NodeConnectCheck();
+        NodeConnectCheckAndEnable();
     }
     
-    public override void NodeConnectCheck()
+    public override void NodeConnectCheckAndEnable()
     {
         for (int i = 0; i < connectedNodes.Count; i++)
         {
@@ -25,7 +25,7 @@ public class DefaultUpgradeSkillNode : BaseNode
             
             _uiLineRenderers[i].LineEnable();
             node.activeFrame.ActiveFrameEnable();
-            node.NodeConnectCheck();
+            node.NodeConnectCheckAndEnable();
         }
     }
 }

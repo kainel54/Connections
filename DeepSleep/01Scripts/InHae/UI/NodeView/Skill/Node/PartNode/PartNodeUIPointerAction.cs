@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,7 +14,7 @@ public class PartNodeUIPointerAction : MonoBehaviour, IPartNodeUIComponent, IBeg
     
     protected NodeEquipData _currentEquipData => _partNodeUI.CurrentEquipData;
 
-    private void Awake()
+    private void Start()
     {
         _dragItem = UIHelper.Instance.GetDragItem(DragItemType.NodeInPart);
     }

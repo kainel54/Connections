@@ -7,7 +7,7 @@ public class PartItemSO : ItemDataSO, IComparable<PartItemSO>
 {
     private void Awake()
     {
-        inventoryType = InventoryType.Part;
+        itemType = ItemType.Part;
     }
 
     public PartType type;

@@ -14,7 +14,7 @@ public class SkillInfoPanelUI : MonoBehaviour
     
     [SerializeField] private Image _skillIcon;
     private TextMeshProUGUI _skillName;
-    private TextMeshProUGUI _skillAttackTypeAndTier;
+    private TextMeshProUGUI _attackTypeAndType;
 
     private Dictionary<SkillFieldDataType, SkillStatTextGroupUI> _statTextUI = new ();
     
@@ -31,7 +31,7 @@ public class SkillInfoPanelUI : MonoBehaviour
         _skillResultDescription = GetComponentInChildren<SkillResultDescription>();
         
         _skillName = transform.Find("TopGroup/Texts/SkillName").GetComponent<TextMeshProUGUI>();
-        _skillAttackTypeAndTier = transform.Find("TopGroup/Texts/AttackTypeAndTierText").GetComponent<TextMeshProUGUI>();
+        _attackTypeAndType = transform.Find("TopGroup/Texts/AttackTypeAndTypeText").GetComponent<TextMeshProUGUI>();
         
         _arrowTrm = transform.Find("InOutButton/Arrow").transform as RectTransform;
         
@@ -80,8 +80,13 @@ public class SkillInfoPanelUI : MonoBehaviour
         _skillName.fontSize = fontSize;
 
         GenericSkillDataSO genericSkillData = evt.skill.GetSkillData(SkillFieldDataType.Generic) as GenericSkillDataSO;
+        SkillType type = genericSkillData.skillType;
+        
         string attackType = genericSkillData.attackType == SkillAttackType.Melee ? "근접" : "원거리";
-        _skillAttackTypeAndTier.text = attackType + " " + ItemTierStringParser.TierToString(skillItemSo.itemTier);
+        string skillType = EnumStringManager.Instance.GetString(type);
+        string skillTypeColor = EnumColorManager.Instance.GetStringColor(type);
+
+        _attackTypeAndType.text = attackType + " " + $"<color=#{skillTypeColor}>{skillType}</color>";
 
         _skillResultDescription.ResultDescription(skillItemSo, evt.skill);
        

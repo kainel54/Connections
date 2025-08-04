@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using IH.EventSystem.NodeEvent.SkillNodeEvents;
 using IH.Manager;
@@ -15,24 +16,28 @@ public class EquipPartInfoPanel : MonoBehaviour
     
     [SerializeField] private Image _skillImage;
     private TextMeshProUGUI _skillTitle;
-    private TextMeshProUGUI _skillDescription;
     
     private Scrollbar _scrollbar;
     private SkillInventoryItem _skillInventoryItem;
 
     private bool _isFirstInfoInit;
+    
+    private SkillResultDescription _skillResultDescription;
+    private Skill _currentSkill;
 
     private void Awake()
     {
+        _skillResultDescription = GetComponentInChildren<SkillResultDescription>();
+        
         _scrollbar = GetComponentInChildren<Scrollbar>();
 
         _skillTitle = transform.Find("TopGroup/SkillName").GetComponent<TextMeshProUGUI>();
-        _skillDescription = transform.Find("TopGroup/Description").GetComponent<TextMeshProUGUI>();
         
         _skillNodeEventChannel.AddListener<EquipPartInfoEvent>(HandleEquipPartInfoEvent);
         _skillNodeEventChannel.AddListener<EquipPartInfoInitEvent>(HandlePartInfoInitEvent);
         _skillNodeEventChannel.AddListener<EquipSkillSelectEvent>(HandleEquipSkillSelectEvent);
-
+        _skillNodeEventChannel.AddListener<SkillStatViewInitEvent>(HandleSkillStatViewInit);
+        
         _uiInputReader.XKeyEvent += HandleAllPartUnEquipEvent;
     }
 
@@ -41,7 +46,8 @@ public class EquipPartInfoPanel : MonoBehaviour
         _skillNodeEventChannel.RemoveListener<EquipPartInfoEvent>(HandleEquipPartInfoEvent);
         _skillNodeEventChannel.RemoveListener<EquipPartInfoInitEvent>(HandlePartInfoInitEvent);
         _skillNodeEventChannel.RemoveListener<EquipSkillSelectEvent>(HandleEquipSkillSelectEvent);
-        
+        _skillNodeEventChannel.RemoveListener<SkillStatViewInitEvent>(HandleSkillStatViewInit);
+
         _uiInputReader.XKeyEvent -= HandleAllPartUnEquipEvent;
     }
 
@@ -49,6 +55,40 @@ public class EquipPartInfoPanel : MonoBehaviour
     private void HandlePartInfoInitEvent(EquipPartInfoInitEvent evt) => Init();
     
     private void HandleEquipPartInfoEvent(EquipPartInfoEvent evt)
+    {
+        _scrollbar.value = 1;
+        _skillInventoryItem = evt.skillInventoryItem;
+
+        var setSkillResultDescriptionEvt = SkillNodeEvents.SetSkillResultDescriptionEvent;
+        setSkillResultDescriptionEvt.skillInventoryItem = _skillInventoryItem;
+        setSkillResultDescriptionEvt.targetDescription = _skillResultDescription;
+
+        _skillNodeEventChannel.RaiseEvent(setSkillResultDescriptionEvt);
+    }
+    
+    private void HandleSkillStatViewInit(SkillStatViewInitEvent evt)
+    {
+        if (_skillInventoryItem == null)
+            return;
+        
+        _currentSkill = evt.skill;
+        
+        _skillImage.sprite = _skillInventoryItem.data.icon;
+        _skillTitle.text = _skillInventoryItem.data.itemName;
+        
+        PartViewInit();
+        
+        foreach (var equipPart in _skillInventoryItem.equipNodeData.Values)
+        {
+            if(equipPart?.partInventoryItem == null || equipPart.partInventoryItem.data == null)
+                continue;
+
+            EquipPartInfo equipPartInfo = Instantiate(_equipPartInfo, _equipPartParent);
+            equipPartInfo.UpdateSlot(equipPart.partInventoryItem);
+        }
+    }
+
+    private void PartViewInit()
     {
         if (!_isFirstInfoInit)
         {
@@ -60,37 +100,17 @@ public class EquipPartInfoPanel : MonoBehaviour
         
         for (int i = 0; i < _equipPartParent.childCount; i++)
             Destroy(_equipPartParent.GetChild(i).gameObject);
-        
-        _scrollbar.value = 1;
-        _skillInventoryItem = evt.skillInventoryItem;
-        SetImageAndText();
-
-        foreach (var equipPart in _skillInventoryItem.equipNodeData.Values)
-        {
-            if(equipPart?.partInventoryItem == null || equipPart.partInventoryItem.data == null)
-                continue;
-
-            EquipPartInfo equipPartInfo = Instantiate(_equipPartInfo, _equipPartParent);
-            equipPartInfo.UpdateSlot(equipPart.partInventoryItem);
-        }
     }
 
-    private void SetImageAndText()
-    {
-        _skillImage.sprite = _skillInventoryItem.data.icon;
-        _skillTitle.text = _skillInventoryItem.data.itemName;
-        _skillDescription.text = _skillInventoryItem.data.itemDescription;
-    }
-    
     private void Init()
     {
+        _currentSkill = null;
         _skillInventoryItem = null;
         _isFirstInfoInit = false;
         for (int i = 0; i < transform.childCount; i++)
             transform.GetChild(i).gameObject.SetActive(false);
     }
     
-    // 나중에 특별 노드가 추가되면 특별 노드도 인벤에 돌아오도록 해줘야 함
     private void HandleAllPartUnEquipEvent()
     {
         if(_skillInventoryItem == null || _skillInventoryItem.data == null)
@@ -108,7 +128,9 @@ public class EquipPartInfoPanel : MonoBehaviour
         }
         _skillInventoryItem.equipNodeData = new Dictionary<int, NodeEquipData>();
         
-        for (int i = 0; i < _equipPartParent.childCount; i++)
-            Destroy(_equipPartParent.GetChild(i).gameObject);
+        var nodeInitEvt = SkillNodeEvents.SkillNodeInitEvent;
+        nodeInitEvt.skillInventoryItem = _skillInventoryItem;
+        nodeInitEvt.skill = _currentSkill;
+        _skillNodeEventChannel.RaiseEvent(nodeInitEvt); 
     }
 }

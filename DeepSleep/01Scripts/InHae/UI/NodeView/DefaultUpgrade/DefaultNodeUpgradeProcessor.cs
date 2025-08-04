@@ -152,7 +152,7 @@ public class DefaultNodeUpgradeProcessor : MonoBehaviour, IDefaultNodeUpgradeCom
         NodeData upgradeNodeData;
         if (!_selectedSkill.nodeGridDictionary.TryGetValue(upgradeGrid, out var data))
         {
-            upgradeNodeData = new NodeData(false, _selectedSkill.nodeGridDictionary.Count, 1, upgradeGrid);
+            upgradeNodeData = new NodeData(false, _selectedSkill.nodeGridDictionary.Count + 1, 1, upgradeGrid);
             _selectedSkill.nodeGridDictionary.Add(upgradeGrid, upgradeNodeData);
             _view.AddNode(_selectedNode, upgradeNodeData);
         }

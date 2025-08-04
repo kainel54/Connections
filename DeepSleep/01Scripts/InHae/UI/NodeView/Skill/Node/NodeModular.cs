@@ -5,7 +5,7 @@ namespace IH.UI
 {
     public static class NodeModular
     {
-        public static float NodeOffset = 150f;
+        public static float NodeOffset = 165f;
         
         private static readonly Dictionary<NodeDir, Vector2Int> nodeDirToGrid = new Dictionary<NodeDir, Vector2Int>
         {

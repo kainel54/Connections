@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 using YH.EventSystem;
 using Random = UnityEngine.Random;
 
@@ -13,6 +14,7 @@ public class LevelGenerator : MonoBehaviour
     public StageDataSO stageDataSO;
     [SerializeField] private GameEventChannelSO _levelChannel;
     [SerializeField] private float _offset;
+    [SerializeField] private bool _isTutorial = false;
 
     private int CurrentSpecialRoomCount =>
         _levelGridDictionary.Count(x => x.Value.levelType == LevelTypeEnum.SpecialLevel);
@@ -41,7 +43,12 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
-        RoomGenerating();
+        if (_isTutorial == false)
+            RoomGenerating();
+        else
+        {
+            TutorialGenerating();
+        }
     }
 
     [ContextMenu("StartGenerating")]
@@ -49,6 +56,77 @@ public class LevelGenerator : MonoBehaviour
     {
         StartCoroutine(RoomGeneratingRoutine());
     }
+
+    #region TutorialRoomGeneration
+
+    private void TutorialGenerating()
+    {
+        StartCoroutine(TutorialGeneratingRoutine());
+    }
+
+
+    private IEnumerator TutorialGeneratingRoutine()
+    {
+        Vector2Int currentGridPos = Vector2Int.zero;
+        DoorDir direction = DoorDir.Right; 
+
+        var tutorialRooms = _levelRoomDictionary[LevelTypeEnum.TutorialLevel];
+
+        for (int i = 0; i < tutorialRooms.Count; i++)
+        {
+            AddTutorialRoom(LevelTypeEnum.TutorialLevel, i, currentGridPos, false, 1);
+
+            if (i > 0)
+            {
+                Vector2Int prevGridPos = currentGridPos - LevelModuler.GetNextGrid(direction);
+                LevelRoom prevRoom = _levelGridDictionary[prevGridPos];
+                LevelRoom currentRoom = _levelGridDictionary[currentGridPos];
+
+                prevRoom.AddOpenDoor(direction); 
+                currentRoom.AddOpenDoor(LevelModuler.GetConverseDir(direction));
+
+                prevRoom.connectGrid.Add(currentGridPos);
+                currentRoom.connectGrid.Add(prevGridPos);
+
+                currentRoom.AlignRoom(prevRoom.GetDoor(direction));
+            }
+
+            currentGridPos += LevelModuler.GetNextGrid(direction);
+
+            yield return null;
+        }
+
+        // 연결 안된 문 제거
+        foreach (var levelRoom in _levelGridDictionary.Values)
+        {
+            NoConnectDoorDisable(levelRoom);
+        }
+
+        PassData();
+        GenerateCompleteAction?.Invoke();
+    }
+
+    private void AddTutorialRoom(LevelTypeEnum typeEnum, int idx, Vector2Int gridPos, bool isRandomDoor, int doorCount = 0)
+    {
+        LevelRoom levelRoom = null;
+
+        levelRoom = Instantiate(_levelRoomDictionary[typeEnum][idx], transform);
+
+        doorCount = isRandomDoor ? Random.Range(2, levelRoom.GetDoorCount() + 1) : doorCount;
+        levelRoom.Init(typeEnum, gridPos, doorCount);
+        levelRoom.transform.position = new Vector3(levelRoom.GridPos.x * _offset, 0, levelRoom.GridPos.y * _offset);
+
+        _selectAbleRoomGrid.Add(gridPos);
+        _levelGridDictionary.Add(gridPos, levelRoom);
+    }
+
+    #endregion
+
+
+
+
+
+
 
     // 방 개수가 다 될 때까지 만큼 while
     private IEnumerator RoomGeneratingRoutine()
@@ -320,4 +398,5 @@ public class LevelGenerator : MonoBehaviour
     {
         return levelRooms[Random.Range(0, levelRooms.Count)];
     }
+
 }

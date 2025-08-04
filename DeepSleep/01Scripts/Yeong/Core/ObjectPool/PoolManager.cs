@@ -2,6 +2,7 @@ using ObjectPooling;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class PoolManager : MonoSingleton<PoolManager>
@@ -13,6 +14,8 @@ public class PoolManager : MonoSingleton<PoolManager>
 
     private void Awake()
     {
+        DOTween.Init().SetCapacity(500, 200);
+        
         foreach (PoolingItemSO item in poolListSO.GetList())
         {
             CreatePool(item);
@@ -61,6 +64,7 @@ public class PoolManager : MonoSingleton<PoolManager>
     {
         if (resetParent)
             obj.GameObject.transform.SetParent(transform);
+        
         obj.OnPush();
         _poolDictionary[new PoolingKey(obj.PoolEnum)].Push(obj);
     }

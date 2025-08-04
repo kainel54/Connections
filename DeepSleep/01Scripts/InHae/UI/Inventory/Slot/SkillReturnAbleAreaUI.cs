@@ -11,9 +11,9 @@ public class SkillReturnAbleAreaUI : MonoBehaviour, IDropHandler
         GameObject gameObject = eventData.pointerDrag;
         SkillEquipSlot skillEquip = gameObject.GetComponent<SkillEquipSlot>();
 
-        if (skillEquip == null || skillEquip.isCombat)
+        if (skillEquip == null || skillEquip.IsCombat)
             return;
-        if(skillEquip.CurrentSkill != null && skillEquip.CurrentSkill.isCoolTime)
+        if(skillEquip.CurrentSkill != null && skillEquip.CurrentSkill.IsSkillCoolTime)
             return;
         
         var dragItem = UIHelper.Instance.GetDragItem(DragItemType.InventorySlotItem);

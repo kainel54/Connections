@@ -57,6 +57,7 @@ namespace YH.Enemy
 
             _bombCaster.OnceCast();
             _enemy.GetCompo<EntityHealth>().Die();
+            _enemy.SetDead();
             display.DisplayEndEvent -= HandleBomb;
             OnBombEvent?.Invoke(false);
         }

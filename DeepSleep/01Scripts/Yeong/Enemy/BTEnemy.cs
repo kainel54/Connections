@@ -5,12 +5,13 @@ using System.Collections;
 using IH.EventSystem.StatusEvent;
 using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.AI;
 using YH.Entities;
 using YH.EventSystem;
 using YH.Players;
 using Random = UnityEngine.Random;
 
-public class BTEnemy : Entity, IPoolable
+public class BTEnemy : Entity, IPoolable, IStunable
 {
     // debug
     [SerializeField] private GameEventChannelSO _statusEventChannel;
@@ -43,8 +44,8 @@ public class BTEnemy : Entity, IPoolable
         _btAgent = GetComponent<BehaviorGraphAgent>();
         _collider = GetComponentInChildren<Collider>();
         _renderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        _enemyDamageCaster = GetComponentInChildren<EnemyDamageCaster>();
-        _mover = GetCompo<EnemyMovement>();
+        _enemyDamageCaster = GetCompo<EnemyDamageCaster>();
+        _mover = GetCompo<EnemyMovement>(true);
         _outline = GetComponent<Outline>();
         _outline.OutlineColor = Color.red;
         _outline.OutlineWidth = 1f;
@@ -131,6 +132,8 @@ public class BTEnemy : Entity, IPoolable
 
     public void FaceToTarget(Vector3 target)
     {
+        Vector3 direction = target - transform.position;
+        if(direction == Vector3.zero) return;
         Quaternion targetRot = Quaternion.LookRotation(target - transform.position);
         Vector3 currentEulerAngle = transform.rotation.eulerAngles;
 
@@ -166,19 +169,34 @@ public class BTEnemy : Entity, IPoolable
         yield return new WaitForSeconds(1.5f);
         PoolManager.Instance.Push(this, true);
 
+        
+
+        Coin coin = PoolManager.Instance.Pop(ObjectType.Coin) as Coin;
+        coin.SetItemDropPosition(transform.position + new Vector3(0f, 1.5f, 0), whatIsGround);
+        coin.transform.position = transform.position + new Vector3(0, 1, 0);
+        coin.value = Random.Range(5, 10);
+
         float random = Random.Range(0f, 100f);
         if (random < 10)
         {
             HealingPotion potion = PoolManager.Instance.Pop(ObjectType.HealingPotion) as HealingPotion;
-            potion.SetItemDropPosition(transform.position + new Vector3(0.5f, 1.5f, 0));
+            potion.SetItemDropPosition(transform.position + new Vector3(0.5f, 1.5f, 0), whatIsGround);
             potion.transform.position = transform.position + new Vector3(0, 1, 0);
         }
     }
 
     public void Setting(Vector3 spawnPos, Quaternion identity)
     {
+        NavMeshHit closestHit;
+        if(NavMesh.SamplePosition(spawnPos, out closestHit, 500, 1 ))
+        {
+            transform.position = closestHit.position;
+            _mover.NavMeshEnable(true);
+        }
+        
         _mover.Setting(spawnPos, player.position);
         _mover.SetStop(true);
+        
         DOVirtual.DelayedCall(1.5f, () =>
         {
             _mover.SetStop(false);
@@ -193,6 +211,8 @@ public class BTEnemy : Entity, IPoolable
 
     public virtual void OnPush()
     {
+        _mover.NavMeshEnable(false);
+
         DisposeComponents();
         if(_enemyDamageCaster!=null)
             _enemyDamageCaster.SetDamageCaster(false);
@@ -202,5 +222,10 @@ public class BTEnemy : Entity, IPoolable
         _mover.SpeedMultiplier = 1;
         _btAgent.enabled = true;
         _btAgent.Start();
+    }
+
+    public void Stun(float time)
+    {
+        throw new NotImplementedException();
     }
 }

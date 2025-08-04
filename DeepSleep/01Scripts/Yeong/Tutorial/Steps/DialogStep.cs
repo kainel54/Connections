@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YH.Players;
 
 [Serializable]
 public struct PanelRect
@@ -58,7 +59,7 @@ public struct PanelRect
         }
         else
         {
-            // ÇÇº¿ À§Ä¡¿¡ µû¶ó Áß¾Ó À§Ä¡¸¦ °è»ê
+            // ï¿½Çºï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß¾ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½
             Vector2 pivotPos = GetPosition();
             Vector2 finalPos = Vector2.zero;
 
@@ -114,11 +115,6 @@ public class DialogStep : TutorialStep
     private Vector2 _panelPosition;
     private Vector2 _panelSize;
 
-    public override void Initialize(TutorialManager tutorialManager)
-    {
-        base.Initialize(tutorialManager);
-
-    }
 
     public override void OnEnter()
     {
@@ -127,12 +123,12 @@ public class DialogStep : TutorialStep
             _panel.SetText("", false, false);
         StartCoroutine(DialogCoroutine());
 
-        _panel = _tutorialManager.GetTutorialPanel(_panelKey);
+       /* _panel = _tutorialManager.GetTutorialPanel(_panelKey);
         if (_panel == null)
         {
             _panel = _tutorialManager.GenerateTutorialPanel(_panelKey);
             _panel.Open(_panelPosition, _panelSize, _duration);
-        }
+        }*/
     }
 
     private IEnumerator DialogCoroutine()
@@ -144,8 +140,8 @@ public class DialogStep : TutorialStep
             _panel.SetText(info.infoSO.tutorialText, speed: info.infoSO.textSpeed);
             yield return new WaitForSeconds(duration + info.delay);
         }
-        if (_callNextStep)
-            _tutorialManager.NextStep();
+       // if (_callNextStep)
+       //     _tutorialManager.NextStep();
     }
 
     public override void OnExit()

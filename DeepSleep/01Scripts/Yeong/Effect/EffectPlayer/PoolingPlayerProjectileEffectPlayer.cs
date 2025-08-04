@@ -18,5 +18,4 @@ public class PoolingPlayerProjectileEffectPlayer : PoolingEffectPlayer
             PoolManager.Instance.Push(this, true);
         });
     }
-
 }

@@ -56,8 +56,15 @@ public class DefaultUpgradePreviewNode : BaseNode
                 startPos,
                 relativePos
             };
+            yield return null;
             
             _uiLineRenderers[i].SetVerticesDirty();
-            yield return null;
-        }    }
+        }
+    }
+
+    public override void OnPush()
+    {
+        base.OnPush();
+        _beforeActive = false;
+    }
 }

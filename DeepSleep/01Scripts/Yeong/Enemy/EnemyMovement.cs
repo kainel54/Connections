@@ -9,17 +9,17 @@ using DG.Tweening;
 
 namespace YH.Entities
 {
-    public class EnemyMovement : MonoBehaviour, IEntityComponent, IAfterInitable
+    public abstract class EnemyMovement : MonoBehaviour, IEntityComponent, IAfterInitable
     {
         [SerializeField] private StatElementSO moveSpeedSO;
 
-        private Rigidbody _rbCompo;
-        private NavMeshAgent _navAgent;
-        private BTEnemy _enemy;
-        private EntityRenderer _renderer;
-        private EntityStat _statCompo;
-        private StatElement _speedStat;
-        private Collider _collider;
+        protected Rigidbody _rbCompo;
+        protected NavMeshAgent _navAgent;
+        protected BTEnemy _enemy;
+        protected EntityRenderer _renderer;
+        protected EntityStat _statCompo;
+        protected StatElement _speedStat;
+        protected Collider _collider;
 
         private Vector3 _nextPathPoint;
         private bool _isAutoRotate;
@@ -48,8 +48,8 @@ namespace YH.Entities
         {
             _speedStat = _statCompo.GetElement(moveSpeedSO);
             _navAgent.speed = _speedStat.Value * SpeedMultiplier;
+            _navAgent.updateRotation = false;
         }
-
 
         private IEnumerator NavAgentDelay()
         {
@@ -65,42 +65,27 @@ namespace YH.Entities
 
         public Vector3 GetNextPathPoint()
         {
-            NavMeshPath path = _navAgent.path;
-
-            if (path.corners.Length < 2)
-            {
-                return _navAgent.destination;
-            }
-
-            for (int i = 0; i < path.corners.Length; i++)
-            {
-                float distance = Vector3.Distance(_navAgent.transform.position, path.corners[i]);
-
-                if (distance < 1 && i < path.corners.Length - 1)
-                {
-                    _nextPathPoint = path.corners[i + 1];
-                    return _nextPathPoint;
-                }
-            }
-
-            return _nextPathPoint;
+            return _navAgent.steeringTarget;
         }
 
         public void SetManualMove(bool isManualMove) => IsManualMove = isManualMove;
         public void SetManualRotation(bool isManualRotation) => IsManualRotation = isManualRotation;
 
-        public void SetStop(bool isStop)
+        public virtual void SetStop(bool isStop)
         {
-            _navAgent.ResetPath();            // °æ·Î ÃÊ±âÈ­
-            _navAgent.velocity = Vector3.zero; // ¼Óµµ ¿ÏÀü Á¤Áö
+            _navAgent.ResetPath();            // ê²½ë¡œ ì´ˆê¸°í™”
+            _navAgent.velocity = Vector3.zero; // ì†ë„ ì™„ì „ ì •ì§€
             _navAgent.isStopped = isStop;
         }
         public void SetSpeed(float speed) => _navAgent.speed = speed;
-        public void SetDestination(Vector3 destination) => _navAgent.SetDestination(destination);
+
+        public void SetDestination(Vector3 destination)
+        {
+            _navAgent.SetDestination(destination); 
+        }
 
         public bool GetIsArrived(float stopOffset)
             => !_navAgent.isPathStale && _navAgent.remainingDistance < _navAgent.stoppingDistance + stopOffset;
-
 
         public void SetNavAgentWarp(Vector3 setPosition, Quaternion setRotation)
         {
@@ -129,7 +114,7 @@ namespace YH.Entities
 
         public void Setting(Vector3 spawnPos, Vector3 targetPos)
         {
-            _navAgent.Warp(spawnPos); // °­Á¦·Î À§Ä¡ ¼³Á¤
+            _navAgent.Warp(spawnPos); // ê°•ì œë¡œ ìœ„ì¹˜ ì„¤ì •
             SetDestination(targetPos);
         }
 
@@ -162,11 +147,11 @@ namespace YH.Entities
         {
             Vector3 origin = transform.position;
 
-            // ÀüÈÄÁÂ¿ì ¹æÇâ Á¤ÀÇ
+            // ì „í›„ì¢Œìš° ë°©í–¥ ì •ì˜
             Vector3[] directions = new Vector3[]
             {
-            -transform.right,       // ¿ŞÂÊ
-            transform.right         // ¿À¸¥ÂÊ
+            -transform.right,       // ì™¼ìª½
+            transform.right         // ì˜¤ë¥¸ìª½
             };
 
             List<Vector3> availablePositions = new List<Vector3>();
@@ -175,7 +160,7 @@ namespace YH.Entities
             {
                 if (!Physics.Raycast(origin, dir, 5, _enemy.whatIsWall))
                 {
-                    // º®ÀÌ ¾ø´Ù¸é ±× ¹æÇâÀ¸·Î ÀÌµ¿ÇÑ À§Ä¡ ÀúÀå
+                    // ë²½ì´ ì—†ë‹¤ë©´ ê·¸ ë°©í–¥ìœ¼ë¡œ ì´ë™í•œ ìœ„ì¹˜ ì €ì¥
                     Vector3 targetPos = origin + dir.normalized * 5;
                     availablePositions.Add(targetPos);
                 }

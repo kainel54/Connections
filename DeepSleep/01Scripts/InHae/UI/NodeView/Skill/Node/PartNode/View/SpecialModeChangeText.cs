@@ -14,7 +14,7 @@ public class SpecialModeChangeText : MonoBehaviour
 
     private void Awake()
     {
-        _skillNodeEventChannel.AddListener<InitNodeSkillEvent>(HandleInitNodeSkillEvent);
+        _skillNodeEventChannel.AddListener<SkillNodeInitEvent>(HandleInitNodeSkillEvent);
         
         _specialPartNodeEventChannel.AddListener<SetSpecialModeEvent>(HandleCurrentViewModeChangeEvent);
         _specialPartNodeEventChannel.AddListener<ChangeSpecialModeEvent>(HandleSpecialModeChangeEvent);
@@ -23,13 +23,13 @@ public class SpecialModeChangeText : MonoBehaviour
 
     private void OnDestroy()
     {
-        _skillNodeEventChannel.RemoveListener<InitNodeSkillEvent>(HandleInitNodeSkillEvent);
+        _skillNodeEventChannel.RemoveListener<SkillNodeInitEvent>(HandleInitNodeSkillEvent);
         
         _specialPartNodeEventChannel.RemoveListener<SetSpecialModeEvent>(HandleCurrentViewModeChangeEvent);
         _specialPartNodeEventChannel.RemoveListener<ChangeSpecialModeEvent>(HandleSpecialModeChangeEvent);
     }
     
-    private void HandleInitNodeSkillEvent(InitNodeSkillEvent evt)
+    private void HandleInitNodeSkillEvent(SkillNodeInitEvent evt)
     {
         _isSpecialMode = false;
         _currentViewModeText.text = "현재 표시:파츠";

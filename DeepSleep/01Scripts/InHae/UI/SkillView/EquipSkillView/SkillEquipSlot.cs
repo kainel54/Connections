@@ -8,15 +8,15 @@ using IH.EventSystem.UIEvent;
 using IH.EventSystem.UIEvent.PanelEvent;
 using ObjectPooling;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using YH.EventSystem;
 using YH.Players;
+using TMPro;
+using UnityEngine.InputSystem;
 
-public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler, 
-    IDragHandler, IEndDragHandler, IPointerClickHandler
+public class SkillEquipSlot : MonoBehaviour
 {
-    [SerializeField] private PlayerInputSO _playerInputSo;
+    [SerializeField] private PlayerManagerSO _playerManager;
     [SerializeField] private GameEventChannelSO _uiEventChannelSO;
     [SerializeField] private GameEventChannelSO _skillNodeEventChannelSO;
     [SerializeField] private GameEventChannelSO _missionEventChannelSO;
@@ -25,44 +25,56 @@ public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler,
     public int skillIdx;
     [SerializeField] private WindowPanel _nodeViewUI;
     
-    private SkillItemSO _currentSkillData;
+    private Dictionary<string, Type> _skillTypes = new ();
+    
     public SkillInventoryItem currentSkillItem;
+    private SkillItemSO _currentSkillData;
     private Skill _currentSkill;
     public Skill CurrentSkill => _currentSkill;
 
     private Image _skillImage;
     private Sprite _defaultSprite;
     private Button _selectBtn;
+    private TextMeshProUGUI _keyboard;
     
-    private Dictionary<string, Type> _skillTypes = new Dictionary<string, Type>();
-    private RectTransform _dragTarget;
-    public bool isEmpty => currentSkillItem == null || currentSkillItem.data == null;  
-    private bool _isDragging;
-
-    private bool _isOnlyNormalAttackEventing;
+    public bool IsEmpty => currentSkillItem == null || currentSkillItem.data == null;  
     
     private bool _isCombat;
-    public bool isCombat => _isCombat;
+    public bool IsCombat => _isCombat;
+    private bool _isOnlyNormalAttackEventing;
+    
+    private SkillEquipSlotPointerAction _slotPointerAction;
 
     private void Start()
     {
-        _playerInputSo.SkillActions[skillIdx] += HandleSkillInput;
+        _slotPointerAction = GetComponent<SkillEquipSlotPointerAction>();
+
+        _playerManager.SetUpPlayerEvent += HandleSetPlayer;
         
         _skillImage = GetComponent<Image>();
         _defaultSprite = _skillImage.sprite;
         
         _selectBtn = GetComponent<Button>();
         _selectBtn.onClick.AddListener(HandleOpenNodeUI);
-        
+        _keyboard = GetComponentInChildren<TextMeshProUGUI>();
+
         _missionEventChannelSO.AddListener<OnlyNormalAttackMissionStartEvent>(HandleCheckInputSkill);
         _levelEventChannelSO.AddListener<InCombatCheckEvent>(HandleInCombatCheck);
     }
-    
+
+    private void HandleSetPlayer()
+    {
+        _playerManager.Player.PlayerInput.SkillActions[skillIdx] += HandleSkillInput;
+        _keyboard.text = _playerManager.Player.PlayerInput.GetSkillKeyName(skillIdx);
+    }
+
     private void OnDestroy()
     {
-        _selectBtn.onClick.RemoveListener(HandleOpenNodeUI);
+        _playerManager.SetUpPlayerEvent -= HandleSetPlayer;
+
+        _playerManager.Player.PlayerInput.SkillActions[skillIdx] -= HandleSkillInput;
         
-        _playerInputSo.SkillActions[skillIdx] -= HandleSkillInput;
+        _selectBtn.onClick.RemoveListener(HandleOpenNodeUI);
         
         _missionEventChannelSO.RemoveListener<OnlyNormalAttackMissionStartEvent>(HandleCheckInputSkill);
         _levelEventChannelSO.RemoveListener<InCombatCheckEvent>(HandleInCombatCheck);
@@ -98,55 +110,13 @@ public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler,
         if(_currentSkill == null)
             return;
         
-        _currentSkill.PressSkill();
-    }
-    
-    public void OnDrop(PointerEventData eventData)
-    {
-        if(eventData.button != PointerEventData.InputButton.Left)
-            return;
-        if(IsCombatCheck())
-            return;
-        
-        DropItemSlotCase(eventData);
-        DropEquipSlotCase(eventData);
-    }
-
-    private void DropItemSlotCase(PointerEventData eventData)
-    {
-        // 드래그한 스킬
-        GameObject gameObject = eventData.pointerDrag;
-        ItemSlotUI slot = gameObject.GetComponent<ItemSlotUI>();
-
-        if(slot == null || slot.isEmpty)
-            return;
-
-        if (!isEmpty)
-            InventoryManager.Instance.AddInventoryItem(InventoryType.Skill, currentSkillItem);
-
-        UpdateSlot(slot.item as SkillInventoryItem);
-        InventoryManager.Instance.RemoveInventoryItem(InventoryType.Skill, slot.item);
-    }
-    
-    private void DropEquipSlotCase(PointerEventData eventData)
-    {
-        GameObject gameObject = eventData.pointerDrag;
-        SkillEquipSlot slot = gameObject.GetComponent<SkillEquipSlot>();
-
-        if (slot == null || slot.isEmpty)
-            return;
-        if (slot.CurrentSkill != null && slot.CurrentSkill.isCoolTime)
-            return;
-        
-        SkillInventoryItem tempData = slot.currentSkillItem;
-        slot.UpdateSlot(currentSkillItem);
-        UpdateSlot(tempData);
+        _currentSkill.SkillAnimation.CheckPlaySkillAnimation();
     }
 
     public void UpdateSlot(SkillInventoryItem skillItem)
     {
         currentSkillItem = skillItem;
-        if (!isEmpty)
+        if (!IsEmpty)
         {
             _currentSkillData = currentSkillItem.data as SkillItemSO;
             _skillImage.sprite = _currentSkillData.icon;
@@ -163,7 +133,10 @@ public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler,
             if (_isOnlyNormalAttackEventing)
                 _currentSkill.PressAction += HandleSkillInputMissionCheck;
             
-            var nodeInitEvt = SkillNodeEvents.InitNodeSkillEvent;
+            var partInfoInitEvt = SkillNodeEvents.EquipPartInfoInitEvent;
+            _skillNodeEventChannelSO.RaiseEvent(partInfoInitEvt);
+            
+            var nodeInitEvt = SkillNodeEvents.SkillNodeInitEvent;
             nodeInitEvt.skillInventoryItem = currentSkillItem;
             nodeInitEvt.skill = _currentSkill;
             _skillNodeEventChannelSO.RaiseEvent(nodeInitEvt);
@@ -176,9 +149,15 @@ public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler,
         SkillHudUpdate();
     }
 
+    public void SetSkillImageColor(Color color) => _skillImage.color = color;
+    
     public void Init()
     {
-        InventoryManager.Instance.AddInventoryItem(InventoryType.Skill, currentSkillItem);
+        var skillUnEquipCheckEvent = SkillNodeEvents.SkillUnEquipCheckEvent;
+        skillUnEquipCheckEvent.skill = _currentSkill;
+        _skillNodeEventChannelSO.RaiseEvent(skillUnEquipCheckEvent);
+        
+        InventoryManager.Instance.AddInventoryItem(ItemType.Skill, currentSkillItem);
         CleanUp();
         SkillHudUpdate();
     }
@@ -194,14 +173,14 @@ public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler,
 
     private void HandleOpenNodeUI()
     {
-        if(isEmpty || _isDragging || IsCombatCheck())
+        if(IsEmpty || _slotPointerAction.IsDragging || IsCombatCheck())
             return;
         
         var nodeViewOpenEvt = UIPanelEvent.WindowPanelOpenEvent;
         nodeViewOpenEvt.currentWindow = _nodeViewUI;
         _uiEventChannelSO.RaiseEvent(nodeViewOpenEvt);
 
-        var nodeInitEvt = SkillNodeEvents.InitNodeSkillEvent;
+        var nodeInitEvt = SkillNodeEvents.SkillNodeInitEvent;
         nodeInitEvt.skillInventoryItem = currentSkillItem;
         nodeInitEvt.skill = _currentSkill;
         _skillNodeEventChannelSO.RaiseEvent(nodeInitEvt);
@@ -216,54 +195,7 @@ public class SkillEquipSlot : MonoBehaviour, IDropHandler, IBeginDragHandler,
 
         _uiEventChannelSO.RaiseEvent(evt);
     }
-    
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if(eventData.button != PointerEventData.InputButton.Left)
-            return;
-        if(isEmpty || IsCombatCheck())
-            return;
-        
-        _isDragging = true;
-        
-        var dragItem = UIHelper.Instance.GetDragItem(DragItemType.InventorySlotItem);
-        dragItem.StartDrag(currentSkillItem);
-        _dragTarget = dragItem.rectTransform;
-        _dragTarget.position = Input.mousePosition;
-        _skillImage.color =Color.clear;
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if(eventData.button != PointerEventData.InputButton.Left)
-            return;
-        if(isEmpty || _isCombat)
-            return;
-        
-        _dragTarget.position = Input.mousePosition;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if(eventData.button != PointerEventData.InputButton.Left || _isCombat)
-            return;
-        
-        _isDragging = false;
-
-        var dragItem = UIHelper.Instance.GetDragItem(DragItemType.InventorySlotItem);
-        dragItem.EndDrag();
-        _skillImage.color = Color.white;
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if(eventData.button != PointerEventData.InputButton.Right || IsCombatCheck())
-            return;
-        
-        Init();
-    }
-
-    private bool IsCombatCheck()
+    public bool IsCombatCheck()
     {
         if (!_isCombat)
             return _isCombat;

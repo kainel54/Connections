@@ -4,6 +4,7 @@ using IH.EventSystem.UIEvent.PanelEvent;
 using ObjectPooling;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YH.EventSystem;
 
@@ -16,15 +17,17 @@ public class ShopPanelUI : MonoBehaviour
     
     [SerializeField] private TextMeshProUGUI _titleText;
     [SerializeField] private TextMeshProUGUI _priceText;
-    [SerializeField] private TextMeshProUGUI _descriptionText;
     [SerializeField] private Image _iconImage;
     [SerializeField] private Button _buyButton;
     
+    [SerializeField] private TextMeshProUGUI _defaultDescriptionText;
+    private SkillResultDescription _skillDescription;
     private RectTransform _rectTransform => transform as RectTransform;
     
     private void Awake()
     {
         _uiEventChannel.AddListener<ShopDescriptionPanelEvent>(HandleShopDescription);
+        _skillDescription = GetComponentInChildren<SkillResultDescription>();
     }
 
     private void OnDestroy()
@@ -37,12 +40,27 @@ public class ShopPanelUI : MonoBehaviour
         if (evt.isPanelActive)
         {
             _titleText.text = evt.itemDataSo.itemName;
-            _descriptionText.text = evt.itemDataSo.itemDescription;
             _priceText.text = evt.itemDataSo.price + "$";  
             _iconImage.sprite = evt.itemDataSo.icon;
 
             _titleText.color = evt.textColor;
-            _descriptionText.color = evt.textColor;
+            
+            if (evt.itemDataSo is SkillItemSO skillItemSo)
+            {
+                _defaultDescriptionText.gameObject.SetActive(false);
+                _skillDescription.gameObject.SetActive(true);
+                
+                _skillDescription.ResultDescription(skillItemSo,
+                    SkillManager.Instance.GetSkill(skillItemSo.reflectionName));
+            }
+            else
+            {
+                _defaultDescriptionText.gameObject.SetActive(true);
+                _skillDescription.gameObject.SetActive(false);
+
+                _defaultDescriptionText.text = evt.itemDataSo.itemDescription;
+                _defaultDescriptionText.color = evt.textColor;
+            }
             
             _priceText.color = evt.canBuyItem ? Color.yellow : Color.red;
 

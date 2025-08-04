@@ -55,7 +55,7 @@ public class SkillInventoryItem : InventoryItem
             Vector2Int grid = Vector2Int.zero;
             grid += NodeModular.GetNodeDirGrid((NodeDir)i);
             
-            NodeData nodeData = new NodeData(false, i, 1, grid);
+            NodeData nodeData = new NodeData(false, i + 1, 1, grid);
             nodeGridDictionary.Add(grid, nodeData);
         }
         

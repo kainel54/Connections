@@ -19,8 +19,9 @@ namespace IH.EventSystem.LevelEvent
         public static BossLevelEvent BossLevelEvent = new BossLevelEvent();
 
         public static InCombatCheckEvent InCombatCheckEvent = new InCombatCheckEvent();
-        //public static StageStartEvent StageStartEvent = new StageStartEvent();
-        //public static StageEndEvent StageEndEvent = new StageEndEvent();
+        public static StageStartEvent StageStartEvent = new StageStartEvent();
+        public static StageEndEvent StageEndEvent = new StageEndEvent();
+        public static DestroyTotemEvent DestroyTotemEvent = new DestroyTotemEvent();
     }
 
     public class LevelDataPassEvent : GameEvent
@@ -64,6 +65,11 @@ namespace IH.EventSystem.LevelEvent
     }
 
     public class StageEndEvent : GameEvent
+    {
+
+    }
+
+    public class DestroyTotemEvent : GameEvent
     {
 
     }

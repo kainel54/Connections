@@ -16,4 +16,5 @@ public class PoolingDefaultEffectPlayer : PoolingEffectPlayer
             PoolManager.Instance.Push(this, true);
         });
     }
+    
 }

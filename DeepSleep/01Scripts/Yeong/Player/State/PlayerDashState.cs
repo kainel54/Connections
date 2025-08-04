@@ -1,71 +1,116 @@
-using DG.Tweening;
+using UnityEngine;
 using YH.Animators;
 using YH.Entities;
 using YH.FSM;
-using UnityEngine;
 using YH.Core;
-using System;
 
 namespace YH.Players
 {
     public class PlayerDashState : EntityState
     {
-        private PointNClickPlayer _player;
-        private EntityAIMover _mover;
-        //private HealthCompo _health;
+        private readonly float _dashDistance = 8f;
+        private readonly float _dashDuration = 0.5f;
 
-        private readonly float _dashDistance = 10f, _dashTime = 0.5f;
+        private MOBAPlayer _player;
+        private EntityAIMover _mover;
+        private EntityHealth _health;
+
+        private Vector3 _dashDirection;
+        private float _elapsedTime;
+        private Vector3 _startPosition;
+        private Vector3 _targetPosition;
+
         public PlayerDashState(Entity entity, AnimParamSO animParam) : base(entity, animParam)
         {
-            _player = entity as PointNClickPlayer;
+            _player = entity as MOBAPlayer;
             _mover = entity.GetCompo<EntityAIMover>();
+            _health = entity.GetCompo<EntityHealth>();
         }
 
         public override void Enter()
         {
             base.Enter();
 
-            Vector3 rollingDirection = GetRollingDirection();
-            _player.transform.rotation = Quaternion.LookRotation(rollingDirection);
+            _player.SetDashing(true);
+            _player.PlayerInput.MoveEvent += HandleMoveEvent;
 
             _mover.CanManualMove = false;
+            _mover.CanManualRotate = false;
             _mover.StopImmediately();
-            Vector3 destination = _player.transform.position + _player.transform.forward.normalized * (_dashDistance - 0.5f);
+            
+            _health.SetInvincible(true);
 
-            _player.transform.DOMove(destination, _dashTime).SetEase(Ease.OutQuad).OnComplete(EndDash);
-        }
+            _dashDirection = GetDashDir();
+            _dashDirection.y = 0f;
+            _dashDirection.Normalize();
 
+            _mover.RotateToDirection(_dashDirection);
 
-        private Vector3 GetRollingDirection()
-        {
-            Vector3 direction = Vector3.zero;
-            Vector3 moveInput = _player.PlayerInput.Movement;
-            if (_player.PlayerInput.Movement.magnitude < 0.1f)
+            _startPosition = _player.transform.position;
+
+            Ray ray = new Ray(_startPosition, _dashDirection);
+            RaycastHit hit;
+            float adjustedDashDistance = _dashDistance;
+
+            if (Physics.Raycast(ray, out hit, _dashDistance, _player.WhatisWall))
             {
-                moveInput = _player.transform.forward.normalized;
-                moveInput = new Vector2(moveInput.x, moveInput.z);
+                adjustedDashDistance = hit.distance - 0.1f;
+                adjustedDashDistance = Mathf.Max(adjustedDashDistance, 0f);
             }
 
-            direction = Quaternion.Euler(0, -45f, 0) * new Vector3(moveInput.x, 0, moveInput.y);
-            //_targetRotation = Quaternion.LookRotation(direction);
-            return direction;
+            _targetPosition = _startPosition + _dashDirection * adjustedDashDistance;
+
+
+            _elapsedTime = 0f;
         }
 
-
-        public override void Exit()
+        private void HandleMoveEvent(bool isClick)
         {
-            Vector3 endPos = new Vector3(_player.transform.position.x, 0, _player.transform.position.z);
-            _mover.EndPos = endPos;
-            _mover.StopImmediately();
-            _mover.CanManualMove = true;
-            base.Exit();
+            _player.isMoveClick = isClick;
+            _player.MoveEvent?.Invoke();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            _elapsedTime += Time.deltaTime;
+
+            float time = Mathf.Clamp01(_elapsedTime / _dashDuration);
+            Vector3 newPos = Vector3.Lerp(_startPosition, _targetPosition, time);
+            _player.transform.position = newPos;
+
+            if (time >= 1f)
+            {
+                EndDash();
+            }
+        }
+
+        private Vector3 GetDashDir()
+        {
+            Vector3 mousePosition = _player.PlayerInput.GetWorldMousePosition();
+            Vector3 dir = (mousePosition - _player.transform.position);
+            dir.y = 0f;
+            return dir.normalized;
         }
 
         private void EndDash()
         {
+            _mover.RotateToDirection(_dashDirection);
+            _health.SetInvincible(false);
             _player.ChangeState(FSMState.Idle);
         }
 
+        public override void Exit()
+        {
+            _player.SetDashing(false);
+            _player.PlayerInput.MoveEvent -= HandleMoveEvent;
 
+            _mover.EndPos = new Vector3(_player.transform.position.x, 0, _player.transform.position.z);
+            _mover.StopImmediately();
+            _mover.CanManualMove = true;
+            _mover.CanManualRotate = true;
+
+            base.Exit();
+        }
     }
 }

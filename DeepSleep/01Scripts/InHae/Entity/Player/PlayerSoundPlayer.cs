@@ -10,15 +10,17 @@ public class PlayerSoundPlayer : MonoBehaviour, IEntityComponent
 {
     [SerializeField] private GameEventChannelSO _soundChannel;
 
-    [Header("Gun Sound")] 
-    [SerializeField] private SoundSO _shootSound;
-    [SerializeField] private SoundSO _dashSound;
-    
     [Header("Health Sound")] 
     [SerializeField] private List<SoundSO> _hitSound;
     [SerializeField] private SoundSO _dieSound;
 
+
+    [Header("Attack Sound")]
+    [SerializeField] private List<SoundSO> _attackSound;
+
+    [SerializeField] private SoundSO _dashSound;
     private Player _player;
+    private MOBAPlayer _mobaPlayer;
 
     private float _currentHitDelay;
     private float _hitDelay = 0.3f;
@@ -26,29 +28,33 @@ public class PlayerSoundPlayer : MonoBehaviour, IEntityComponent
     public void Initialize(Entity entity)
     {
         _player = entity as Player;
-    }
-
-    private void Awake()
-    {
-        _player.GetCompo<PlayerAttackCompo>().FireEvent += HandleFireSound;
-        _player.GetCompo<PlayerMovement>().OnDashEvent += HandleDashSound;
-    }
-
-    private void HandleDashSound(bool obj)
-    {
-        if (obj)
+        if (_player.PlayerInput.ControlType == ControlType.PointNClick)
         {
-            var evt = SoundEvents.PlaySfxEvent;
-            evt.clipData = _dashSound;
-            evt.position = transform.position;
-
-            _soundChannel.RaiseEvent(evt);
+            _mobaPlayer = _player as MOBAPlayer;
+            _mobaPlayer.AttackComboEvent += HandleAttackEvent;
+            _mobaPlayer.DashEvent += HandleDashEvent;
         }
+    }
+    private void HandleAttackEvent(int attackCombo)
+    {
+        var evt = SoundEvents.PlaySfxEvent;
+        evt.clipData = _attackSound[attackCombo];
+        evt.position = transform.position;
+
+        _soundChannel.RaiseEvent(evt);
+    }
+
+    private void HandleDashEvent()
+    {
+        var evt = SoundEvents.PlaySfxEvent;
+        evt.clipData = _dashSound;
+        evt.position = transform.position;
+
+        _soundChannel.RaiseEvent(evt);
     }
 
     private void OnDestroy()
     {
-        _player.GetCompo<PlayerAttackCompo>().FireEvent -= HandleFireSound;
     }
 
     private void Update()
@@ -59,23 +65,6 @@ public class PlayerSoundPlayer : MonoBehaviour, IEntityComponent
         }
     }
 
-    private void HandleReloadSound(float obj)
-    {
-        var evt = SoundEvents.PlaySfxEvent;
-        evt.clipData = _dashSound;
-        evt.position = transform.position;
-
-        _soundChannel.RaiseEvent(evt);
-    }
-
-    private void HandleFireSound()
-    {
-        var evt = SoundEvents.PlaySfxEvent;
-        evt.clipData = _shootSound;
-        evt.position = transform.position;
-
-        _soundChannel.RaiseEvent(evt);
-    }
     
     public void HandleDeadSound()
     {

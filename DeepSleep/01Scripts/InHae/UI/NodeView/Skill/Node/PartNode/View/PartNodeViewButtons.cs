@@ -20,7 +20,7 @@ public class PartNodeViewButtons : MonoBehaviour
 
     private void Awake()
     {
-        _skillNodeEventChannel.AddListener<InitNodeSkillEvent>(HandleInitNodeSkillEvent);
+        _skillNodeEventChannel.AddListener<SkillNodeInitEvent>(HandleInitNodeSkillEvent);
         
         _specialNodeEventChannel.AddListener<ChangeSpecialModeEvent>(HandleChangeSpecialModeEvent);
         _specialNodeEventChannel.AddListener<SetSpecialModeEvent>(HandleSetSpecialModeEvent);
@@ -28,7 +28,7 @@ public class PartNodeViewButtons : MonoBehaviour
 
     private void OnDestroy()
     {
-        _skillNodeEventChannel.RemoveListener<InitNodeSkillEvent>(HandleInitNodeSkillEvent);
+        _skillNodeEventChannel.RemoveListener<SkillNodeInitEvent>(HandleInitNodeSkillEvent);
         
         _specialNodeEventChannel.RemoveListener<ChangeSpecialModeEvent>(HandleChangeSpecialModeEvent);
         _specialNodeEventChannel.RemoveListener<SetSpecialModeEvent>(HandleSetSpecialModeEvent);
@@ -45,7 +45,7 @@ public class PartNodeViewButtons : MonoBehaviour
             ChangePartVisual();
     }
     
-    private void HandleInitNodeSkillEvent(InitNodeSkillEvent evt)
+    private void HandleInitNodeSkillEvent(SkillNodeInitEvent evt)
     {
         PartButton();
     }

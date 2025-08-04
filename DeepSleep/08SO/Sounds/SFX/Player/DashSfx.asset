@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: DashSfx
   m_EditorClassIdentifier: 
   audioType: 0
-  clip: {fileID: 8300000, guid: 2e3b971348b6f404bb26694fb2a6791f, type: 3}
+  clip: {fileID: 8300000, guid: 4c8a819d400236e46aad55f24d60048f, type: 3}
   isLoop: 0
   isRandomizePitch: 0
   is3DSound: 0
   randomPitchModifier: 0.1
-  volume: 0.1
-  pitch: 0.8
+  volume: 0.5
+  pitch: 1
   startTime: 0

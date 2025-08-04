@@ -33,13 +33,17 @@ public class PartNodeUIChainCheck : MonoBehaviour, IPartNodeUIComponent
 
     private void Awake()
     {
-        _chainListButton = GetComponentInChildren<Button>();
-        _chainButtonText = _chainListButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-        
-        _chainListButton.onClick.AddListener(ChainListPopUp);
+        // _chainListButton = GetComponentInChildren<Button>();
+        // _chainButtonText = _chainListButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        //
+        // _chainListButton.onClick.AddListener(ChainListPopUp);
+    }
+
+    private void Start()
+    {
         _chainPopUpPanel = UIHelper.Instance.GetPopUpPanel(ItemPopUpItemType.Chain) as ChainPopUpPanel;
     }
-    
+
     public void Initialize(PartNodeUI partNodeUI)
     {
         _partNodeUI = partNodeUI;

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5664b7598583f9245bab874600320904, type: 3}
   m_Name: MagicArrowTargetingData
   m_EditorClassIdentifier: 
-  fieldType: 0
+  fieldType: 3
   canUseSkillRangeStat:
-    statInfo: {fileID: 0}
+    statInfo: {fileID: 11400000, guid: ba4fb3a67ac7a09488ddd39d8f10f819, type: 2}
     _defaultValue: 0
     currentValue: 0

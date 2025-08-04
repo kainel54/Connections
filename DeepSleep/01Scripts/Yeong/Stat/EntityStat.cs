@@ -10,11 +10,15 @@ namespace YH.StatSystem
         [SerializeField] private List<StatElement> _overrideStatElements = new List<StatElement>();
         [SerializeField] private StatBaseSO _baseStat;
         private Entity _entity;
+
         public void Initialize(Entity entity)
         {
             _entity = entity;
+            _baseStat = Instantiate(_baseStat);
+            
             Initialize();
         }
+        
         private Dictionary<string, StatElement> _overrideStatDictionary;
 
         public void Initialize()

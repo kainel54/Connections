@@ -21,7 +21,7 @@ public partial class BackDashAction : Action
 
     protected override Status OnStart()
     {
-        _movement = Agent.Value.GetCompo<EnemyMovement>();
+        _movement = Agent.Value.GetCompo<EnemyMovement>(true);
 
         // 현재 위치와 뒤쪽 방향 계산
         Vector3 backwardDir = -Agent.Value.transform.forward;

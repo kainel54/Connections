@@ -8,6 +8,7 @@ public abstract class BaseInteractDescription : MonoBehaviour
     [SerializeField] protected float _scale;
     
     protected RectTransform _rectTransform => transform as RectTransform;
+    private Tween _tween;
 
     protected void ShowPanel(Vector3 pos, float yOffset)
     {
@@ -15,7 +16,12 @@ public abstract class BaseInteractDescription : MonoBehaviour
         position.y += yOffset;
         _rectTransform.anchoredPosition = position;
 
-        _rectTransform.DOScale(Vector3.one * _scale, 0.3f);
+        if (_tween != null && _tween.IsActive())
+            return;
+        if(_rectTransform.localScale == Vector3.one * _scale)
+            return;
+        
+        _tween = _rectTransform.DOScale(Vector3.one * _scale, 0.3f);
     }
     
     protected void HidePanel() => _rectTransform.DOScale(Vector3.zero, 0.3f);

@@ -3,20 +3,10 @@ using UnityEngine;
 
 public class SkillRangeObj : SkillObj
 {
-    protected int shootCount = 0;
+    protected int _shootCount = 0;
     
-    public void RangeInit(int shootcnt)
+    public void RangeInit(int shootCnt)
     {
-        shootCount = shootcnt;
-    }
-
-    public void DestroyObject(GameObject gameObject)
-    {
-        Destroy(gameObject);
-    }
-
-    public void DestroyObject(GameObject gameObject, float delay)
-    {
-        Destroy(gameObject, delay);
+        _shootCount = shootCnt;
     }
 }

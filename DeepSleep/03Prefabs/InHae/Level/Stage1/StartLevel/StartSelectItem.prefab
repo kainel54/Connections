@@ -58,8 +58,8 @@ Transform:
   m_GameObject: {fileID: 7279108800240660594}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.86, z: 0}
-  m_LocalScale: {x: 0.14, y: 0.23861217, z: 0.14}
+  m_LocalPosition: {x: 0, y: -3.7901, z: 0}
+  m_LocalScale: {x: 0.14, y: 0.3434782, z: 0.14}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1696742310267919643}
@@ -189,3 +189,4 @@ MonoBehaviour:
   _upTime: 5
   _visualTrm: {fileID: 35390966042220308}
   skillItem: {fileID: 0}
+  isCollected: 0

@@ -5,27 +5,19 @@ using YH.Players;
 public class AttackStep : TutorialStep
 {
     private bool _isAttacked;
-    private Player _player;
-    private PlayerAttackCompo _playerAttacker;
-    [SerializeField] private PlayerManagerSO _playerManager;
 
     public override void OnEnter()
     {
         base.OnEnter();
-        _player = _playerManager.Player;
-        _playerAttacker = _player.GetCompo<PlayerAttackCompo>();
+        _player.AttackEvent += HandleAttack;
     }
 
-    public override void OnUpdate()
+    private void HandleAttack()
     {
-        base.OnUpdate();
-        if(_isAttacked)
+        _isAttacked = true;
+        if (_isAttacked)
         {
-            _tutorialManager.NextStep();
-        }
-        if (!_isAttacked)
-        {
-            _isAttacked = _playerAttacker.isShooting;
+            _player.AttackEvent -= HandleAttack;
         }
     }
 }

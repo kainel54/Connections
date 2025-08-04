@@ -8,15 +8,12 @@ using IH.EventSystem.NodeEvent.SpecialPartNodeEvent;
 using IH.EventSystem.SoundEvent;
 using IH.Manager;
 using IH.UI;
+using ObjectPooling;
 using UnityEngine;
-using UnityEngine.Serialization;
 using YH.EventSystem;
 
 public class SkillNodeUI : BaseNode
 {
-    [SerializeField] private PartNodeUI _partNodeUI;
-    [SerializeField] private SpecialPartNodeUI _specialPartNodeUI;
-    
     [SerializeField] private GameEventChannelSO _skillNodeEventChannel;
     [SerializeField] private GameEventChannelSO _partNodeEventChannel;
     [SerializeField] private GameEventChannelSO _spsecialPartNodeEventChannel;
@@ -26,7 +23,7 @@ public class SkillNodeUI : BaseNode
     public SkillInventoryItem currentSkillItem;
     
     private Dictionary<Vector2Int, PartNodeUI> _allPartNodeUIDictionary = new ();
-    private List<PartNodeUI> _connectPartNodeUI = new List<PartNodeUI>();
+    private List<PartNodeUI> _connectPartNodeUI = new ();
 
     private Dictionary<PartType, PartNodeUI> _partTypeCheckDictionary = new Dictionary<PartType, PartNodeUI>();
     
@@ -34,9 +31,14 @@ public class SkillNodeUI : BaseNode
     
     private float _nodeOffset;
 
+    private List<BaseNode> _currentNodeList = new();
+
     protected override void Awake()
     {
         base.Awake();
+        
+        index = 0;
+        
         _partNodeEventChannel.AddListener<AutoEquipPartEvent>(HandleAutoEquipPartEvent);
         _spsecialPartNodeEventChannel.AddListener<AutoEquipAbilityEvent>(HandleAutoEquipAbilityEvent);
     }
@@ -83,14 +85,19 @@ public class SkillNodeUI : BaseNode
         soundPlayEvt.clipData = _equipPartSound;
         soundPlayEvt.position = transform.position;
         _soundChannelSO.RaiseEvent(soundPlayEvt);
-        
+
         partNodeUIList[0].UpdateNode(nodeEquipData);
+        partNodeUIList[0].isNewEnableNode = true;
+        
         InventoryManager.Instance.RemoveInventoryItemWithSo(evt.part.data);
         SkillNodeUpdate();
     }
 
-    public void Init(SkillInventoryItem currentSkillInventoryItem, Skill skill)
+    public void Init(SkillInventoryItem currentSkillInventoryItem, Skill skill, List<BaseNode> currentNodeList)
     {
+        _currentNodeList = currentNodeList;
+        _currentNodeList.Add(this);
+        
         _nodeOffset = NodeModular.NodeOffset;
         
         currentSkillItem = currentSkillInventoryItem;
@@ -169,13 +176,16 @@ public class SkillNodeUI : BaseNode
         foreach (var nodeData in currentSkillItem.nodeGridDictionary)
         {
             NodeData node = nodeData.Value;
-            
+
             PartNodeUI currentPartNode;
-            if(node.isSpecial)
-                currentPartNode = Instantiate(_specialPartNodeUI, _nodeParent);
+
+            if (node.isSpecial)
+                currentPartNode = PoolManager.Instance.Pop(NodeUIPoolingType.SpecialPartNode) as PartNodeUI;
             else
-                currentPartNode = Instantiate(_partNodeUI, _nodeParent);
-                
+                currentPartNode = PoolManager.Instance.Pop(NodeUIPoolingType.PartNode) as PartNodeUI;
+            
+            currentPartNode.transform.SetParent(_nodeParent);
+            currentPartNode.transform.localScale = Vector3.one;
             currentPartNode.transform.SetAsLastSibling();
             currentPartNode.transform.localPosition =
                 new Vector2(node.grid.x * 0.5f * _nodeOffset, node.grid.y * _nodeOffset);
@@ -183,6 +193,7 @@ public class SkillNodeUI : BaseNode
             _allPartNodeUIDictionary.Add(nodeData.Key, currentPartNode);
             
             currentPartNode.Init(this, nodeData.Value);
+            _currentNodeList.Add(currentPartNode);
         }
     }
 
@@ -194,7 +205,7 @@ public class SkillNodeUI : BaseNode
             
             foreach (var connectNodeIndex in currentData.connectNodeGridList)
                 nodeUI.Value.connectedNodes.Add(_allPartNodeUIDictionary[connectNodeIndex]);
-                
+
             nodeUI.Value.LineConnect();
         }
 
@@ -203,6 +214,7 @@ public class SkillNodeUI : BaseNode
             Vector2Int closeGrid = Vector2Int.zero;
             closeGrid += NodeModular.GetNodeDirGrid((NodeDir)i);
             connectedNodes.Add(_allPartNodeUIDictionary[closeGrid]);
+            _allPartNodeUIDictionary[closeGrid].connectedNodes.Add(this);
         }
         
         LineConnect();
@@ -221,7 +233,7 @@ public class SkillNodeUI : BaseNode
         TypeDictionaryInit();
         _connectPartNodeUI.Clear();
         
-        NodeConnectCheck();
+        NodeConnectCheckAndEnable();
         UpdatePart();
     }
 
@@ -240,5 +252,13 @@ public class SkillNodeUI : BaseNode
 
             _partTypeCheckDictionary[(PartType)type] = null;
         }
+    }
+
+    public override void OnPush()
+    {
+        base.OnPush();
+        _allPartNodeUIDictionary.Clear();
+        _connectPartNodeUI.Clear();
+        _partTypeCheckDictionary.Clear();
     }
 }

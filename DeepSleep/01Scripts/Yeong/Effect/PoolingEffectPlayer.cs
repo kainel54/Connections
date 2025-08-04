@@ -7,11 +7,13 @@ using UnityEngine;
 public abstract class PoolingEffectPlayer : MonoBehaviour, IPoolable
 {
     private List<ParticleSystem> _particleEffect;
+    private List<TrailRenderer> _trailRenderer;
     protected float _lifeDuration;
 
     private void Awake()
     {
         _particleEffect = GetComponentsInChildren<ParticleSystem>().ToList();
+        _trailRenderer = GetComponentsInChildren<TrailRenderer>().ToList();
         _lifeDuration = _particleEffect[0].main.duration;
     }
 
@@ -27,13 +29,18 @@ public abstract class PoolingEffectPlayer : MonoBehaviour, IPoolable
     {
         _lifeDuration = duration;
     }
-
-    public void Init()
+    
+    protected void Init()
     {
-        _particleEffect.ForEach(x =>
+        _particleEffect?.ForEach(x =>
         {
             x.Stop();
             x.Simulate(0);
+        });
+
+        _trailRenderer?.ForEach(x =>
+        {
+            x.Clear();
         });
     }
 

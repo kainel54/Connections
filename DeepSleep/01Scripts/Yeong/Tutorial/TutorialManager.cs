@@ -45,7 +45,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         }
         _stepList.ForEach(step =>
         {
-            step.Initialize(this);
+           // step.Initialize(this);
             step.gameObject.SetActive(false);
         });
         _lastIndex = _stepList.IndexOf(_startStep);

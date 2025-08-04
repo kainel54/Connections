@@ -7,7 +7,8 @@ public class BombPart : SkillPart, IBombPart
     public void BombEquip()
     {
         _skill.AddShootCount(1);
-
+        _skill.SkillAnimation.isPlayAnimation = false;
+        
         if (_skill.GetShootCount() > 1)
         {
             return;
@@ -20,6 +21,8 @@ public class BombPart : SkillPart, IBombPart
     public void BombUnEquip()
     {
         _skill.AddShootCount(-1);
+        _skill.SkillAnimation.isPlayAnimation = true;
+
         if (_skill.GetShootCount() >= 1)
         {
             return;

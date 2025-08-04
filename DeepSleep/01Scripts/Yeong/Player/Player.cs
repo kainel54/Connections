@@ -1,14 +1,12 @@
-using System;
-using IH.EventSystem.StatusEvent;
-using YH.Entities;
-using YH.StatSystem;
+using System.Collections.Generic;
 using UnityEngine;
+using YH.Entities;
 using YH.EventSystem;
-using Unity.AppUI.UI;
+using YH.StatSystem;
 
 namespace YH.Players
 {
-    public class Player : Entity
+    public abstract class Player : Entity
     {
         // Debug
         [SerializeField] private GameEventChannelSO _statusEventChannel;
@@ -18,18 +16,19 @@ namespace YH.Players
         [field: SerializeField] private StatElementSO _attackCooldownSO;
         public StatElement attackCooldownStat { get; private set; }
         [field: SerializeField] public PlayerInputSO PlayerInput { get; private set; }
-        [SerializeField] private LayerMask _whatIsGround,_whatIsTower;
+        [SerializeField] private LayerMask _whatIsGround, _whatIsTower;
         private Outline _outline;
 
         private EntityStat _statCompo;
         public bool isShooting { get; set; }
 
         public float attackDistance;
-        [HideInInspector] public float lastAttackTime;
         [HideInInspector] public Transform target;
 
         public LayerMask whatIsEnemy;
         public Transform fireTrm;
+        private Collider _collider;
+
 
         public EntityHealth EntityHealth { get; private set; }
         protected override void Awake()
@@ -39,8 +38,11 @@ namespace YH.Players
             _playerManagerSO.InitCoin();
             _outline = GetComponent<Outline>();
             _outline.enabled = false;
+            _collider = GetComponent<Collider>();
 
             EntityHealth = GetComponent<EntityHealth>();
+            
+            PlayerInput.Controls.Enable();
         }
 
         protected override void AfterInitComponents()
@@ -58,7 +60,7 @@ namespace YH.Players
             PlayerInput.ClearSubscription();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             SetOutLine();
 #if UNITY_STANDALONE_WIN
@@ -99,11 +101,26 @@ namespace YH.Players
             }
         }
 
-        
-        public void SetDead()
+        public virtual void SetDead()
         {
             PlayerInput.Controls.Disable();
+            _collider.enabled = false;
             IsDead = true;
+        }
+
+        public abstract void PlayerLevelMove(Vector3 position);
+
+        public List<BTEnemy> GetEnemies()
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(_playerManagerSO.PlayerTrm.position, 100, whatIsEnemy);
+            List<BTEnemy> enemies = new();
+
+            foreach (Collider enemy in hitColliders)
+            {
+                enemies.Add(enemy.GetComponent<BTEnemy>());
+            }
+
+            return enemies;
         }
     }
 }

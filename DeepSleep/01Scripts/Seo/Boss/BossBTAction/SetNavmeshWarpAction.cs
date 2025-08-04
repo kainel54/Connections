@@ -16,7 +16,7 @@ public partial class SetNavmeshWarpAction : Action
     private EnemyMovement _mover;
     protected override Status OnStart()
     {
-        _mover = Enemy.Value.GetCompo<EnemyMovement>();
+        _mover = Enemy.Value.GetCompo<EnemyMovement>(true);
         if (Boolean.Value)
         {
             _mover.SetStartingWarpSetting();

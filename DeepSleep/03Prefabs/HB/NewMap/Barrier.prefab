@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 6956285184863540200}
   - component: {fileID: 603458622400765470}
   - component: {fileID: 2183489868972082275}
-  m_Layer: 0
+  - component: {fileID: 7747705515819934167}
+  m_Layer: 24
   m_Name: Barrier
   m_TagString: Barrier
   m_Icon: {fileID: 0}
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1, z: 0.75}
+  m_LocalScale: {x: 2.5, y: 1, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -103,7 +104,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -123,3 +124,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startStageEventChannel: {fileID: 11400000, guid: 9e01c9d2f502fa248ace0587376ba1de, type: 2}
   _endStageEventChannel: {fileID: 11400000, guid: 6e75c8f59159ee14e92f5380a32c71a8, type: 2}
+--- !u!208 &7747705515819934167
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6316489740800845197}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 5, y: 0.00001, z: 5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

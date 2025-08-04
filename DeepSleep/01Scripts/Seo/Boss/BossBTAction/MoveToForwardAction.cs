@@ -14,20 +14,29 @@ public partial class MoveToForwardAction : Action
 {
     [SerializeReference] public BlackboardVariable<BTEnemy> Boss;
 
-    private EnemyMovement _movemet;
+    private EnemyMovement _movement;
     private float _maxDistance = 7;
 
     private float _lastChaseTime;
     public float calcPeriod = 0.1f;
 
-    Vector3 endPos;
+
+    private float _elapsedTime = 0f;
+    private float _duration = 1.1f;
+
+
+
+    private float _speed;
+
+    private Vector3 _endPos;
+    private Vector3 _startPos;
 
     protected override Status OnStart()
     {
-        _movemet = Boss.Value.GetCompo<EnemyMovement>();
+        _movement = Boss.Value.GetCompo<EnemyMovement>(true);
 
         _lastChaseTime = Time.time;
-        _movemet.SetStop(false);
+        _movement.SetStop(false);
 
         float distance;
         if (Physics.Raycast(Boss.Value.transform.position + Vector3.up * 2f, Boss.Value.transform.forward, out RaycastHit hit, 7f, Boss.Value.whatIsWall))
@@ -39,36 +48,39 @@ public partial class MoveToForwardAction : Action
         else
         {
             distance = _maxDistance;
-            Debug.Log("레이 안 맞음");
         }
-        endPos = Boss.Value.transform.position + Boss.Value.transform.forward * distance;
+        _startPos = Boss.Value.transform.position;
+        _endPos = _startPos + Boss.Value.transform.forward * distance;
+        _speed = Vector3.Distance(Boss.Value.transform.position, _endPos) / (1.1f);
 
-        _movemet.SetDestination(endPos);
+
+        _elapsedTime = 0f;
+
         return Status.Running;
     }
+
 
     protected override Status OnUpdate()
     {
+        _elapsedTime += Time.deltaTime;
+        float t = Mathf.Clamp01(_elapsedTime / 1.1f); // 정확히 1.1초
+        float easet = EaseInOutQuad(t);
+        Boss.Value.transform.position = Vector3.Lerp(_startPos, _endPos, easet);
 
-        Boss.Value.FaceToTarget(_movemet.GetNextPathPoint());
-        if (_lastChaseTime + calcPeriod < Time.time)
+        if (t >= 1f)
         {
-            _movemet.SetDestination(endPos);
-            _lastChaseTime = Time.time;
-        }
-        _movemet.GetNextPathPoint();
-
-
-
-        if (Vector3.Distance(endPos, Boss.Value.transform.position) < 0.2f)
+            _movement.NavMeshEnable(true);
             return Status.Success;
+        }
 
         return Status.Running;
     }
-    protected override void OnEnd()
-    {
-        _movemet.SetSpeed(20);
 
+    private float EaseInOutQuad(float t)
+    {
+        return t < 0.5f
+            ? 2f * t * t
+            : -1f + (4f - 2f * t) * t;
     }
 }
 

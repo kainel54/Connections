@@ -2,43 +2,62 @@ using System;
 using System.Collections.Generic;
 using IH.EventSystem.SoundEvent;
 using UnityEngine;
+using UnityEngine.Serialization;
 using YH.EventSystem;
 using YH.Players;
+
+public enum PlayerSkillPointEnum
+{
+    Player, Sword, SwordEnd, Hip
+}
 
 public delegate void CooldownInfo(float current, float total);
 public abstract class Skill : MonoBehaviour
 {
+    [SerializeField] protected SkillObj _popSkillObj;
+    
+    [SerializeField] private PlayerSkillPointEnum _playerSkillPointEnum;
     [SerializeField] private PlayerManagerSO _playerManager;
     [HideInInspector] public Player player;
     
     [SerializeField] private GameEventChannelSO _soundEventChannel;
     [SerializeField] private SoundSO _soundSo;
     
-    [SerializeField] private Transform _partParent;
     [SerializeField] private List<SkillFieldDataSO> _skillFieldDataSO = new();
-
     [SerializeField] private List<SkillStatInfoSO> _defaultUseSkillStats = new();
+    
     public HashSet<SkillStatInfoSO> currentUseSkillStats = new();
-
+    private Transform _partParent;
+    
     private Dictionary<SkillFieldDataType, SkillFieldDataSO> _skillDataDictionary = new();
     private Dictionary<Type, SkillPart> _skillPartDictionary = new();
 
+    public event Action SkillInputAction;
     public event Action PressAction;
-    public event CooldownInfo CooldownEvent;
     public event Action<Skill> UseSkillAction;
+    
+    public event CooldownInfo CooldownEvent;
     public event Action<int> skillCountAction;
 
     private int _shootCount = 0;
     private int _firedCount = 0;
     
     private float _cooldownTimer;
-    public bool isCoolTime => _cooldownTimer > 0;
+    public bool IsSkillCoolTime => _cooldownTimer > 0f;
+    public bool CanShootSkill => _firedCount > 0;
     
     public LayerMask whatIsEnemy, whatIsGround;
+    
+    public SkillAnimation SkillAnimation {get; private set;}
+    protected PlayerSkillPointManager _playerSkillPointManager;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        _playerManager.SetUpPlayerEvent += HandleSetupPlayer;
+        _partParent = transform.Find("AbleParts");
+
+        SkillAnimation = GetComponent<SkillAnimation>();
+
+        PlayInitCheck();
 
         for (int i = 0; i < _skillFieldDataSO.Count; i++)
         {
@@ -53,9 +72,11 @@ public abstract class Skill : MonoBehaviour
         
         foreach (var useSkillStatInfoSo in _defaultUseSkillStats)
             currentUseSkillStats.Add(useSkillStatInfoSo);
+
+        DataInit();
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         _playerManager.SetUpPlayerEvent -= HandleSetupPlayer;
     }
@@ -63,6 +84,21 @@ public abstract class Skill : MonoBehaviour
     private void HandleSetupPlayer()
     {
         player = _playerManager.Player;
+        _playerSkillPointManager = player.GetCompo<PlayerSkillPointManager>();
+        SkillAnimation.Init(this);
+    }
+
+    private void PlayInitCheck()
+    {
+        player = _playerManager.Player;
+
+        if (player != null)
+        {
+            _playerSkillPointManager = player.GetCompo<PlayerSkillPointManager>();
+            SkillAnimation.Init(this);
+        }
+        else
+            _playerManager.SetUpPlayerEvent += HandleSetupPlayer;
     }
 
     protected virtual void Update()
@@ -89,7 +125,14 @@ public abstract class Skill : MonoBehaviour
         }
     }
 
-    public void PressSkill()
+    //스킬 키를 눌렀을 때 호출
+    public void InputSkillProcess()
+    {
+        SkillInputAction?.Invoke();
+    }
+    
+    //스킬 발동 전에 처리 (애니메이션 중 호출)
+    public void UseBeforeProcess()
     {
         if(_shootCount == 1)
             skillCountAction?.Invoke(0);
@@ -102,18 +145,20 @@ public abstract class Skill : MonoBehaviour
             return;
         }
 
-        if (_cooldownTimer > 0)
-            return;
         PressAction?.Invoke();
 
         if (_shootCount > 0)
             return;
-        UseSkill(player.transform);
+        
+        //기본적인 스킬 사용
+        UseSkill(_playerSkillPointManager.GetTransform(_playerSkillPointEnum));
     }
 
+    //진짜 스킬 발동
     public virtual void UseSkill(Transform fireTrm)
     {
         UseSkillAction?.Invoke(this);
+        Debug.Log("Use Skill");
     }
 
     public void SetCoolTime()
@@ -142,7 +187,7 @@ public abstract class Skill : MonoBehaviour
     public SkillFieldDataSO GetSkillData(SkillFieldDataType fieldType) => _skillDataDictionary[fieldType];
     public SkillPart GetSkillPart(Type type) => _skillPartDictionary[type];
 
-    public void DataInit()
+    public void  DataInit()
     {
         foreach (SkillFieldDataSO dataSo in _skillFieldDataSO)
         {
